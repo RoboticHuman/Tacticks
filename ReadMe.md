@@ -22,6 +22,3 @@ Dependencies:
 	GLM			0.9.7
 	Assimp		3.2.71805284
 P.S. Those are the versions that I (Dan) am working with. That doesn't mean it will not work with other versions. It would be nice to to find to decide on a version and everyone upgrade to that version.
-
-Known Issues:
-	*Model 'box.obj' in envCheck is not working properly. Most probably because the camera is not setup properly?

@@ -117,7 +117,7 @@ mat4 transform(vec2 const &Orientation, vec3 const &Translate, vec3 const &Up){
 	return Projection * View * Model;
 }
 
-bool Read_Mesh(GLuint &vao, GLuint &vbo, GLuint &veo, const char* fpath){
+bool Read_Mesh(GLuint &vao, GLuint &vbo, GLuint &veo, unsigned int &nFaces, const char* fpath){
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(fpath, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
 
@@ -167,6 +167,7 @@ bool Read_Mesh(GLuint &vao, GLuint &vbo, GLuint &veo, const char* fpath){
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Faces.size(), &Faces[0], GL_STATIC_DRAW);
 
+	nFaces = Faces.size();
 	return true;
 }
 
@@ -200,10 +201,11 @@ int main(int argc, char* argv[]){
 	GLuint vao, vbo, veo;
 	GLuint shaderProgram;
 	GLint posAttrib;
+	unsigned int nFaces;
 
 	if(!GL_init(mainwindow, maincontext)) return -1;
 	if(!Read_Shader(shaderProgram, "shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs")) return -1;
-	if(!Read_Mesh(vao, vbo, veo, "models/envCheck/pyramid.obj")) return -1;
+	if(!Read_Mesh(vao, vbo, veo, nFaces, "models/envCheck/box.obj")) return -1;
 
 	glBindFragDataLocation(shaderProgram, 0, "outColor");
 	posAttrib = glGetAttribLocation(shaderProgram, "position");
@@ -234,7 +236,7 @@ int main(int argc, char* argv[]){
 		}
 
 		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, nFaces, GL_UNSIGNED_INT, 0);
 
 		SDL_GL_SwapWindow(mainwindow);
 	}
