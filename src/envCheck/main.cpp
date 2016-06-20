@@ -22,6 +22,31 @@ using namespace glm;
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
+char* readAllFile(const char* fpath){
+	unsigned long long fsz;
+	char* buf;
+
+	FILE* file = fopen(fpath, "r");
+	if(file == nullptr){
+		printf("Error:: Unable to load shader file: %s\n", fpath);
+		return nullptr;
+	}
+
+	fseek(file, 0, SEEK_END);
+	fsz = ftell(file);
+	rewind(file);
+
+	buf = new char[fsz+1]();
+	if(fread(buf, 1, fsz, file) != fsz){
+		printf("Unexpected error while reading file: %s\n", fpath);
+		fclose(file);
+		delete [] buf;
+		return nullptr;
+	}
+	fclose(file);
+	return buf;
+}
+
 bool GL_Destroy(SDL_Window* &mainwindow, SDL_GLContext &maincontext){
 	SDL_GL_DeleteContext(maincontext);
 	SDL_DestroyWindow(mainwindow);
@@ -41,6 +66,8 @@ bool GL_init(SDL_Window* &mainwindow, SDL_GLContext &maincontext){
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	string SDL_err;
 	mainwindow = SDL_CreateWindow("SDLTutorial", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 512, 512, SDL_WINDOW_OPENGL);
@@ -81,31 +108,6 @@ bool GL_init(SDL_Window* &mainwindow, SDL_GLContext &maincontext){
 	return true;
 }
 
-char* readAllFile(const char* fpath){
-	unsigned long long fsz;
-	char* buf;
-
-	FILE* file = fopen(fpath, "r");
-	if(file == nullptr){
-		printf("Error:: Unable to load shader file: %s\n", fpath);
-		return nullptr;
-	}
-
-	fseek(file, 0, SEEK_END);
-	fsz = ftell(file);
-	rewind(file);
-
-	buf = new char[fsz+1]();
-	if(fread(buf, 1, fsz, file) != fsz){
-		printf("Unexpected error while reading file: %s\n", fpath);
-		fclose(file);
-		delete [] buf;
-		return nullptr;
-	}
-	fclose(file);
-	return buf;
-}
-
 mat4 transform(vec2 const &Orientation, vec3 const &Translate, vec3 const &Up){
 	mat4 Projection = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 	mat4 ViewTranslate = translate(mat4(1.0f), Translate);
@@ -115,63 +117,103 @@ mat4 transform(vec2 const &Orientation, vec3 const &Translate, vec3 const &Up){
 	return Projection * View * Model;
 }
 
-int main(int argc, char* argv[]){
-	SDL_Window *mainwindow; SDL_GLContext maincontext;
-	SDL_Event event;
-
-	GLuint vao, vbo;
-	GLchar* vertexSource;
-	GLchar* fragmentSource;
-	GLuint vertexShader, fragmentShader, shaderProgram;
-	GLint posAttrib;
-
-	float Vertices[3][3] = {
-		{-1.0f,-1.0f, 0.0f},
-		{ 1.0f,-1.0f, 0.0f},
-		{ 0.0f, 0.0f, 0.0f}
-	};
-
-	if(!GL_init(mainwindow, maincontext)) return -1;
-
+bool Read_Mesh(GLuint &vao, GLuint &vbo, GLuint &veo, const char* fpath){
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile("models/envCheck/box.obj",
-		aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
-		aiProcess_SortByPType);
+	const aiScene* scene = importer.ReadFile(fpath, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+
 	if(scene == nullptr){
 		printf("Error:: Assimp is unable to load Obj File: %s\n", importer.GetErrorString());
-		return -1;
+		return false;
 	}
 	else printf("Assimp Okay ... Using Assimp %d.%d.%d\n", aiGetVersionMajor(), aiGetVersionMinor(), aiGetVersionRevision());
 
-	vertexSource = readAllFile("shaders/envCheck/VSTest.vs");
-	fragmentSource = readAllFile("shaders/envCheck/FSTest.fs");
+	assert(scene->mNumMeshes == 1);
+	aiMesh* mesh = scene->mMeshes[0];
 
-    glGenVertexArrays(1, &vao);
+	vector<float> Vertices(3 * mesh->mNumVertices);
+	vector<unsigned int> Faces(3 * mesh->mNumFaces);
+
+	for(int i = 0; i < mesh->mNumVertices; i++){
+		Vertices[3*i+0] = mesh->mVertices[i].x;
+		Vertices[3*i+1] = mesh->mVertices[i].y;
+		Vertices[3*i+2] = mesh->mVertices[i].z;
+	}
+	for(int i = 0; i < mesh->mNumFaces; i++){
+		assert(mesh->mFaces[i].mNumIndices == 3);
+		Faces[3*i+0] = mesh->mFaces[i].mIndices[0];
+		Faces[3*i+1] = mesh->mFaces[i].mIndices[1];
+		Faces[3*i+2] = mesh->mFaces[i].mIndices[2];
+	}
+
+	/*vector<float> Vertices(3*4);
+	Vertices[ 0] = -1.0f; Vertices[ 1] = -1.0f; Vertices[ 2] = 0.0f;
+	Vertices[ 3] =  0.0f; Vertices[ 4] = -1.0f; Vertices[ 5] = 1.0f;
+	Vertices[ 6] =  1.0f; Vertices[ 7] = -1.0f; Vertices[ 8] = 0.0f;
+	Vertices[ 9] =  0.0f; Vertices[10] =  1.0f; Vertices[12] = 0.0f;
+
+	vector<unsigned int> Faces(3*4);
+	Faces[ 0] = 0; Faces[ 1] = 3; Faces[ 2] = 1;
+	Faces[ 3] = 1; Faces[ 4] = 3; Faces[ 5] = 2;
+	Faces[ 6] = 2; Faces[ 7] = 3; Faces[ 8] = 0;
+	Faces[ 9] = 0; Faces[10] = 1; Faces[12] = 2;
+*/
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+	glGenBuffers(1, &veo);
+
     glBindVertexArray(vao);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, veo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Faces.size(), &Faces[0], GL_STATIC_DRAW);
 
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexSource, NULL);
-    glCompileShader(vertexShader);
+	return true;
+}
 
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+bool Read_Shader(GLuint &shaderProgram, const char* vsfpath, const char* fsfpath){
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	GLchar* vertexSource = readAllFile("shaders/envCheck/VSTest.vs");
+	glShaderSource(vertexShader, 1, &vertexSource, NULL);
+	glCompileShader(vertexShader);
+
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	GLchar* fragmentSource = readAllFile("shaders/envCheck/FSTest.fs");
     glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
     glCompileShader(fragmentShader);
 
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
-	glBindFragDataLocation(shaderProgram, 0, "outColor");
 	glLinkProgram(shaderProgram);
+
+	delete []vertexSource;
+	delete []fragmentSource;
+    glDeleteShader(fragmentShader);
+    glDeleteShader(vertexShader);
+	return true;
+}
+
+int main(int argc, char* argv[]){
+	SDL_Window *mainwindow; SDL_GLContext maincontext;
+	SDL_Event event;
+
+	GLuint vao, vbo, veo;
+	GLuint shaderProgram;
+	GLint posAttrib;
+
+	if(!GL_init(mainwindow, maincontext)) return -1;
+	if(!Read_Shader(shaderProgram, "shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs")) return -1;
+	if(!Read_Mesh(vao, vbo, veo, "models/envCheck/pyramid.obj")) return -1;
+
+	glBindFragDataLocation(shaderProgram, 0, "outColor");
+	posAttrib = glGetAttribLocation(shaderProgram, "position");
 	glUseProgram(shaderProgram);
 
-	glGenBuffers(1, &vbo);
+	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
-
-	posAttrib = glGetAttribLocation(shaderProgram, "position");
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, veo);
     glEnableVertexAttribArray(posAttrib);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	bool Exit_Flag = false;
 	while(!Exit_Flag){
@@ -192,14 +234,13 @@ int main(int argc, char* argv[]){
 		}
 
 		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
 
 		SDL_GL_SwapWindow(mainwindow);
 	}
 
+	glDisableVertexAttribArray(posAttrib);
 	glDeleteProgram(shaderProgram);
-    glDeleteShader(fragmentShader);
-    glDeleteShader(vertexShader);
     glDeleteBuffers(1, &vbo);
     glDeleteVertexArrays(1, &vao);
 

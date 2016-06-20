@@ -14,3 +14,14 @@ By default the make file will check 'my.proj' for files names. However if you wa
 To check that the environment is setup properly run: make envCheck
 
 P.S. this is a dummy ReadMe until we settle on one :D
+
+Dependencies:
+	SDL			2.0.4
+	GLEW		2.0.0
+	OpenGL		3.3 (Core Profile)
+	GLM			0.9.7
+	Assimp		3.2.71805284
+P.S. Those are the versions that I (Dan) am working with. That doesn't mean it will not work with other versions. It would be nice to to find to decide on a version and everyone upgrade to that version.
+
+Known Issues:
+	*Model 'box.obj' in envCheck is not working properly. Most probably because the camera is not setup properly?
