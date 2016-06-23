@@ -135,12 +135,11 @@ bool GL_init(SDL_Window* &mainwindow, SDL_GLContext &maincontext){
 }
 
 mat4 transform(vec2 const &Orientation, vec3 const &Translate, vec3 const &Up){
-	mat4 Projection = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+	mat4 Projection = perspective(45.0f, float(SCREEN_WIDTH / SCREEN_HEIGHT), 0.1f, 100.0f);
 	mat4 ViewTranslate = translate(mat4(1.0f), Translate);
 	mat4 ViewRotateX = rotate(ViewTranslate, Orientation.y, Up);
 	mat4 View = rotate(ViewRotateX, Orientation.x, Up);
-	mat4 Model = mat4(1.0f);
-	return Projection * View * Model;
+	return Projection * View;
 }
 
 bool Read_Mesh(GLuint &vao, GLuint &vbo, GLuint &veo, unsigned int &nFaces, const char* fpath){
@@ -243,19 +242,19 @@ int main(int argc, char* argv[]){
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, veo);
     glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
+	glEnable(GL_DEPTH_TEST);
 	transformAttrib = glGetUniformLocation(shaderProgram, "transform");
 
 	glm::mat4 trans;
+	glm::mat4 rotateTrans;
 	bool Exit_Flag = false;
 	//Timer for getting deltatime
 	Timer timer;
 	while(!Exit_Flag){
-		newTime = SDL_GetTicks();
-		deltaTime = float(newTime - prevTime) /1000;
-		prevTime = newTime;
+
 		//rotation code
-		trans = glm::rotate(trans,GLfloat(timer.GetDelta()),glm::vec3(0.0,0.0,1.0));
+		trans = transform(vec2(2.0,1.0), vec3(0.0,-0.8f,-3.5f), vec3(1.0,0.0,0.0));
+		trans = rotate(trans,GLfloat(SDL_GetTicks())/1000,glm::vec3(0.0,0.0,1.0));
 		glUniformMatrix4fv(transformAttrib,1,GL_FALSE,glm::value_ptr(trans));
 		//
 		while(SDL_PollEvent(&event)){	//Handeling events
@@ -275,7 +274,7 @@ int main(int argc, char* argv[]){
 
 		}
 
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glDrawElements(GL_TRIANGLES, nFaces, GL_UNSIGNED_INT, 0);
 
 		SDL_GL_SwapWindow(mainwindow);
