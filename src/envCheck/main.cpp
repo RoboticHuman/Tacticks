@@ -9,18 +9,44 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 //Assimp
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/version.h>
+#include <chrono>
 
+using namespace std::chrono;
 using namespace std;
 using namespace glm;
 
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
+
+
+
+class Timer
+{
+    public:
+        Timer():timePrev( high_resolution_clock::now() )
+        {
+        }
+        double GetDelta()
+        {
+
+            auto timeCurrent = high_resolution_clock::now();
+
+            duration< double > delta( timeCurrent - timePrev );
+
+            timePrev = high_resolution_clock::now();
+
+            return delta.count();
+        }
+    private:
+        time_point< high_resolution_clock > timePrev;
+};
 
 char* readAllFile(const char* fpath){
 	unsigned long long fsz;
@@ -59,7 +85,7 @@ bool GL_init(SDL_Window* &mainwindow, SDL_GLContext &maincontext){
 	SDL_VERSION(&SDL_cVer);
 	SDL_GetVersion(&SDL_rVer);
 
-	if(SDL_Init(SDL_INIT_VIDEO) != 0){
+	if(SDL_Init(SDL_INIT_VIDEO| SDL_INIT_TIMER) != 0){
 		printf("Error:: Unable to initialize SDL: %s\n", SDL_GetError());
 		return false;
 	}
@@ -201,6 +227,7 @@ int main(int argc, char* argv[]){
 	GLuint vao, vbo, veo;
 	GLuint shaderProgram;
 	GLint posAttrib;
+	GLuint transformAttrib;
 	unsigned int nFaces;
 
 	if(!GL_init(mainwindow, maincontext)) return -1;
@@ -217,8 +244,20 @@ int main(int argc, char* argv[]){
     glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
+	transformAttrib = glGetUniformLocation(shaderProgram, "transform");
+
+	glm::mat4 trans;
 	bool Exit_Flag = false;
+	//Timer for getting deltatime
+	Timer timer;
 	while(!Exit_Flag){
+		newTime = SDL_GetTicks();
+		deltaTime = float(newTime - prevTime) /1000;
+		prevTime = newTime;
+		//rotation code
+		trans = glm::rotate(trans,GLfloat(timer.GetDelta()),glm::vec3(0.0,0.0,1.0));
+		glUniformMatrix4fv(transformAttrib,1,GL_FALSE,glm::value_ptr(trans));
+		//
 		while(SDL_PollEvent(&event)){	//Handeling events
 			switch(event.type){
 				case SDL_KEYDOWN:
@@ -233,6 +272,7 @@ int main(int argc, char* argv[]){
 					Exit_Flag = true;
 				break;
 			}
+
 		}
 
 		glClear(GL_COLOR_BUFFER_BIT);
