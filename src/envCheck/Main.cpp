@@ -25,23 +25,14 @@ using namespace glm;
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-
-
-class Timer
-{
+class Timer{
     public:
-        Timer():timePrev( high_resolution_clock::now() )
-        {
+        Timer():timePrev( high_resolution_clock::now()){
         }
-        double GetDelta()
-        {
-
+        double GetDelta(){
             auto timeCurrent = high_resolution_clock::now();
-
             duration< double > delta( timeCurrent - timePrev );
-
             timePrev = high_resolution_clock::now();
-
             return delta.count();
         }
     private:
@@ -170,18 +161,6 @@ bool Read_Mesh(GLuint &vao, GLuint &vbo, GLuint &veo, unsigned int &nFaces, cons
 		Faces[3*i+2] = mesh->mFaces[i].mIndices[2];
 	}
 
-	/*vector<float> Vertices(3*4);
-	Vertices[ 0] = -1.0f; Vertices[ 1] = -1.0f; Vertices[ 2] = 0.0f;
-	Vertices[ 3] =  0.0f; Vertices[ 4] = -1.0f; Vertices[ 5] = 1.0f;
-	Vertices[ 6] =  1.0f; Vertices[ 7] = -1.0f; Vertices[ 8] = 0.0f;
-	Vertices[ 9] =  0.0f; Vertices[10] =  1.0f; Vertices[12] = 0.0f;
-
-	vector<unsigned int> Faces(3*4);
-	Faces[ 0] = 0; Faces[ 1] = 3; Faces[ 2] = 1;
-	Faces[ 3] = 1; Faces[ 4] = 3; Faces[ 5] = 2;
-	Faces[ 6] = 2; Faces[ 7] = 3; Faces[ 8] = 0;
-	Faces[ 9] = 0; Faces[10] = 1; Faces[12] = 2;
-*/
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &veo);
@@ -249,7 +228,7 @@ int main(int argc, char* argv[]){
 	glm::mat4 rotateTrans;
 	bool Exit_Flag = false;
 	//Timer for getting deltatime
-	Timer timer;
+	//Timer timer;
 	while(!Exit_Flag){
 
 		//rotation code
