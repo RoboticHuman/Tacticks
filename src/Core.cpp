@@ -1,11 +1,23 @@
 #include "Core.h"
 #include <string>
+#include <cstdio>
 using namespace std;
 
-
-Core::~Core()
+void Core::preLoop()
 {
-	shutdown();
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0, 0, 0, 1.0);
+
+	shader.push_back(Shader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs"));
+}
+void Core::render()
+{
+	shader[0].use();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+void Core::postLoop()
+{
+	shader.clear();
 }
 
 void Core::shutdown()
@@ -56,7 +68,6 @@ bool Core::init()
 		printf("\tSDL compiled version: %d.%d.%d\n", SDL_cVer.major, SDL_cVer.minor, SDL_cVer.patch);
 		printf("\tSDL runtime version:  %d.%d.%d\n", SDL_rVer.major, SDL_rVer.minor, SDL_rVer.patch);
 	}
-	else printf("SDL Okay... Using SDL %d.%d.%d\n", SDL_rVer.major, SDL_rVer.minor, SDL_rVer.patch);
 
 	GLenum glew_init = glewInit();
 	if(glew_init != GLEW_OK){
@@ -64,15 +75,13 @@ bool Core::init()
 		shutdown();
 		return false;
 	}
-	printf("GLEW Okay... Using GLEW %s\n", glewGetString(GLEW_VERSION));
-	printf("OpenGL Okay... Using OpenGL %s\n", glGetString(GL_VERSION));
-	glEnable(GL_DEPTH_TEST);
-	glClearColor(0, 0, 0, 1.0);
 	return true;
 }
 
 void Core::start()
 {
+	SDL_Event event;
+	preLoop();
 	while(!exitFlag){
 		while(SDL_PollEvent(&event)){	//Handeling events
 			switch(event.type){
@@ -90,8 +99,10 @@ void Core::start()
 			}
 
 		}
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//DrawCall comes here
+
+		render();
+
 		SDL_GL_SwapWindow(mainwindow);
 	}
+	postLoop();
 }
