@@ -50,6 +50,7 @@ private:
 	vector<Vertex> vertices;
 	vector<GLuint> indices;
 	vector<Texture> textures;
+	bool textureSetupDone = false;
 	/**
 	 * @brief      Setup the necessary buffers to receive the data loaded into the mesh
 	 */

@@ -6,7 +6,7 @@
 #include "SOIL.h"
 #include "Mesh.h"
 using namespace std;
-class Shader;
+
 class aiNode;
 class aiScene;
 class aiMesh;

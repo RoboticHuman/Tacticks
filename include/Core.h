@@ -4,6 +4,23 @@
 #include <vector>
 #include "Shader.h"
 #include "Model.h"
+#include <chrono>
+using namespace std::chrono;
+
+class Timer{
+    public:
+        Timer():timePrev( high_resolution_clock::now()){
+        }
+        double GetDelta(){
+            auto timeCurrent = high_resolution_clock::now();
+            duration< double > delta( timeCurrent - timePrev );
+            timePrev = high_resolution_clock::now();
+            return delta.count();
+        }
+    private:
+        time_point< high_resolution_clock > timePrev;
+};
+
 
 /**
  * @brief      This class is responsible for initializing the windowing system as well as handling input.
@@ -18,6 +35,7 @@ private:
 	bool exitFlag = false;
 	vector<Model *> models;
 	std::vector<Shader> shader;
+	Timer timer;
 
 	void preLoop();
 	void render();

@@ -56,7 +56,7 @@ Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
 	vector<Vertex> vertices;
 	vector<GLuint> indices;
 	vector<Texture> textures;
-	printf("number of vertices: %d\n", (int)mesh->mNumVertices);
+	
 	for(GLuint i =0; i<mesh->mNumVertices; i++)
 	{
 		Vertex vertex;
@@ -100,7 +100,7 @@ Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
 		{
 			if(loadedTexturePaths.count(texturePath.C_Str()) == 0)
 			{
-				printf("FOUND!\n");
+				//printf("FOUND!\n");
 				Texture texture;
 				texture.id = textureFromFile(texturePath.C_Str(), containingDir);
 				//TODO: THIS IS HARDCODED FOR NOW AS WE ONLY SUPPORT A SINGLE DIFFUSE
@@ -116,17 +116,17 @@ Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
 			}
 		}
 		else {
-			printf("NOT FOUND!\n");
+			//printf("NOT FOUND!\n");
 			Texture texture;
 			texture.id = textureFromFile("white.png",containingDir);
 			texture.type = "texture_diffuse";
-			texture.path = containingDir+"/"+"white.png";
 			textures.push_back(texture);
 			texturesLoaded.push_back(texture);
 			loadedTexturePaths.insert(make_pair(texture.path,texturesLoaded.size()-1));
 		}
 
 	}
+	
 	return Mesh(vertices, indices, textures);
 }
 
@@ -138,7 +138,6 @@ GLuint Model::textureFromFile(const char* path, string containingDir)
     glGenTextures(1, &textureID);
     int width,height;
     unsigned char* image = SOIL_load_image(fileName.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
-
     // Assign texture to ID
     glBindTexture(GL_TEXTURE_2D, textureID);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);

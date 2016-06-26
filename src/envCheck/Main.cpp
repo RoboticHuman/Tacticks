@@ -211,7 +211,6 @@ int main(int argc, char* argv[]){
 	if(!Read_Shader(shaderProgram, "shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs")) return -1;
 	if(!Read_Mesh(vao, vbo, veo, nFaces, "models/envCheck/box.obj")) return -1;
 
-	glBindFragDataLocation(shaderProgram, 0, "outColor");
 	posAttrib = glGetAttribLocation(shaderProgram, "position");
 	glUseProgram(shaderProgram);
 

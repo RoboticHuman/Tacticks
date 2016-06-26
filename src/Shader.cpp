@@ -1,6 +1,6 @@
 #include "Shader.h"
 #include "Utility.h"
-
+#include <cstdio>
 Shader::Shader(const char* vsfpath, const char* fsfpath)
 {
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -26,7 +26,7 @@ Shader::Shader(const char* vsfpath, const char* fsfpath)
 
 Shader::~Shader()
 {
-	if(shaderProgram != 0) glDeleteProgram(shaderProgram);
+	//if(shaderProgram != 0) glDeleteProgram(shaderProgram);
 }
 
 void Shader::use()

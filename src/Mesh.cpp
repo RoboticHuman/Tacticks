@@ -12,6 +12,7 @@ Mesh::Mesh(vector<Vertex> &vertices, vector<GLuint> &indices, vector<Texture> &t
 
 void Mesh::setupBuffers()
 {
+	std::cout<<sizeof(Vertex)<<endl;
 	//generate vertex array
 	glGenVertexArrays(1, &VAO);
 	//generate vertex buffer object to store vertex data
@@ -47,27 +48,26 @@ void Mesh::setupBuffers()
 
 void Mesh::draw(Shader shader)
 {
-	GLuint diffuseSamplerIndex = 1;
-	GLuint specularSamplerIndex = 1;
-	for(GLuint i=0; i<textures.size();i++)
+	if(!textureSetupDone)
 	{
-		glActiveTexture(GL_TEXTURE0+i);
-		if(textures[i].type == "texture_diffuse")
-			glUniform1i(glGetUniformLocation(shader.getShaderProgram(),(textures[i].type+ std::to_string(diffuseSamplerIndex++)).c_str()),i);
-		else if(textures[i].type == "texture_specular")
-			glUniform1i(glGetUniformLocation(shader.getShaderProgram(),(textures[i].type+ std::to_string(specularSamplerIndex++)).c_str()),i);
-		glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		GLuint diffuseSamplerIndex = 1;
+		GLuint specularSamplerIndex = 1;
+		for(GLuint i=0; i<textures.size();i++)
+		{
+			glActiveTexture(GL_TEXTURE0+i);
+			if(textures[i].type == "texture_diffuse")
+				glUniform1i(glGetUniformLocation(shader.getShaderProgram(),(textures[i].type+ std::to_string(diffuseSamplerIndex++)).c_str()),i);
+			else if(textures[i].type == "texture_specular")
+				glUniform1i(glGetUniformLocation(shader.getShaderProgram(),(textures[i].type+ std::to_string(specularSamplerIndex++)).c_str()),i);
+			glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		}
+		glActiveTexture(GL_TEXTURE0);
+		textureSetupDone= true;
 	}
-	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT,0);
 	glBindVertexArray(0);
 
-	// Always good practice to set everything back to defaults once configured.
-        for (GLuint i = 0; i < textures.size(); i++)
-        {
-            glActiveTexture(GL_TEXTURE0 + i);
-            glBindTexture(GL_TEXTURE_2D, 0);
-        }
+	
 }
 

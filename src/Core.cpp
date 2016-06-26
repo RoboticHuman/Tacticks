@@ -2,6 +2,7 @@
 #include <string>
 #include <cstdio>
 #include "Model.h"
+#include <iostream>
 using namespace std;
 void Core::preLoop()
 {
@@ -9,15 +10,13 @@ void Core::preLoop()
 	glClearColor(0, 0, 0, 1.0);
 
 	shader.push_back(Shader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs"));
-	
-	string modelPath = "/home/omar/Tacticks/models/envCheck/box.obj";
+	string modelPath = "/home/omar/Tacticks/models/envCheck/Crate1.obj";
 	models.push_back(new Model(modelPath));
-
+	shader[0].use();
 }
 void Core::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	shader[0].use();
 	models[0]->draw(shader[0]);
 	
 }
@@ -51,7 +50,7 @@ bool Core::init()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	string SDL_err;
-	mainwindow = SDL_CreateWindow("SDLTutorial", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 512, 512, SDL_WINDOW_OPENGL);
+	mainwindow = SDL_CreateWindow("Tacticks Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
 	if(mainwindow == nullptr){
 		printf("Error:: Unable to create SDL window: %s\n", SDL_GetError());
 		SDL_Quit();
@@ -91,6 +90,14 @@ void Core::start()
 	preLoop();
 
 	while(!exitFlag){
+		const float MIN_FRAME_TIME = 1.0f / 40.0f;
+		double dt = timer.GetDelta();
+		if ( dt < MIN_FRAME_TIME)
+		{
+			int ms = (int)((MIN_FRAME_TIME - dt) * 1000.0f);
+			if (ms > 10) ms = 10;
+			if (ms >= 0) SDL_Delay(ms);
+		}
 		while(SDL_PollEvent(&event)){	//Handeling events
 			switch(event.type){
 				case SDL_KEYDOWN:
