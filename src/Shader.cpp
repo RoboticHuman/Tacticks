@@ -4,12 +4,12 @@
 Shader::Shader(const char* vsfpath, const char* fsfpath)
 {
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	GLchar* vertexSource = readAllFile("shaders/envCheck/VSTest.vs");
+	GLchar* vertexSource = readAllFile(vsfpath);
 	glShaderSource(vertexShader, 1, &vertexSource, NULL);
 	glCompileShader(vertexShader);
 
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	GLchar* fragmentSource = readAllFile("shaders/envCheck/FSTest.fs");
+	GLchar* fragmentSource = readAllFile(fsfpath);
     glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
     glCompileShader(fragmentShader);
 
@@ -32,4 +32,9 @@ Shader::~Shader()
 void Shader::use()
 {
 	if(shaderProgram != 0) glUseProgram(shaderProgram);
+}
+
+GLuint Shader::getShaderProgram()
+{
+	return shaderProgram;
 }

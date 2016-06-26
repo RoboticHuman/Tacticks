@@ -8,7 +8,7 @@ HDir = ./include
 BDir = ./Build
 CompileFlags = -std=c++11 #`sdl2-config --libs`
 LinkFlags = `sdl2-config --libs`
-Libs = -lGL -lGLEW -lassimp
+Libs = -lSOIL -lGL -lGLEW -lassimp
 Objects = $(addsuffix .o, $(addprefix $(BDir)/, $(shell cat $(FileSrc))))
 FolderList = $(sort $(SDir)/ $(HDir)/ $(BDir)/ $(dir $(Objects)) $(dir $(AppName)))
 

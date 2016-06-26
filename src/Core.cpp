@@ -1,19 +1,25 @@
 #include "Core.h"
 #include <string>
 #include <cstdio>
+#include "Model.h"
 using namespace std;
-
 void Core::preLoop()
 {
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0, 0, 0, 1.0);
 
 	shader.push_back(Shader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs"));
+	
+	string modelPath = "/home/omar/Tacticks/models/envCheck/box.obj";
+	models.push_back(new Model(modelPath));
+
 }
 void Core::render()
 {
-	shader[0].use();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	shader[0].use();
+	models[0]->draw(shader[0]);
+	
 }
 void Core::postLoop()
 {
@@ -76,12 +82,14 @@ bool Core::init()
 		return false;
 	}
 	return true;
+	
 }
 
 void Core::start()
 {
 	SDL_Event event;
 	preLoop();
+
 	while(!exitFlag){
 		while(SDL_PollEvent(&event)){	//Handeling events
 			switch(event.type){
@@ -99,9 +107,7 @@ void Core::start()
 			}
 
 		}
-
 		render();
-
 		SDL_GL_SwapWindow(mainwindow);
 	}
 	postLoop();

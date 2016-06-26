@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <vector>
 #include "Shader.h"
+#include "Model.h"
 
 /**
  * @brief      This class is responsible for initializing the windowing system as well as handling input.
@@ -15,7 +16,7 @@ private:
 	SDL_Window *mainwindow = nullptr;
 	SDL_GLContext maincontext = NULL;
 	bool exitFlag = false;
-
+	vector<Model *> models;
 	std::vector<Shader> shader;
 
 	void preLoop();

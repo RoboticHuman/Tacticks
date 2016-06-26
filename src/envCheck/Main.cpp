@@ -170,7 +170,6 @@ bool Read_Mesh(GLuint &vao, GLuint &vbo, GLuint &veo, unsigned int &nFaces, cons
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, veo);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Faces.size(), &Faces[0], GL_STATIC_DRAW);
-
 	nFaces = Faces.size();
 	return true;
 }
