@@ -12,7 +12,7 @@ Model::Model(string path)
 	loadModel(path);
 }
 
-void Model::draw(Shader shader)
+void Model::draw(Shader *shader)
 {
 	for(GLuint i=0; i<meshes.size();i++)
 	{
@@ -48,7 +48,7 @@ void Model::processNode(aiNode *node, const aiScene *scene)
 	{
 		processNode(node->mChildren[i],scene);
 	}
-	
+
 }
 
 Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
@@ -56,11 +56,11 @@ Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
 	vector<Vertex> vertices;
 	vector<GLuint> indices;
 	vector<Texture> textures;
-	
+
 	for(GLuint i =0; i<mesh->mNumVertices; i++)
 	{
 		Vertex vertex;
-		glm::vec3 vector; 
+		glm::vec3 vector;
 		vector.x = mesh->mVertices[i].x; vector.y = mesh->mVertices[i].y; vector.z = mesh->mVertices[i].z;
 
 		vertex.position = vector;
@@ -75,14 +75,14 @@ Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
 			vector.y = mesh->mTextureCoords[0][i].y;
 			vertex.texCoords = vector;
 		}
-		else 
+		else
 		{
 			vertex.texCoords = glm::vec2(0.0f, 0.0f);
 		}
 		vertices.push_back(vertex);
 	}
 
-	
+
 	for(GLuint i=0;i<mesh->mNumFaces; i++)
 	{
 		aiFace face = mesh->mFaces[i];
@@ -91,7 +91,7 @@ Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
 			indices.push_back(face.mIndices[j]);
 		}
 	}
-	
+
 	if(mesh->mMaterialIndex >=0)
 	{
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
@@ -126,7 +126,7 @@ Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
 		}
 
 	}
-	
+
 	return Mesh(vertices, indices, textures);
 }
 
@@ -141,7 +141,7 @@ GLuint Model::textureFromFile(const char* path, string containingDir)
     // Assign texture to ID
     glBindTexture(GL_TEXTURE_2D, textureID);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    glGenerateMipmap(GL_TEXTURE_2D);	
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     // Parameters
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );

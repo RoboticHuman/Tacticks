@@ -26,7 +26,7 @@ Shader::Shader(const char* vsfpath, const char* fsfpath)
 
 Shader::~Shader()
 {
-	//if(shaderProgram != 0) glDeleteProgram(shaderProgram);
+	if(shaderProgram != 0) glDeleteProgram(shaderProgram);
 }
 
 void Shader::use()

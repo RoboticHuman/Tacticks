@@ -34,7 +34,7 @@ private:
 	SDL_GLContext maincontext = NULL;
 	bool exitFlag = false;
 	vector<Model *> models;
-	std::vector<Shader> shader;
+	std::vector<Shader *> shader;
 	Timer timer;
 
 	void preLoop();

@@ -9,20 +9,21 @@ void Core::preLoop()
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0, 0, 0, 1.0);
 
-	shader.push_back(Shader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs"));
-	string modelPath = "/home/omar/Tacticks/models/envCheck/Crate1.obj";
-	models.push_back(new Model(modelPath));
-	shader[0].use();
+	shader.push_back(new Shader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs"));
+	models.push_back(new Model("models/envCheck/Crate1.obj"));
+
+	shader[0]->use();
 }
 void Core::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	models[0]->draw(shader[0]);
-	
+
 }
 void Core::postLoop()
 {
-	shader.clear();
+	for(Shader* s : shader) delete s;
+	for(Model* m : models) delete m;
 }
 
 void Core::shutdown()
@@ -81,7 +82,7 @@ bool Core::init()
 		return false;
 	}
 	return true;
-	
+
 }
 
 void Core::start()

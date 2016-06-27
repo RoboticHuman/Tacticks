@@ -1,14 +1,14 @@
 .PHONY: first build clean run envCheck
 RootDir = $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 FileSrc = my.proj
-AppName = Tacticks
+AppName = Tacticks.out
 CleanFiles = *.log
 SDir = ./src
 HDir = ./include
 BDir = ./Build
 CompileFlags = -std=c++11 #`sdl2-config --libs`
 LinkFlags = `sdl2-config --libs`
-Libs = -lSOIL -lGL -lGLEW -lassimp
+Libs = -lsoil -lGL -lGLEW -lassimp
 Objects = $(addsuffix .o, $(addprefix $(BDir)/, $(shell cat $(FileSrc))))
 FolderList = $(sort $(SDir)/ $(HDir)/ $(BDir)/ $(dir $(Objects)) $(dir $(AppName)))
 

@@ -27,7 +27,7 @@ struct Texture{
 class Mesh
 {
 	Mesh() = delete;
-	
+
 public:
 	/**
 	 * @brief      Mesh contsructor to initialize per mesh components
@@ -42,7 +42,7 @@ public:
 	 *
 	 * @param[in]  shader  The shader program to use for drawing the mesh
 	 */
-	void draw(Shader shader);
+	void draw(Shader *shader);
 private:
 	//OpenGL buffers
 	//Vertex array, Vertext buffer and Element Buffer
@@ -56,7 +56,3 @@ private:
 	 */
 	void setupBuffers();
 };
-
-
-
-

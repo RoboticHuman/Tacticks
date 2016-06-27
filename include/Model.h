@@ -15,7 +15,7 @@ class Model
 {
 public:
 	Model(string path);
-	void draw(Shader shader);
+	void draw(Shader *shader);
 private:
 	vector<Mesh> meshes;
 	string containingDir;
