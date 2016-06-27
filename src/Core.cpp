@@ -1,18 +1,27 @@
-#include "Core.h"
 #include <string>
 #include <cstdio>
-#include "Model.h"
 #include <iostream>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/vec3.hpp>
+#include "Core.h"
+#include "Model.h"
+#include "Shader.h"
+#include "Model.h"
 using namespace std;
+using namespace glm;
+
 void Core::preLoop()
 {
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0, 0, 0, 1.0);
 
 	shader.push_back(new Shader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs"));
+	shader[0]->use();
+
 	models.push_back(new Model("models/envCheck/Crate1.obj"));
 
-	shader[0]->use();
+	cam.setup(90, 1.0*screenWdith/screenHeight, vec3(0.0, 0.0, -2.0));
+	glUniformMatrix4fv(shader[0]->getUniformLocation("transform"), 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
 }
 void Core::render()
 {
@@ -22,8 +31,8 @@ void Core::render()
 }
 void Core::postLoop()
 {
-	for(Shader* s : shader) delete s;
-	for(Model* m : models) delete m;
+	for(Shader *s : shader) delete s;
+	for(Model *m : models) delete m;
 }
 
 void Core::shutdown()
@@ -51,7 +60,7 @@ bool Core::init()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	string SDL_err;
-	mainwindow = SDL_CreateWindow("Tacticks Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
+	mainwindow = SDL_CreateWindow("Tacticks Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWdith, screenHeight, SDL_WINDOW_OPENGL);
 	if(mainwindow == nullptr){
 		printf("Error:: Unable to create SDL window: %s\n", SDL_GetError());
 		SDL_Quit();
@@ -91,14 +100,14 @@ void Core::start()
 	preLoop();
 
 	while(!exitFlag){
-		const float MIN_FRAME_TIME = 1.0f / 40.0f;
+		const double MIN_FRAME_TIME = 1.0f / 40.0f;
 		double dt = timer.GetDelta();
-		if ( dt < MIN_FRAME_TIME)
-		{
+		if ( dt < MIN_FRAME_TIME){
 			int ms = (int)((MIN_FRAME_TIME - dt) * 1000.0f);
 			if (ms > 10) ms = 10;
 			if (ms >= 0) SDL_Delay(ms);
 		}
+
 		while(SDL_PollEvent(&event)){	//Handeling events
 			switch(event.type){
 				case SDL_KEYDOWN:
@@ -115,7 +124,9 @@ void Core::start()
 			}
 
 		}
+
 		render();
+
 		SDL_GL_SwapWindow(mainwindow);
 	}
 	postLoop();

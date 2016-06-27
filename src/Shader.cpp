@@ -38,3 +38,11 @@ GLuint Shader::getShaderProgram()
 {
 	return shaderProgram;
 }
+GLint Shader::getUniformLocation(const char* name) const
+{
+	return glGetUniformLocation(shaderProgram, name);
+}
+GLint Shader::getAttribLocation(const char* name) const
+{
+	return glGetAttribLocation(shaderProgram, name);
+}

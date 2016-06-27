@@ -2,25 +2,11 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <vector>
-#include "Shader.h"
-#include "Model.h"
-#include <chrono>
-using namespace std::chrono;
+#include "Camera.h"
+#include "Timer.h"
 
-class Timer{
-    public:
-        Timer():timePrev( high_resolution_clock::now()){
-        }
-        double GetDelta(){
-            auto timeCurrent = high_resolution_clock::now();
-            duration< double > delta( timeCurrent - timePrev );
-            timePrev = high_resolution_clock::now();
-            return delta.count();
-        }
-    private:
-        time_point< high_resolution_clock > timePrev;
-};
-
+class Shader;
+class Model;
 
 /**
  * @brief      This class is responsible for initializing the windowing system as well as handling input.
@@ -30,11 +16,15 @@ class Core
 	Core(const Core&) = delete;
 	Core(Core&&) = delete;
 private:
+	static const int screenWdith = 640;
+	static const int screenHeight = 480;
+
 	SDL_Window *mainwindow = nullptr;
 	SDL_GLContext maincontext = NULL;
 	bool exitFlag = false;
-	vector<Model *> models;
+	std::vector<Model *> models;
 	std::vector<Shader *> shader;
+	Camera cam;
 	Timer timer;
 
 	void preLoop();
