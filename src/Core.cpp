@@ -20,7 +20,7 @@ void Core::preLoop()
 
 	models.push_back(new Model("models/envCheck/Crate1.obj"));
 
-	cam.setup(90, 1.0*screenWdith/screenHeight, vec3(0.0, 0.0, -2.0));
+	cam.setup(90, 1.0*screenWdith/screenHeight, vec3(2.0, 2.0, 2.5), vec3(0.0, 0.0, 0.0));
 	glUniformMatrix4fv(shader[0]->getUniformLocation("transform"), 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
 }
 void Core::render()
