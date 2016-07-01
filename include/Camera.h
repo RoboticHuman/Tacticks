@@ -15,9 +15,7 @@ class Camera{
 	glm::vec3 forward = glm::vec3(0.0, 0.0, 1.0);
 	glm::vec3 right = glm::vec3(1.0, 0.0, 0.0);
 
-	glm::quat rot = glm::quat(glm::vec3(0.0, 0.0, 0.0));
-
-	//void update();
+	void updateAxies();
 public:
 	Camera() = default;
 	~Camera() = default;

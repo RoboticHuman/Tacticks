@@ -11,17 +11,19 @@ void Camera::setup(float fov, float aspectRatio, vec3 position, vec3 at){
 	this->position = position;
 	this->at = at;
 
+	updateAxies();
+}
+
+void Camera::updateAxies(){
 	this->up = vec3(0.0, 1.0, 0.0);
 	this->forward = normalize(at - position);
 	this->right = normalize(cross(forward, up));
-
-	this->rot = glm::quat(glm::vec3(0.0, 0.0, 0.0));
 }
+
 mat4 Camera::getViewMatrix() const{
 	mat4 projection = perspective(fov, aspectRatio, near, far);
 	mat4 transformation = lookAt(position, at, up);
-	mat4 rotation = mat4_cast(rot);
-	return projection * rotation;
+	return projection * transformation;
 }
 
 void Camera::moveUp(float amount){
@@ -38,8 +40,10 @@ void Camera::moveRight(float amount){
 }
 
 void Camera::lookUp(float theta){
-	rot = rotate(rot, theta, right);
+	at = mat3_cast(angleAxis(theta, right)) * (at - position) + position;
+	updateAxies();
 }
 void Camera::lookRight(float theta){
-	rot = rotate(rot, theta, up);
+	at = mat3_cast(angleAxis(-theta, up)) * (at - position) + position;
+	updateAxies();
 }

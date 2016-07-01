@@ -20,7 +20,7 @@ void Core::preLoop()
 
 	models.push_back(new Model("models/envCheck/Crate1.obj"));
 
-	cam.setup(90, 1.0*screenWdith/screenHeight, vec3(0.0, 1.0, 0.0), vec3(0.0, 0.0, 0.0));
+	cam.setup(90, 1.0*screenWdith/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0));
 	transformLocation = shader[0]->getUniformLocation("transform");
 }
 void Core::render()
