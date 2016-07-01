@@ -20,8 +20,8 @@ void Core::preLoop()
 
 	models.push_back(new Model("models/envCheck/Crate1.obj"));
 
-	cam.setup(90, 1.0*screenWdith/screenHeight, vec3(2.0, 2.0, 2.5), vec3(0.0, 0.0, 0.0));
-	glUniformMatrix4fv(shader[0]->getUniformLocation("transform"), 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
+	cam.setup(90, 1.0*screenWdith/screenHeight, vec3(0.0, 1.0, 0.0), vec3(0.0, 0.0, 0.0));
+	transformLocation = shader[0]->getUniformLocation("transform");
 }
 void Core::render()
 {
@@ -112,7 +112,6 @@ void Core::start()
 			switch(event.type){
 				case SDL_KEYDOWN:
 					switch(event.key.keysym.sym){
-						case SDLK_q:
 						case SDLK_ESCAPE:
 							exitFlag = true;
 						break;
@@ -124,6 +123,21 @@ void Core::start()
 			}
 
 		}
+		const Uint8 *keyState = SDL_GetKeyboardState(nullptr);
+
+		if(keyState[SDL_SCANCODE_T]) cam.moveUp(moveSpeed * dt);
+		if(keyState[SDL_SCANCODE_G]) cam.moveUp(-moveSpeed * dt);
+		if(keyState[SDL_SCANCODE_W]) cam.moveForward(moveSpeed * dt);
+		if(keyState[SDL_SCANCODE_S]) cam.moveForward(-moveSpeed * dt);
+		if(keyState[SDL_SCANCODE_D]) cam.moveRight(moveSpeed * dt);
+		if(keyState[SDL_SCANCODE_A]) cam.moveRight(-moveSpeed * dt);
+
+		if(keyState[SDL_SCANCODE_E]) cam.lookRight(moveSpeed * dt);
+		if(keyState[SDL_SCANCODE_Q]) cam.lookRight(-moveSpeed * dt);
+		if(keyState[SDL_SCANCODE_R]) cam.lookUp(moveSpeed * dt);
+		if(keyState[SDL_SCANCODE_F]) cam.lookUp(-moveSpeed * dt);
+
+		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
 
 		render();
 

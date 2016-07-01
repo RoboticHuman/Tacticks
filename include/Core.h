@@ -18,6 +18,7 @@ class Core
 private:
 	static const int screenWdith = 640;
 	static const int screenHeight = 480;
+	const float moveSpeed = 1.0f;
 
 	SDL_Window *mainwindow = nullptr;
 	SDL_GLContext maincontext = NULL;
@@ -26,6 +27,8 @@ private:
 	std::vector<Shader *> shader;
 	Camera cam;
 	Timer timer;
+
+	GLuint transformLocation;
 
 	void preLoop();
 	void render();
