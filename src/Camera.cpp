@@ -21,7 +21,7 @@ mat4 Camera::getViewMatrix() const{
 	mat4 projection = perspective(fov, aspectRatio, near, far);
 	mat4 transformation = lookAt(position, at, up);
 	mat4 rotation = mat4_cast(rot);
-	return projection * transformation;
+	return projection * rotation;
 }
 
 void Camera::moveUp(float amount){
