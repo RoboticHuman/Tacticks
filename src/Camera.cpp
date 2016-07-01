@@ -11,7 +11,7 @@ void Camera::setup(float fov, float aspectRatio, vec3 position, vec3 at){
 	this->position = position;
 	this->at = at;
 
-	this->up = vec3(0.0, 0.0, 1.0);
+	this->up = vec3(0.0, 1.0, 0.0);
 	this->forward = normalize(at - position);
 	this->right = normalize(cross(forward, up));
 
