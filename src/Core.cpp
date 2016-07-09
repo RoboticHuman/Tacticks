@@ -13,6 +13,7 @@ using namespace glm;
 void Core::preLoop()
 {
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 	glClearColor(0, 0, 0, 1.0);
 
 	shader.push_back(new Shader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs"));
@@ -20,7 +21,7 @@ void Core::preLoop()
 
 	models.push_back(new Model("models/envCheck/Crate1.obj"));
 
-	cam.setup(45, 1.0*screenWdith/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0));
+	cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0));
 	transformLocation = shader[0]->getUniformLocation("transform");
 }
 void Core::render()
@@ -59,8 +60,21 @@ bool Core::init()
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
+	//hides cursor and allow only for relative motion
+	SDL_SetRelativeMouseMode(SDL_TRUE);
+
+	// 4x MSAA.
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+
+	SDL_DisplayMode displayMode;
+	SDL_GetCurrentDisplayMode(0, &displayMode);
+
+	screenWidth = std::min(displayMode.w, (int)(displayMode.h * 16.0f/9.0f)) - 80;
+	screenHeight = displayMode.h - 80;
+
 	string SDL_err;
-	mainwindow = SDL_CreateWindow("Tacticks Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWdith, screenHeight, SDL_WINDOW_OPENGL);
+	mainwindow = SDL_CreateWindow("Tacticks Editor", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_OPENGL);
 	if(mainwindow == nullptr){
 		printf("Error:: Unable to create SDL window: %s\n", SDL_GetError());
 		SDL_Quit();
@@ -101,6 +115,7 @@ void Core::start()
 
 	while(!exitFlag){
 		const double MIN_FRAME_TIME = 1.0f / 40.0f;
+		cameraAngle = vec2(0,0);
 		double dt = timer.GetDelta();
 		if ( dt < MIN_FRAME_TIME){
 			int ms = (int)((MIN_FRAME_TIME - dt) * 1000.0f);
@@ -120,6 +135,41 @@ void Core::start()
 				case SDL_QUIT:
 					exitFlag = true;
 				break;
+				case SDL_MOUSEBUTTONDOWN:
+					if (event.button.button == SDL_BUTTON_RIGHT)
+					{
+						shouldRotateView = true;
+						origCameraAngle=cameraAngle;
+						origMousePos = mousePos;
+					}
+				break;
+				case SDL_MOUSEWHEEL:
+				cout<<"Current mouse sensitivity: "<<mouseSensitivity<<endl;
+					if(shouldRotateView)
+					{	const float mouseSen = mouseSensitivity;
+						if (event.wheel.y > 0) mouseSensitivity = glm::clamp(mouseSen + 1.f,1.f,10.f);
+						else mouseSensitivity = glm::clamp(mouseSen-1.f,1.f,10.f);
+					}
+				break;
+				case SDL_MOUSEBUTTONUP:
+					if (event.button.button == SDL_BUTTON_RIGHT)
+					{
+						shouldRotateView = false;
+					}
+					break;
+				case SDL_MOUSEMOTION:
+					/* //TODO: try to have the rotation based on an angle from mouse movement instead of relative motion.
+					int sdlMousex,sdlMousey;
+					SDL_GetMouseState(&sdlMousex,&sdlMousey);
+					mousePos.x = sdlMousex;
+					mousePos.y = screenHeight-1 - sdlMousey;
+					*/
+					if(shouldRotateView)
+					{
+						cameraAngle.x = -(float)event.motion.yrel * mouseSensitivity;
+						cameraAngle.y = (float)event.motion.xrel * mouseSensitivity ;
+					}
+					break;
 			}
 
 		}
@@ -131,16 +181,12 @@ void Core::start()
 		if(keyState[SDL_SCANCODE_S]) cam.moveForward(-moveSpeed * dt);
 		if(keyState[SDL_SCANCODE_D]) cam.moveRight(moveSpeed * dt);
 		if(keyState[SDL_SCANCODE_A]) cam.moveRight(-moveSpeed * dt);
-
-		if(keyState[SDL_SCANCODE_E]) cam.lookRight(moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_Q]) cam.lookRight(-moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_R]) cam.lookUp(moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_F]) cam.lookUp(-moveSpeed * dt);
+		if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 5.f; else moveSpeed=1.0f;
+		cam.updateCameraAngle(glm::radians(cameraAngle.y)* dt , glm::radians(cameraAngle.x) * dt);
 
 		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
 
 		render();
-
 		SDL_GL_SwapWindow(mainwindow);
 	}
 	postLoop();

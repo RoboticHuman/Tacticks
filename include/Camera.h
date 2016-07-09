@@ -2,6 +2,7 @@
 #include <glm/mat4x4.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <limits>
 
 class Camera{
 	float fov = 90.0;
@@ -22,10 +23,11 @@ public:
 
 	void setup(float, float, glm::vec3, glm::vec3);
 	glm::mat4 getViewMatrix() const;
-
+	glm::vec3 getCameraWorldPosition();
 	void moveUp(float);
 	void moveForward(float);
 	void moveRight(float);
+	void updateCameraAngle(float thetaX, float thetaY);
 
 	void lookUp(float);
 	void lookRight(float);

@@ -14,6 +14,11 @@ void Camera::setup(float fov, float aspectRatio, vec3 position, vec3 at){
 	updateAxies();
 }
 
+glm::vec3 Camera::getCameraWorldPosition()
+{
+	return this->position;
+}
+
 void Camera::updateAxies(){
 	this->up = vec3(0.0, 1.0, 0.0);
 	this->forward = normalize(at - position);
@@ -21,6 +26,7 @@ void Camera::updateAxies(){
 }
 
 mat4 Camera::getViewMatrix() const{
+
 	mat4 projection = perspective(fov, aspectRatio, near, far);
 	mat4 transformation = lookAt(position, at, up);
 	return projection * transformation;
@@ -45,5 +51,11 @@ void Camera::lookUp(float theta){
 }
 void Camera::lookRight(float theta){
 	at = mat3_cast(angleAxis(-theta, up)) * (at - position) + position;
+	updateAxies();
+}
+
+void Camera::updateCameraAngle(float thetaX, float thetaY)
+{
+	at = glm::mix(at,(mat3_cast(angleAxis(thetaY, right) * angleAxis(-thetaX, up)) * (at-position) + position),0.7f);
 	updateAxies();
 }

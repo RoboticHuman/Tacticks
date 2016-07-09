@@ -4,6 +4,7 @@
 #include <vector>
 #include "Camera.h"
 #include "Timer.h"
+#include <cmath>
 
 class Shader;
 class Model;
@@ -16,10 +17,15 @@ class Core
 	Core(const Core&) = delete;
 	Core(Core&&) = delete;
 private:
-	static const int screenWdith = 640;
-	static const int screenHeight = 480;
-	const float moveSpeed = 1.0f;
-
+	int screenWidth ;
+	int screenHeight ;
+	float moveSpeed = 1.0f;
+	float mouseSensitivity = 1.0f;
+	bool shouldRotateView = false;
+	glm::vec2 mousePos = glm::vec2(0,0);
+	glm::vec2 origMousePos = glm::vec2(0,0);
+	glm::vec2 cameraAngle = glm::vec2(0,0);
+	glm::vec2 origCameraAngle = glm::vec2(0,0);
 	SDL_Window *mainwindow = nullptr;
 	SDL_GLContext maincontext = NULL;
 	bool exitFlag = false;
