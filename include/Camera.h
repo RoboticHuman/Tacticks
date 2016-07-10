@@ -20,15 +20,41 @@ class Camera{
 public:
 	Camera() = default;
 	~Camera() = default;
-
+	/**
+	 * @brief		This functions sets up the initial camera position and settings.
+	 */
 	void setup(float, float, glm::vec3, glm::vec3);
+	/**
+	 *	@breif		Returns the View transformation materix.
+	 */
 	glm::mat4 getViewMatrix() const;
+	/**
+	 *	@breif		return the position parameter
+	 */
 	glm::vec3 getCameraWorldPosition();
+	/**
+	 *	@breif		Moves the camera upwards.
+	 */
 	void moveUp(float);
+	/**
+	 *	@breif		Moves the camera forward
+	 */
 	void moveForward(float);
+	/**
+	 *	@breif		Moves the camera to the right
+	 */
 	void moveRight(float);
+	/**
+	 *	@breif		Updates the camera Angle
+	 */
 	void updateCameraAngle(float thetaX, float thetaY);
 
+	/**
+	 *	@breif		Rotates the camera vertically
+	 */
 	void lookUp(float);
+	/**
+	 *	@breif		Rotates the camera horizontally.
+	 */
 	void lookRight(float);
 };

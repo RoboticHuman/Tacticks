@@ -36,8 +36,17 @@ private:
 
 	GLuint transformLocation;
 
+	/**
+	 * @brief      This functions is called exactly once just after initializing the window and right before the main loop.
+	 */
 	void preLoop();
+	/**
+	 * @brief      This function is called once per loop to render the scene on the the screen.
+	 */
 	void render();
+	/**
+	 * @brief      This function is called once right after exiting the main loop. It's main purpose is to deallocate and clean up things before the destruction of the window.
+	 */
 	void postLoop();
 public:
 	Core() = default;

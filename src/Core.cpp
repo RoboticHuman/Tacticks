@@ -81,6 +81,7 @@ bool Core::init()
 		return false;
 	}
 	if((SDL_err = SDL_GetError()) != ""){
+
 		printf("Error:: SDL Error: %s\n", SDL_err.c_str());
 		SDL_ClearError();
 	}
