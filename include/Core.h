@@ -20,7 +20,7 @@ private:
 	int screenWidth ;
 	int screenHeight ;
 	float moveSpeed = 1.0f;
-	float mouseSensitivity = 1.0f;
+	float mouseSensitivity = 5.0f;
 	bool shouldRotateView = false;
 	glm::vec2 mousePos = glm::vec2(0,0);
 	glm::vec2 origMousePos = glm::vec2(0,0);

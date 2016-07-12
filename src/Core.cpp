@@ -60,8 +60,6 @@ bool Core::init()
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-	//hides cursor and allow only for relative motion
-	SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	// 4x MSAA.
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
@@ -159,16 +157,10 @@ void Core::start()
 					}
 					break;
 				case SDL_MOUSEMOTION:
-					/* //TODO: try to have the rotation based on an angle from mouse movement instead of relative motion.
-					int sdlMousex,sdlMousey;
-					SDL_GetMouseState(&sdlMousex,&sdlMousey);
-					mousePos.x = sdlMousex;
-					mousePos.y = screenHeight-1 - sdlMousey;
-					*/
 					if(shouldRotateView)
 					{
-						cameraAngle.x = -(float)event.motion.yrel * mouseSensitivity;
-						cameraAngle.y = (float)event.motion.xrel * mouseSensitivity ;
+						cameraAngle.x = -(float)event.motion.yrel * mouseSensitivity * 10;
+						cameraAngle.y = (float)event.motion.xrel * mouseSensitivity * 10;
 					}
 					break;
 			}
@@ -182,7 +174,7 @@ void Core::start()
 		if(keyState[SDL_SCANCODE_S]) cam.moveForward(-moveSpeed * dt);
 		if(keyState[SDL_SCANCODE_D]) cam.moveRight(moveSpeed * dt);
 		if(keyState[SDL_SCANCODE_A]) cam.moveRight(-moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 5.f; else moveSpeed=1.0f;
+		if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 5.f; else moveSpeed=2.5f;
 		cam.updateCameraAngle(glm::radians(cameraAngle.y)* dt , glm::radians(cameraAngle.x) * dt);
 
 		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()));

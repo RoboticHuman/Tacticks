@@ -8,7 +8,12 @@ HDir = ./include
 BDir = ./Build
 CompileFlags = -std=c++11
 LinkFlags = `sdl2-config --libs`
-Libs = -lSOIL -lGL -lGLEW -lassimp
+ifeq ($(shell uname),Darwin)	# Mac OS X
+	Libs = -lSOIL -framework OpenGL -lGLEW -lassimp
+else
+	Libs = -lSOIL -lGL -lGLEW -lassimp
+endif
+
 Objects = $(addsuffix .o, $(addprefix $(BDir)/, $(shell cat $(FileSrc))))
 FolderList = $(sort $(SDir)/ $(HDir)/ $(BDir)/ $(dir $(Objects)) $(dir $(AppName)))
 

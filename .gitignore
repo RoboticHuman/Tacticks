@@ -28,3 +28,6 @@ Build/*
 *.exe
 *.out
 *.app
+
+# Mac Generated Files
+.DS_Store*
