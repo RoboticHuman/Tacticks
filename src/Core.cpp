@@ -8,18 +8,19 @@
 #include "Shader.h"
 #include "Model.h"
 #include "Globals.h"
+#include "ResourceManager.h"
 
 using namespace std;
 using namespace glm;
-#include "ResourceManager.h"
-
-
 
 void Core::preLoop()
 {
-	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	glEnable (GL_BLEND);
 	glClearColor(0, 0, 0, 1.0);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//shader.push_back(new Shader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs"));
 	models.push_back(new Model("models/envCheck/Crate1.obj"));
@@ -32,8 +33,11 @@ void Core::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glEnable(GL_DEPTH_TEST);
 	ResourceManager::getShader("meshShader")->use();
 	models[0]->draw(ResourceManager::getShader("meshShader"));
+
+	glDisable(GL_DEPTH_TEST);
 	coreHUD.render();
 }
 void Core::postLoop()
@@ -69,7 +73,7 @@ bool Core::init()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	//hides cursor and allow only for relative motion
-	SDL_SetRelativeMouseMode(SDL_TRUE);
+	//dSDL_SetRelativeMouseMode(SDL_TRUE);
 
 	// 4x MSAA.
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);

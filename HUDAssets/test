@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<style type="text/css">
+			body { background-color: transparent; }
+			h1 { background: rgba(255, 0, 0, 0.0); }
+			h2 { background: rgba(0, 255, 0, 1.0); }
+			h3 { background: rgba(0, 0, 255, 0.5); }
+		</style>
+	</head>
+	<body>
+		<h1>1234567890</h1>
+		<h2>1234567890</h2>
+		<h3>1234567890</h3>
+	</body>
+</html>

@@ -46,26 +46,26 @@ void Sprite::init()
 
 void Sprite::setShaders(const char* vsPath, const char* fsPath)
 {
-  shader->loadAndBind(vsPath,fsPath);
+	shader->loadAndBind(vsPath,fsPath);
 }
 
 void Sprite::scale(float x, float y)
 {
-  spriteScale.x *= x;
-  spriteScale.y *= y;
-  shouldRecomputeTransform = true;
+	spriteScale.x *= x;
+	spriteScale.y *= y;
+	shouldRecomputeTransform = true;
 }
 
 void Sprite::move(float offsetX, float offsetY)
 {
-  spritePos.x += offsetX;
-  spritePos.y +=offsetY;
-  shouldRecomputeTransform = true;
+	spritePos.x += offsetX;
+	spritePos.y +=offsetY;
+	shouldRecomputeTransform = true;
 }
 
 void Sprite::setPosition(glm::vec2 newPos)
 {
-  spritePos = newPos;
+	spritePos = newPos;
   shouldRecomputeTransform = true;
 }
 
@@ -77,24 +77,24 @@ void Sprite::rotate(float angle)
 
 void Sprite::setRotation(float angle)
 {
-  rotation = angle;
-  shouldRecomputeTransform = true;
+	rotation = angle;
+	shouldRecomputeTransform = true;
 }
 
 glm::mat4 Sprite::getTransform(){
-  if(shouldRecomputeTransform)
-  {
-    //translation
-    model = glm::translate(model, glm::vec3(spritePos,0.0f));
-    //rotation
-    model = glm::translate(model,glm::vec3(0.5f * spriteTexture.Width, 0.5f * spriteTexture.Height, 0.0f));
-    model = glm::rotate(model, rotation, glm::vec3(0.0f,0.0f,1.0f));
-    model = glm::translate(model, glm::vec3(-0.5f*spriteTexture.Width, -0.5f*spriteTexture.Height, 0.0f));
-    //scaling
-    model = glm::scale(model, glm::vec3(spriteTexture.Width,spriteTexture.Height,1.0f));
-  }
-  shouldRecomputeTransform = false;
-  return model;
+	if(shouldRecomputeTransform)
+	{
+		//translation
+		model = glm::translate(model, glm::vec3(spritePos,0.0f));
+		//rotation
+		model = glm::translate(model,glm::vec3(0.5f * spriteTexture.Width, 0.5f * spriteTexture.Height, 0.0f));
+		model = glm::rotate(model, rotation, glm::vec3(0.0f,0.0f,1.0f));
+		model = glm::translate(model, glm::vec3(-0.5f*spriteTexture.Width, -0.5f*spriteTexture.Height, 0.0f));
+		//scaling
+		model = glm::scale(model, glm::vec3(spriteTexture.Width,spriteTexture.Height,1.0f));
+	}
+	shouldRecomputeTransform = false;
+	return model;
 }
 
 void Sprite::setTexture(int width, int height, unsigned char* data)
