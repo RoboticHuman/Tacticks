@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Timer.h"
 #include <cmath>
+#include "HUD.h"
 
 class Shader;
 class Model;
@@ -33,6 +34,7 @@ private:
 	std::vector<Shader *> shader;
 	Camera cam;
 	Timer timer;
+	HUD coreHUD;
 
 	GLuint transformLocation;
 

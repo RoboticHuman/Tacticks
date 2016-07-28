@@ -7,8 +7,13 @@
 #include "Model.h"
 #include "Shader.h"
 #include "Model.h"
+#include "Globals.h"
+
 using namespace std;
 using namespace glm;
+#include "ResourceManager.h"
+
+
 
 void Core::preLoop()
 {
@@ -16,28 +21,31 @@ void Core::preLoop()
 	glEnable(GL_CULL_FACE);
 	glClearColor(0, 0, 0, 1.0);
 
-	shader.push_back(new Shader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs"));
-	shader[0]->use();
-
+	//shader.push_back(new Shader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs"));
 	models.push_back(new Model("models/envCheck/Crate1.obj"));
-
 	cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0));
-	transformLocation = shader[0]->getUniformLocation("transform");
+	transformLocation = ResourceManager::getShader("meshShader")->getUniformLocation("transform");
+
+
 }
 void Core::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	models[0]->draw(shader[0]);
 
+	ResourceManager::getShader("meshShader")->use();
+	models[0]->draw(ResourceManager::getShader("meshShader"));
+	coreHUD.render();
 }
 void Core::postLoop()
 {
-	for(Shader *s : shader) delete s;
+	//for(Shader *s : shader) delete s;
 	for(Model *m : models) delete m;
 }
 
 void Core::shutdown()
 {
+	coreHUD.shutdown();
+	ResourceManager::cleanup();
 	SDL_GL_DeleteContext(maincontext);
 	SDL_DestroyWindow(mainwindow);
 	SDL_Quit();
@@ -105,6 +113,11 @@ bool Core::init()
 		shutdown();
 		return false;
 	}
+
+	ResourceManager::loadShader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs","meshShader");
+	ResourceManager::loadShader("shaders/VSHUD.vs", "shaders/FSHUD.fs","hudShader");
+	coreHUD.init();
+
 	return true;
 
 }
@@ -184,10 +197,13 @@ void Core::start()
 		if(keyState[SDL_SCANCODE_A]) cam.moveRight(-moveSpeed * dt);
 		if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 5.f; else moveSpeed=1.0f;
 		cam.updateCameraAngle(glm::radians(cameraAngle.y)* dt , glm::radians(cameraAngle.x) * dt);
-
+		//need to use the shader before the operation after it, TODO: need to fix this crap...
+		ResourceManager::getShader("meshShader")->use();
 		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
+		coreHUD.update();
 
 		render();
+
 		SDL_GL_SwapWindow(mainwindow);
 	}
 	postLoop();

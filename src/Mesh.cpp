@@ -47,8 +47,7 @@ void Mesh::setupBuffers()
 
 void Mesh::draw(Shader *shader)
 {
-	if(!textureSetupDone)
-	{
+
 		GLuint diffuseSamplerIndex = 1;
 		GLuint specularSamplerIndex = 1;
 		for(GLuint i=0; i<textures.size();i++)
@@ -62,7 +61,7 @@ void Mesh::draw(Shader *shader)
 		}
 		glActiveTexture(GL_TEXTURE0);
 		textureSetupDone= true;
-	}
+
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT,0);
 	glBindVertexArray(0);
