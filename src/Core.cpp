@@ -149,14 +149,16 @@ void Core::start()
 							exitFlag = true;
 						break;
 						default:
-							coreHUD.keyDown(event.key.keysym.sym);
+							//coreHUD.keyDown(event.key.keysym.sym);
+							coreHUD.handleKeyPress(event);
 							break;
 					}
 				break;
 				case SDL_KEYUP:
 					switch(event.key.keysym.sym){
 						default:
-							coreHUD.keyUp(event.key.keysym.sym);
+							//coreHUD.keyUp(event.key.keysym.sym);
+							coreHUD.handleKeyPress(event);
 							break;
 					}
 				break;

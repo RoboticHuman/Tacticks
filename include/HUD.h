@@ -30,8 +30,6 @@ public:
 	void mouseRightUp();
 	void mouseMiddleUp();
 
-	void keyDown(SDL_Keycode);	//int for quick test
-	void keyUp(SDL_Keycode);	//int for quick test
-
+	void handleKeyPress(const SDL_Event &event);
 	int getWebKeyFromSDLKey(SDL_Keycode key); //helper function for mapping between SDL and Awesomium key codes ;)
 };

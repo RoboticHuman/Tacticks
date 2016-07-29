@@ -3,6 +3,8 @@
 #include "Shader.h"
 #include "ResourceManager.h"
 #include "HUDDataSource.h"
+#include <iostream>
+using namespace std;
 using namespace Awesomium;
 
 void HUD::init(int screenWidth, int screenHeight)
@@ -81,26 +83,45 @@ void HUD::mouseMiddleUp()
 	web_view->InjectMouseUp(kMouseButton_Middle);
 }
 
-#include <iostream>
-using namespace std;
+void HUD::handleKeyPress(const SDL_Event &event)
+{
+  if (!(event.type == SDL_KEYDOWN || event.type == SDL_KEYUP))
+    return;
 
-void HUD::keyDown(int key){
-	WebKeyboardEvent event;
-	event.type = WebKeyboardEvent::kTypeKeyDown;
-  event.virtual_key_code = Awesomium::KeyCodes::AK_A;;
-	web_view->InjectKeyboardEvent(event);
-	cout << "hmmmDown" << endl;
+  Awesomium::WebKeyboardEvent keyEvent;
 
-}
+  keyEvent.type = event.type == SDL_KEYDOWN?
+                  Awesomium::WebKeyboardEvent::kTypeKeyDown :
+                  Awesomium::WebKeyboardEvent::kTypeKeyUp;
+  char* buf = new char[20];
+  keyEvent.virtual_key_code = getWebKeyFromSDLKey(event.key.keysym.sym);
+  cout<<keyEvent.virtual_key_code<<endl;
+  Awesomium::GetKeyIdentifierFromVirtualKeyCode(keyEvent.virtual_key_code,
+      &buf);
+  strcpy(keyEvent.key_identifier, buf);
+  delete[] buf;
 
-void HUD::keyUp(int key){
-	WebKeyboardEvent event;
-	event.type = WebKeyboardEvent::kTypeKeyUp;
+  keyEvent.modifiers = 0;
 
-	event.virtual_key_code = Awesomium::KeyCodes::AK_A;
+  keyEvent.native_key_code = event.key.keysym.scancode;
+  if (event.type == SDL_KEYUP) {
+    web_view->InjectKeyboardEvent(keyEvent);
+  } else {
+    unsigned int chr;
+    chr = keyEvent.virtual_key_code;
 
-	cout << "hmmmUp" << endl;
-	web_view->InjectKeyboardEvent(event);
+    keyEvent.text[0] = chr;
+    keyEvent.unmodified_text[0] = chr;
+
+    web_view->InjectKeyboardEvent(keyEvent);
+
+    if (chr) {
+      keyEvent.type = Awesomium::WebKeyboardEvent::kTypeChar;
+      keyEvent.virtual_key_code = chr;
+      keyEvent.native_key_code = chr;
+      web_view->InjectKeyboardEvent(keyEvent);
+    }
+  }
 }
 
 #define mapKey(a, b) case SDLK_##a: return Awesomium::KeyCodes::AK_##b;
@@ -108,6 +129,13 @@ void HUD::keyUp(int key){
 /// Get an Awesomium KeyCode from an SDLKey Code
 int HUD::getWebKeyFromSDLKey(SDL_Keycode key) {
   switch (key) {
+    mapKey(BACKSPACE, BACK)
+    mapKey(TAB, TAB)
+    mapKey(CLEAR, CLEAR)
+    mapKey(RETURN, RETURN)
+    mapKey(PAUSE, PAUSE)
+    mapKey(ESCAPE, ESCAPE)
+    mapKey(SPACE, SPACE)
     mapKey(a, A)
     mapKey(b, B)
     mapKey(c, C)
@@ -134,6 +162,16 @@ int HUD::getWebKeyFromSDLKey(SDL_Keycode key) {
     mapKey(x, X)
     mapKey(y, Y)
     mapKey(z, Z)
+    mapKey(0, 0)
+    mapKey(1, 1)
+    mapKey(2, 2)
+    mapKey(3, 3)
+    mapKey(4, 4)
+    mapKey(5, 5)
+    mapKey(6, 6)
+    mapKey(7, 7)
+    mapKey(8, 8)
+    mapKey(9, 9)
   default:
     return Awesomium::KeyCodes::AK_UNKNOWN;
   }
