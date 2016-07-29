@@ -148,34 +148,62 @@ void Core::start()
 						case SDLK_ESCAPE:
 							exitFlag = true;
 						break;
+						default:
+							coreHUD.keyDown(event.key.keysym.sym);
+							break;
+					}
+				break;
+				case SDL_KEYUP:
+					switch(event.key.keysym.sym){
+						default:
+							coreHUD.keyUp(event.key.keysym.sym);
+							break;
 					}
 				break;
 				case SDL_QUIT:
 					exitFlag = true;
 				break;
 				case SDL_MOUSEBUTTONDOWN:
-					if (event.button.button == SDL_BUTTON_RIGHT)
-					{
-						shouldRotateView = true;
-						origCameraAngle=cameraAngle;
-						origMousePos = mousePos;
+					switch(event.button.button){
+						case SDL_BUTTON_LEFT:
+							coreHUD.mouseLeftDown();
+						break;
+						case SDL_BUTTON_MIDDLE:
+							coreHUD.mouseLeftDown();
+						break;
+						case SDL_BUTTON_RIGHT:
+							coreHUD.mouseRightDown();
+							shouldRotateView = true;
+							origCameraAngle=cameraAngle;
+							origMousePos = mousePos;
+						break;
 					}
 				break;
 				case SDL_MOUSEWHEEL:
-				cout<<"Current mouse sensitivity: "<<mouseSensitivity<<endl;
+					//cout<<"Current mouse sensitivity: "<<mouseSensitivity<<endl;
 					if(shouldRotateView)
-					{	const float mouseSen = mouseSensitivity;
+					{
+						const float mouseSen = mouseSensitivity;
 						if (event.wheel.y > 0) mouseSensitivity = glm::clamp(mouseSen + 1.f,1.f,10.f);
 						else mouseSensitivity = glm::clamp(mouseSen-1.f,1.f,10.f);
 					}
 				break;
 				case SDL_MOUSEBUTTONUP:
-					if (event.button.button == SDL_BUTTON_RIGHT)
-					{
-						shouldRotateView = false;
+					switch(event.button.button){
+						case SDL_BUTTON_LEFT:
+							coreHUD.mouseLeftUp();
+						break;
+						case SDL_BUTTON_MIDDLE:
+							coreHUD.mouseLeftUp();
+						break;
+						case SDL_BUTTON_RIGHT:
+							coreHUD.mouseRightUp();
+							shouldRotateView = false;
+						break;
 					}
-					break;
+				break;
 				case SDL_MOUSEMOTION:
+					coreHUD.mouseMoveTo(event.motion.x, event.motion.y);
 					/* //TODO: try to have the rotation based on an angle from mouse movement instead of relative motion.
 					int sdlMousex,sdlMousey;
 					SDL_GetMouseState(&sdlMousex,&sdlMousey);
@@ -187,7 +215,7 @@ void Core::start()
 						cameraAngle.x = -(float)event.motion.yrel * mouseSensitivity;
 						cameraAngle.y = (float)event.motion.xrel * mouseSensitivity ;
 					}
-					break;
+				break;
 			}
 
 		}
@@ -201,10 +229,12 @@ void Core::start()
 		if(keyState[SDL_SCANCODE_A]) cam.moveRight(-moveSpeed * dt);
 		if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 5.f; else moveSpeed=1.0f;
 		cam.updateCameraAngle(glm::radians(cameraAngle.y)* dt , glm::radians(cameraAngle.x) * dt);
+
+		coreHUD.update();
+
 		//need to use the shader before the operation after it, TODO: need to fix this crap...
 		ResourceManager::getShader("meshShader")->use();
 		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
-		coreHUD.update();
 
 		render();
 
