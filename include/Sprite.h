@@ -15,9 +15,10 @@ private:
   Texture2D spriteTexture;
   float rotation = 0;
   glm::mat4 model;
+  glm::mat4 projection;
   void init();
 public:
-  Sprite (Shader *shader);
+  Sprite (Shader *shader,int screenWidth, int screenHeight);
   ~Sprite ();
   void setShaders(const char* vsPath, const char* fsPath);
   void scale(float x, float y);

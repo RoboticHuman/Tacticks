@@ -10,3 +10,4 @@ HUD
 Sprite
 Texture2D
 ResourceManager
+HUDDataSource

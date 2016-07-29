@@ -2,17 +2,19 @@
 #include <Awesomium/WebCore.h>
 #include <Awesomium/STLHelpers.h>
 #include "Sprite.h"
+#include <SDL2/SDL.h>
 
 class Shader;
 class HUD{
 	Awesomium::WebCore* web_core;
 	Awesomium::WebConfig web_config;
 	Awesomium::WebView* web_view;
+	Awesomium::WebSession* web_session;
 	Sprite *sprite;
 public:
 	HUD()=default;
 	~HUD()=default;
-	void init();
+	void init(int screenWidth, int screenHeight);
 	void shutdown();
 	void update();
 	void render();
@@ -28,6 +30,8 @@ public:
 	void mouseRightUp();
 	void mouseMiddleUp();
 
-	void keyDown(int);	//int for quick test
-	void keyUp(int);	//int for quick test  
+	void keyDown(SDL_Keycode);	//int for quick test
+	void keyUp(SDL_Keycode);	//int for quick test
+
+	int getWebKeyFromSDLKey(SDL_Keycode key); //helper function for mapping between SDL and Awesomium key codes ;)
 };

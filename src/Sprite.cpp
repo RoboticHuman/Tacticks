@@ -2,10 +2,11 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 using namespace std;
-Sprite::Sprite(Shader *shader)
+Sprite::Sprite(Shader *shader,int screenWidth, int screenHeight)
 {
   this->shader = shader;
   init();
+  projection = glm::ortho(0.0f, (float)screenWidth, (float)screenHeight, 0.0f, -1.0f, 1.0f);
 }
 
 Sprite::~Sprite()
@@ -106,7 +107,7 @@ void Sprite::setTexture(int width, int height, unsigned char* data)
 void Sprite::draw()
 {
   shader->use();
-  glUniformMatrix4fv(shader->getUniformLocation("projection"), 1, GL_FALSE, value_ptr(glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f)));
+  glUniformMatrix4fv(shader->getUniformLocation("projection"), 1, GL_FALSE, value_ptr(projection));
   glUniformMatrix4fv(shader->getUniformLocation("model"), 1, GL_FALSE, value_ptr(getTransform()));
   //glActiveTexture(GL_TEXTURE0);
   spriteTexture.Bind();

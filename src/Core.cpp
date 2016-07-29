@@ -73,7 +73,7 @@ bool Core::init()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	//hides cursor and allow only for relative motion
-	//dSDL_SetRelativeMouseMode(SDL_TRUE);
+	//SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	// 4x MSAA.
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
@@ -120,7 +120,7 @@ bool Core::init()
 
 	ResourceManager::loadShader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs","meshShader");
 	ResourceManager::loadShader("shaders/VSHUD.vs", "shaders/FSHUD.fs","hudShader");
-	coreHUD.init();
+	coreHUD.init(screenWidth,screenHeight);
 
 	return true;
 
