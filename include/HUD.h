@@ -11,6 +11,14 @@ class HUD{
 	Awesomium::WebView* web_view;
 	Awesomium::WebSession* web_session;
 	Sprite *sprite;
+
+	//ConversionFunctions
+	static Awesomium::MouseButton SDLToAwesomium(Uint8);
+	static int SDLToAwesomium(SDL_Keycode);
+	static bool isCharTypeKey(const SDL_Keysym&);
+	static char applyModifiers(int, int);
+	static Awesomium::WebKeyboardEvent SDLToAwesomium(SDL_KeyboardEvent, bool = false);
+
 public:
 	HUD()=default;
 	~HUD()=default;
@@ -20,15 +28,7 @@ public:
 	void render();
 
 	//Input Injection
-	void mouseMoveTo(int, int);
-
-	void mouseLeftDown();
-	void mouseRightDown();
-	void mouseMiddleDown();
-
-	void mouseLeftUp();
-	void mouseRightUp();
-	void mouseMiddleUp();
+	void injectEvent(const SDL_Event&);
 
 	void handleKeyPress(const SDL_Event &event);
 	int getWebKeyFromSDLKey(SDL_Keycode key); //helper function for mapping between SDL and Awesomium key codes ;)

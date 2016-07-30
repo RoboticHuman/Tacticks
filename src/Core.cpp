@@ -142,24 +142,13 @@ void Core::start()
 		}
 
 		while(SDL_PollEvent(&event)){	//Handeling events
+			coreHUD.injectEvent(event);
 			switch(event.type){
 				case SDL_KEYDOWN:
 					switch(event.key.keysym.sym){
 						case SDLK_ESCAPE:
 							exitFlag = true;
 						break;
-						default:
-							//coreHUD.keyDown(event.key.keysym.sym);
-							coreHUD.handleKeyPress(event);
-							break;
-					}
-				break;
-				case SDL_KEYUP:
-					switch(event.key.keysym.sym){
-						default:
-							//coreHUD.keyUp(event.key.keysym.sym);
-							coreHUD.handleKeyPress(event);
-							break;
 					}
 				break;
 				case SDL_QUIT:
@@ -167,14 +156,7 @@ void Core::start()
 				break;
 				case SDL_MOUSEBUTTONDOWN:
 					switch(event.button.button){
-						case SDL_BUTTON_LEFT:
-							coreHUD.mouseLeftDown();
-						break;
-						case SDL_BUTTON_MIDDLE:
-							coreHUD.mouseLeftDown();
-						break;
 						case SDL_BUTTON_RIGHT:
-							coreHUD.mouseRightDown();
 							shouldRotateView = true;
 							origCameraAngle=cameraAngle;
 							origMousePos = mousePos;
@@ -182,7 +164,6 @@ void Core::start()
 					}
 				break;
 				case SDL_MOUSEWHEEL:
-					//cout<<"Current mouse sensitivity: "<<mouseSensitivity<<endl;
 					if(shouldRotateView)
 					{
 						const float mouseSen = mouseSensitivity;
@@ -192,20 +173,12 @@ void Core::start()
 				break;
 				case SDL_MOUSEBUTTONUP:
 					switch(event.button.button){
-						case SDL_BUTTON_LEFT:
-							coreHUD.mouseLeftUp();
-						break;
-						case SDL_BUTTON_MIDDLE:
-							coreHUD.mouseLeftUp();
-						break;
 						case SDL_BUTTON_RIGHT:
-							coreHUD.mouseRightUp();
 							shouldRotateView = false;
 						break;
 					}
 				break;
 				case SDL_MOUSEMOTION:
-					coreHUD.mouseMoveTo(event.motion.x, event.motion.y);
 					/* //TODO: try to have the rotation based on an angle from mouse movement instead of relative motion.
 					int sdlMousex,sdlMousey;
 					SDL_GetMouseState(&sdlMousex,&sdlMousey);
@@ -219,7 +192,6 @@ void Core::start()
 					}
 				break;
 			}
-
 		}
 		const Uint8 *keyState = SDL_GetKeyboardState(nullptr);
 
