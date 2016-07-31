@@ -5,6 +5,12 @@
 #include <memory>
 #include "NavLibContainer.h"
 #include "SampleNavLib.h"
+
+#include "NLrcPolyMesh.h"
+#include "NLrcCompactHeightfield.h"
+#include "NLrcPolyMeshDetail.h"
+#include "NLrcHeightfield.h"
+#include "NLrcContourSet.h"
 using namespace std;
 
 

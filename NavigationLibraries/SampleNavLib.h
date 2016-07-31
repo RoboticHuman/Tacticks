@@ -1,9 +1,7 @@
 #ifndef SampleNavLib_h
 #define SampleNavLib_h
 
-#include "NavLibContainer.h"
-
-
+#include <cmath>
 
 /**
  * @brief      A sample Navigation Library
@@ -31,11 +29,11 @@ public:
     
     // This means that the user wishes to use "a" as a parameter for the first constructor
     bool constructedWithSameParams(int a){
-        return (a == area && abs(0-precision) < 0.0000001);
+        return (a == area && std::abs(0-precision) < 0.0000001);
     }
     // This means that the user wishes to use "a" and "b" as parametera for the second constructor
     bool constructedWithSameParams(int a, float b){
-        return (a == area && abs(b-precision) < 0.0000001);
+        return (a == area && std::abs(b-precision) < 0.0000001);
     }
     
     
