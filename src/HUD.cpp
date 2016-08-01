@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "ResourceManager.h"
 #include "HUDDataSource.h"
+#include "HUDMenuHandler.h"
 #include <iostream>
 using namespace std;
 using namespace Awesomium;
@@ -267,7 +268,7 @@ WebKeyboardEvent HUD::SDLToAwesomium(SDL_KeyboardEvent event, bool forceCharType
 	int chr = event.keysym.sym;
 	retEvent.text[0] = applyModifiers(chr, retEvent.modifiers);
 	retEvent.unmodified_text[0] = chr;
-	
+
 	return retEvent;
 }
 
@@ -280,6 +281,7 @@ void HUD::init(int screenWidth, int screenHeight)
 	DataSource* data_source = new HUDDataSource();
 	web_session->AddDataSource(WSLit("Tacticks"), data_source);
 	web_view = web_core->CreateWebView(screenWidth, screenHeight,web_session,kWebViewType_Offscreen);
+	web_view->set_menu_listener(new HUDMenuHandler());
 	sprite = new Sprite(ResourceManager::getShader("hudShader"),screenWidth,screenHeight);
 	WebURL url(WSLit("asset://Tacticks/HUDAssets/test"));
 	web_view->LoadURL(url);
