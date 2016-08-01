@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<script type="text/javascript">
+			function setTextboxValue(val){
+				alert("hmmm");
+				document.getElementById("MyTextBox").value = val;
+			}
+		</script>
 		<style type="text/css">
 			body{
 				background-color: transparent;
@@ -21,7 +27,7 @@
 				<option value="Op3">Option 3</option>
 			</select>
 			<input type="submit">
-			<input type="text">
+			<input type="text" id="MyTextBox">
 		</div>
 	</body>
 </html>

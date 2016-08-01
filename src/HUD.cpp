@@ -180,7 +180,8 @@ bool HUD::isCharTypeKey(const SDL_Keysym& key)
 	}
 	return ret;
 }
-char HUD::applyModifiers(int chr, int modifiers){
+char HUD::applyModifiers(int chr, int modifiers)
+{
 	if(modifiers & WebKeyboardEvent::kModShiftKey) switch(chr){
 		case 'a': case 'b': case 'c': case 'd': case 'e':
 		case 'f': case 'g': case 'h': case 'i': case 'j':
@@ -245,7 +246,8 @@ char HUD::applyModifiers(int chr, int modifiers){
 	}
 	return chr;
 }
-WebKeyboardEvent HUD::SDLToAwesomium(SDL_KeyboardEvent event, bool forceCharType){
+WebKeyboardEvent HUD::SDLToAwesomium(SDL_KeyboardEvent event, bool forceCharType)
+{
 	WebKeyboardEvent retEvent;
 
 		 if(forceCharType)				retEvent.type = WebKeyboardEvent::kTypeChar;
@@ -259,15 +261,15 @@ WebKeyboardEvent HUD::SDLToAwesomium(SDL_KeyboardEvent event, bool forceCharType
 	GetKeyIdentifierFromVirtualKeyCode(retEvent.virtual_key_code, &buf);
 
 	retEvent.modifiers = 0;	//TODO: Yet to be implemented
-	if (event.keysym.mod & KMOD_LALT 	|| event.keysym.mod & KMOD_RALT)	retEvent.modifiers |= WebKeyboardEvent::kModAltKey;
-    if (event.keysym.mod & KMOD_LCTRL 	|| event.keysym.mod & KMOD_RCTRL)	retEvent.modifiers |= WebKeyboardEvent::kModControlKey;
-    if (event.keysym.mod & KMOD_LSHIFT 	|| event.keysym.mod & KMOD_RSHIFT)	retEvent.modifiers |= WebKeyboardEvent::kModShiftKey;
-    if (event.keysym.mod & KMOD_NUM)										retEvent.modifiers |= WebKeyboardEvent::kModIsKeypad;
+	if(event.keysym.mod & KMOD_LALT   || event.keysym.mod & KMOD_RALT)	 retEvent.modifiers |= WebKeyboardEvent::kModAltKey;
+    if(event.keysym.mod & KMOD_LCTRL  || event.keysym.mod & KMOD_RCTRL)	 retEvent.modifiers |= WebKeyboardEvent::kModControlKey;
+    if(event.keysym.mod & KMOD_LSHIFT || event.keysym.mod & KMOD_RSHIFT) retEvent.modifiers |= WebKeyboardEvent::kModShiftKey;
+    if(event.keysym.mod & KMOD_NUM)										 retEvent.modifiers |= WebKeyboardEvent::kModIsKeypad;
 
 	int chr = event.keysym.sym;
 	retEvent.text[0] = applyModifiers(chr, retEvent.modifiers);
 	retEvent.unmodified_text[0] = chr;
-	
+
 	return retEvent;
 }
 
@@ -326,12 +328,20 @@ void HUD::injectEvent(const SDL_Event& event)
 		case SDL_MOUSEWHEEL:		break;
 
 		//Keyboard Events
+		case SDL_KEYUP:				web_view->InjectKeyboardEvent(SDLToAwesomium(event.key));		break;
 		case SDL_KEYDOWN:
 			web_view->InjectKeyboardEvent(SDLToAwesomium(event.key));
 			if(isCharTypeKey(event.key.keysym)) web_view->InjectKeyboardEvent(SDLToAwesomium(event.key, true));
 		break;
-		case SDL_KEYUP:
-			web_view->InjectKeyboardEvent(SDLToAwesomium(event.key));
-		break;
+	}
+}
+
+void HUD::setTextboxValue(string str)
+{
+	JSValue window = web_view->ExecuteJavascriptWithResult(WSLit("window"), WSLit(""));
+	if (window.IsObject()) {
+		JSArray args;
+		args.Push(WSLit(str.c_str()));
+		window.ToObject().Invoke(WSLit("setTextboxValue"), args);
 	}
 }

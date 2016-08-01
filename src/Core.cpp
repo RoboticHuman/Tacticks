@@ -22,7 +22,6 @@ void Core::preLoop()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//shader.push_back(new Shader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs"));
 	models.push_back(new Model("models/envCheck/Crate1.obj"));
 	cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0));
 	transformLocation = ResourceManager::getShader("meshShader")->getUniformLocation("transform");
@@ -42,7 +41,6 @@ void Core::render()
 }
 void Core::postLoop()
 {
-	//for(Shader *s : shader) delete s;
 	for(Model *m : models) delete m;
 }
 
@@ -130,7 +128,8 @@ void Core::start()
 {
 	SDL_Event event;
 	preLoop();
-
+	int textBoxValue = 0;
+	coreHUD.setTextboxValue(to_string(textBoxValue));
 	while(!exitFlag){
 		const double MIN_FRAME_TIME = 1.0f / 40.0f;
 		cameraAngle = vec2(0,0);
@@ -148,6 +147,12 @@ void Core::start()
 					switch(event.key.keysym.sym){
 						case SDLK_ESCAPE:
 							exitFlag = true;
+						break;
+						case SDLK_KP_PLUS:
+							coreHUD.setTextboxValue(to_string(++textBoxValue));
+						break;
+						case SDLK_KP_MINUS:
+							coreHUD.setTextboxValue(to_string(--textBoxValue));
 						break;
 					}
 				break;

@@ -3,6 +3,7 @@
 #include <Awesomium/STLHelpers.h>
 #include "Sprite.h"
 #include <SDL2/SDL.h>
+#include <string>
 
 class Shader;
 class HUD{
@@ -32,4 +33,6 @@ public:
 
 	void handleKeyPress(const SDL_Event &event);
 	int getWebKeyFromSDLKey(SDL_Keycode key); //helper function for mapping between SDL and Awesomium key codes ;)
+
+	void setTextboxValue(std::string);
 };
