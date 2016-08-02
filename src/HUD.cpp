@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 #include "HUDDataSource.h"
 #include "HUDMethodHandler.h"
+#include "HUDMenuHandler.h"
 #include <iostream>
 using namespace std;
 using namespace Awesomium;
@@ -156,7 +157,6 @@ int HUD::SDLToAwesomium(SDL_Keycode key)
 }
 bool HUD::isCharTypeKey(const SDL_Keysym& key)
 {
-	//TODO: Add support for numpad
 	bool ret = (key.sym & 0x40000000) == 0;
 	if(key.sym == SDLK_ESCAPE || key.sym == SDLK_UNKNOWN) ret = false;
 	ret	|=	key.sym == SDLK_KP_PERIOD
@@ -289,8 +289,9 @@ void HUD::init(int screenWidth, int screenHeight)
 
 	web_view = web_core->CreateWebView(screenWidth, screenHeight,web_session,kWebViewType_Offscreen);
 	web_view->SetTransparent(true);
+	web_view->set_menu_listener(new HUDMenuHandler());
 	web_view->set_js_method_handler(method_handler);
-	
+
 	mainObject = web_view->ExecuteJavascriptWithResult(WSLit("window"), WSLit("")).ToObject();
 	mainObject.SetCustomMethod(WSLit("ConsoleLog"), false);
 
