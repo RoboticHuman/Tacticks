@@ -26,7 +26,7 @@
 				<option value="Op2">Option 2</option>
 				<option value="Op3">Option 3</option>
 			</select>
-			<input type="submit">
+			<input type="button" value="Print Value" onclick="ConsoleLog(document.getElementById('MyTextBox').value)">
 			<input type="text" id="MyTextBox">
 		</div>
 	</body>

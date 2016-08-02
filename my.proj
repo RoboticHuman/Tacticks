@@ -11,3 +11,4 @@ Sprite
 Texture2D
 ResourceManager
 HUDDataSource
+HUDMethodHandler

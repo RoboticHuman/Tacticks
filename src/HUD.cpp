@@ -3,6 +3,7 @@
 #include "Shader.h"
 #include "ResourceManager.h"
 #include "HUDDataSource.h"
+#include "HUDMethodHandler.h"
 #include <iostream>
 using namespace std;
 using namespace Awesomium;
@@ -275,27 +276,38 @@ WebKeyboardEvent HUD::SDLToAwesomium(SDL_KeyboardEvent event, bool forceCharType
 
 void HUD::init(int screenWidth, int screenHeight)
 {
+	WebURL url(WSLit("asset://Tacticks/HUDAssets/test"));
+	sprite = new Sprite(ResourceManager::getShader("hudShader"),screenWidth,screenHeight);
+	data_source = new HUDDataSource();
+	method_handler = new HUDMethodHandler();
+
 	web_config.log_path = WSLit("awesomiumLog.log");
 	web_config.log_level = kLogLevel_Normal;
 	web_core = WebCore::Initialize(web_config);
 	web_session = web_core->CreateWebSession(WebString(WSLit("")),WebPreferences());
-	DataSource* data_source = new HUDDataSource();
 	web_session->AddDataSource(WSLit("Tacticks"), data_source);
+
 	web_view = web_core->CreateWebView(screenWidth, screenHeight,web_session,kWebViewType_Offscreen);
-	sprite = new Sprite(ResourceManager::getShader("hudShader"),screenWidth,screenHeight);
-	WebURL url(WSLit("asset://Tacticks/HUDAssets/test"));
-	web_view->LoadURL(url);
 	web_view->SetTransparent(true);
+	web_view->set_js_method_handler(method_handler);
+	
+	mainObject = web_view->ExecuteJavascriptWithResult(WSLit("window"), WSLit("")).ToObject();
+	mainObject.SetCustomMethod(WSLit("ConsoleLog"), false);
+
+	web_view->LoadURL(url);
 	web_view->Focus();
 	while(web_view->IsLoading()) web_core->Update();
+
 }
 
 void HUD::shutdown()
 {
-	delete sprite;
 	web_view->Destroy();
 	web_session->Release();
 	WebCore::Shutdown();
+	delete method_handler;
+	delete data_source;
+	delete sprite;
 }
 
 void HUD::update()

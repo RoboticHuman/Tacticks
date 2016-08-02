@@ -6,11 +6,15 @@
 #include <string>
 
 class Shader;
+
 class HUD{
 	Awesomium::WebCore* web_core;
 	Awesomium::WebConfig web_config;
 	Awesomium::WebView* web_view;
+	Awesomium::JSObject mainObject;
 	Awesomium::WebSession* web_session;
+	Awesomium::JSMethodHandler* method_handler;
+	Awesomium::DataSource* data_source;
 	Sprite *sprite;
 
 	//ConversionFunctions
