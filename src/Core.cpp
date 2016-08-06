@@ -198,17 +198,19 @@ void Core::start()
 				break;
 			}
 		}
-		const Uint8 *keyState = SDL_GetKeyboardState(nullptr);
+		if(coreHUD.shouldCoreMove())
+		{
+			const Uint8 *keyState = SDL_GetKeyboardState(nullptr);
 
-		if(keyState[SDL_SCANCODE_T]) cam.moveUp(moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_G]) cam.moveUp(-moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_W]) cam.moveForward(moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_S]) cam.moveForward(-moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_D]) cam.moveRight(moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_A]) cam.moveRight(-moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 5.f; else moveSpeed=1.0f;
-		cam.updateCameraAngle(glm::radians(cameraAngle.y)* dt , glm::radians(cameraAngle.x) * dt);
-
+			if(keyState[SDL_SCANCODE_T]) cam.moveUp(moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_G]) cam.moveUp(-moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_W]) cam.moveForward(moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_S]) cam.moveForward(-moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_D]) cam.moveRight(moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_A]) cam.moveRight(-moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 5.f; else moveSpeed=1.0f;
+			cam.updateCameraAngle(glm::radians(cameraAngle.y)* dt , glm::radians(cameraAngle.x) * dt);
+		}
 		coreHUD.update();
 
 		//need to use the shader before the operation after it, TODO: need to fix this crap...

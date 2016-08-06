@@ -33,7 +33,7 @@ public:
 	void shutdown();
 	void update();
 	void render();
-
+	bool shouldCoreMove();
 	//Input Injection
 	void injectEvent(const SDL_Event&);
 

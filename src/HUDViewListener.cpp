@@ -9,6 +9,11 @@ void 	HUDViewListener::OnChangeAddressBar (Awesomium::WebView *caller, const Awe
 
 }
 
+bool HUDViewListener::isTextInputFocused()
+{
+  return textInputFocused;
+}
+
 void HUDViewListener::OnChangeTitle (Awesomium::WebView *caller, const Awesomium::WebString &title)
 {
 
@@ -30,7 +35,7 @@ void 	HUDViewListener::OnChangeTooltip (Awesomium::WebView *caller, const Awesom
 
 void 	HUDViewListener::OnChangeFocus (Awesomium::WebView *caller, Awesomium::FocusedElementType focused_type)
 {
-  if(focused_type== kFocusedElementType_None || focused_type==kFocusedElementType_Other  ) std::cout<<"OKAAAAY!!!"<<std::endl;
+  if(focused_type== kFocusedElementType_None) textInputFocused=false; else if(focused_type==kFocusedElementType_TextInput)textInputFocused=true;
 }
 void 	HUDViewListener::OnShowCreatedWebView (Awesomium::WebView *caller, Awesomium::WebView *new_view, const Awesomium::WebURL &opener_url, const Awesomium::WebURL &target_url, const Awesomium::Rect &initial_pos, bool is_popup)
 {

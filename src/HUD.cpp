@@ -336,6 +336,11 @@ void HUD::render()
 	sprite->draw();
 }
 
+bool HUD::shouldCoreMove()
+{
+	return !(dynamic_cast<HUDViewListener*>(view_listener)->isTextInputFocused());
+}
+
 void HUD::injectEvent(const SDL_Event& event)
 {
 	switch(event.type){
