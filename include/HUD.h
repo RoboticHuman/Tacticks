@@ -14,6 +14,8 @@ class HUD{
 	Awesomium::JSObject mainObject;
 	Awesomium::WebSession* web_session;
 	Awesomium::JSMethodHandler* method_handler;
+	Awesomium::WebViewListener::View* view_listener;
+	Awesomium::WebViewListener::Menu* view_menu_handler;
 	Awesomium::DataSource* data_source;
 	Sprite *sprite;
 

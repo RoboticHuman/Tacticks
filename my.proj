@@ -13,3 +13,4 @@ ResourceManager
 HUDDataSource
 HUDMethodHandler
 HUDMenuHandler
+HUDViewListener

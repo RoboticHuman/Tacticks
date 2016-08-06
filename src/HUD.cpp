@@ -5,6 +5,7 @@
 #include "HUDDataSource.h"
 #include "HUDMethodHandler.h"
 #include "HUDMenuHandler.h"
+#include "HUDViewListener.h"
 #include <iostream>
 using namespace std;
 using namespace Awesomium;
@@ -280,6 +281,8 @@ void HUD::init(int screenWidth, int screenHeight)
 	sprite = new Sprite(ResourceManager::getShader("hudShader"),screenWidth,screenHeight);
 	data_source = new HUDDataSource();
 	method_handler = new HUDMethodHandler();
+	view_menu_handler = new HUDMenuHandler();
+	view_listener = new HUDViewListener();
 
 	web_config.log_path = WSLit("awesomiumLog.log");
 	web_config.log_level = kLogLevel_Normal;
@@ -289,8 +292,9 @@ void HUD::init(int screenWidth, int screenHeight)
 
 	web_view = web_core->CreateWebView(screenWidth, screenHeight,web_session,kWebViewType_Offscreen);
 	web_view->SetTransparent(true);
-	web_view->set_menu_listener(new HUDMenuHandler());
+	web_view->set_menu_listener(view_menu_handler);
 	web_view->set_js_method_handler(method_handler);
+	web_view->set_view_listener(view_listener);
 
 	mainObject = web_view->ExecuteJavascriptWithResult(WSLit("window"), WSLit("")).ToObject();
 	mainObject.SetCustomMethod(WSLit("ConsoleLog"), false);
@@ -307,6 +311,7 @@ void HUD::shutdown()
 	web_session->Release();
 	WebCore::Shutdown();
 	delete method_handler;
+
 	delete data_source;
 	delete sprite;
 }
