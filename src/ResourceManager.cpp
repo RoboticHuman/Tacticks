@@ -1,5 +1,5 @@
 #include "ResourceManager.h"
-#include "SOIL.h"
+#include <SOIL/SOIL.h>
 
 map<string, Texture2D> ResourceManager::textures;
 map<string, Shader*> ResourceManager::shaders;

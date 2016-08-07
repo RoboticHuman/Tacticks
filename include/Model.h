@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 #include <map>
-#include "SOIL.h"
+#include <SOIL/SOIL.h>
 #include "Mesh.h"
 using namespace std;
 
