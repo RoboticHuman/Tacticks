@@ -6,6 +6,7 @@
 #include <string>
 
 class Shader;
+class HUDEventHandler;
 
 class HUD{
 	Awesomium::WebCore* web_core;
@@ -13,10 +14,8 @@ class HUD{
 	Awesomium::WebView* web_view;
 	Awesomium::JSObject mainObject;
 	Awesomium::WebSession* web_session;
-	Awesomium::JSMethodHandler* method_handler;
-	Awesomium::WebViewListener::View* view_listener;
-	Awesomium::WebViewListener::Menu* view_menu_handler;
 	Awesomium::DataSource* data_source;
+	HUDEventHandler* event_handler;
 	Sprite *sprite;
 
 	//ConversionFunctions

@@ -1,12 +1,11 @@
 #include "HUD.h"
 #include <Awesomium/BitmapSurface.h>
+#include <iostream>
 #include "Shader.h"
 #include "ResourceManager.h"
 #include "HUDDataSource.h"
-#include "HUDMethodHandler.h"
-#include "HUDMenuHandler.h"
-#include "HUDViewListener.h"
-#include <iostream>
+#include "HUDEventHandler.h"
+
 using namespace std;
 using namespace Awesomium;
 
@@ -280,9 +279,7 @@ void HUD::init(int screenWidth, int screenHeight)
 	WebURL url(WSLit("asset://Tacticks/HUDAssets/test"));
 	sprite = new Sprite(ResourceManager::getShader("hudShader"),screenWidth,screenHeight);
 	data_source = new HUDDataSource();
-	method_handler = new HUDMethodHandler();
-	view_menu_handler = new HUDMenuHandler();
-	view_listener = new HUDViewListener();
+	event_handler = new HUDEventHandler();
 
 	web_config.log_path = WSLit("awesomiumLog.log");
 	web_config.log_level = kLogLevel_Normal;
@@ -292,9 +289,9 @@ void HUD::init(int screenWidth, int screenHeight)
 
 	web_view = web_core->CreateWebView(screenWidth, screenHeight,web_session,kWebViewType_Offscreen);
 	web_view->SetTransparent(true);
-	web_view->set_menu_listener(view_menu_handler);
-	web_view->set_js_method_handler(method_handler);
-	web_view->set_view_listener(view_listener);
+	web_view->set_js_method_handler(event_handler);
+	web_view->set_menu_listener(event_handler);
+	web_view->set_view_listener(event_handler);
 
 	mainObject = web_view->ExecuteJavascriptWithResult(WSLit("window"), WSLit("")).ToObject();
 	mainObject.SetCustomMethod(WSLit("ConsoleLog"), false);
@@ -302,7 +299,6 @@ void HUD::init(int screenWidth, int screenHeight)
 	web_view->LoadURL(url);
 	web_view->Focus();
 	while(web_view->IsLoading()) web_core->Update();
-
 }
 
 void HUD::shutdown()
@@ -310,8 +306,7 @@ void HUD::shutdown()
 	web_view->Destroy();
 	web_session->Release();
 	WebCore::Shutdown();
-	delete method_handler;
-
+	delete event_handler;
 	delete data_source;
 	delete sprite;
 }
@@ -338,7 +333,7 @@ void HUD::render()
 
 bool HUD::shouldCoreMove()
 {
-	return !(dynamic_cast<HUDViewListener*>(view_listener)->isTextInputFocused());
+	return !event_handler->isTextInputFocused();
 }
 
 void HUD::injectEvent(const SDL_Event& event)
@@ -361,10 +356,7 @@ void HUD::injectEvent(const SDL_Event& event)
 
 void HUD::setTextboxValue(string str)
 {
-	JSValue window = web_view->ExecuteJavascriptWithResult(WSLit("window"), WSLit(""));
-	if (window.IsObject()) {
-		JSArray args;
-		args.Push(WSLit(str.c_str()));
-		window.ToObject().Invoke(WSLit("setTextboxValue"), args);
-	}
+	JSArray args;
+	args.Push(WSLit(str.c_str()));
+	mainObject.Invoke(WSLit("setTextboxValue"), args);
 }

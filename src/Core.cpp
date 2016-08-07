@@ -25,8 +25,6 @@ void Core::preLoop()
 	models.push_back(new Model("models/envCheck/Crate1.obj"));
 	cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0));
 	transformLocation = ResourceManager::getShader("meshShader")->getUniformLocation("transform");
-
-
 }
 void Core::render()
 {
@@ -121,7 +119,6 @@ bool Core::init()
 	coreHUD.init(screenWidth,screenHeight);
 
 	return true;
-
 }
 
 void Core::start()
