@@ -79,7 +79,7 @@
 			}
 		</script>
 	</head>
-	<body>
+	<body onload="document.getElementById('MyTextBox').value = getDefaultPath()">
 		<div class="dropdown">
 		<button onclick="onDropDownClick()" class="dropbtn">Options</button>
 		    <div id="optionsDropDown" class="dropdown-content">
@@ -90,7 +90,7 @@
 		</div>
 		<div>
 			<input type="button" value="Print Value" onclick="loadMesh(document.getElementById('MyTextBox').value)">
-			<input type="text" id="MyTextBox" value="models/envCheck/Crate1.obj">
+			<input type="text" id="MyTextBox" >
 		</div>
 
 	</body>

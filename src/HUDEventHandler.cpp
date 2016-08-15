@@ -10,8 +10,7 @@ void HUDEventHandler::OnMethodCall(WebView* webView, unsigned int objID, const W
 	js_handler->callback(ToString(method), args);
 }
 JSValue HUDEventHandler::OnMethodCallWithReturnValue(WebView* webView, unsigned int objID, const WebString& method, const JSArray& args){
-	cout << "Unknown Method " << method << endl;
-	return JSValue();
+	return js_handler->callbackWithReturn(ToString(method), args);
 }
 
 //WebViewListener::Menu
