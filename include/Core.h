@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <vector>
+#include <string>
 #include "Camera.h"
 #include "Timer.h"
 #include <cmath>
@@ -67,4 +68,6 @@ public:
 	 * @brief      This function takes care of cleaning SDL related structures and quits SDL safely.
 	 */
 	void shutdown();
+
+	void loadMesh(std::string, bool = false);
 };

@@ -1,21 +1,22 @@
 #pragma once
 #include <Awesomium/WebCore.h>
 #include <Awesomium/STLHelpers.h>
-#include "Sprite.h"
 #include <SDL2/SDL.h>
 #include <string>
+#include "Sprite.h"
 
 class Shader;
 class HUDEventHandler;
+class JSHandler;
 
 class HUD{
 	Awesomium::WebCore* web_core;
 	Awesomium::WebConfig web_config;
 	Awesomium::WebView* web_view;
-	Awesomium::JSObject mainObject;
 	Awesomium::WebSession* web_session;
 	Awesomium::DataSource* data_source;
 	HUDEventHandler* event_handler;
+	JSHandler* js_handler;
 	Sprite *sprite;
 
 	//ConversionFunctions
@@ -24,20 +25,16 @@ class HUD{
 	static bool isCharTypeKey(const SDL_Keysym&);
 	static char applyModifiers(int, int);
 	static Awesomium::WebKeyboardEvent SDLToAwesomium(SDL_KeyboardEvent, bool = false);
-
 public:
-	HUD()=default;
-	~HUD()=default;
+	HUD() = default;
+	~HUD() = default;
+
 	void init(int screenWidth, int screenHeight);
 	void shutdown();
 	void update();
 	void render();
-	bool shouldCoreMove();
-	//Input Injection
+
 	void injectEvent(const SDL_Event&);
 
-	void handleKeyPress(const SDL_Event &event);
-	int getWebKeyFromSDLKey(SDL_Keycode key); //helper function for mapping between SDL and Awesomium key codes ;)
-
-	void setTextboxValue(std::string);
+	bool shouldCoreMove() const;
 };

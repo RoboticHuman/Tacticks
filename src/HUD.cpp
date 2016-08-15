@@ -5,6 +5,7 @@
 #include "ResourceManager.h"
 #include "HUDDataSource.h"
 #include "HUDEventHandler.h"
+#include "JSHandler.h"
 
 using namespace std;
 using namespace Awesomium;
@@ -279,7 +280,8 @@ void HUD::init(int screenWidth, int screenHeight)
 	WebURL url(WSLit("asset://Tacticks/HUDAssets/test"));
 	sprite = new Sprite(ResourceManager::getShader("hudShader"),screenWidth,screenHeight);
 	data_source = new HUDDataSource();
-	event_handler = new HUDEventHandler();
+	js_handler = new JSHandler();
+	event_handler = new HUDEventHandler(js_handler);
 
 	web_config.log_path = WSLit("awesomiumLog.log");
 	web_config.log_level = kLogLevel_Normal;
@@ -293,16 +295,15 @@ void HUD::init(int screenWidth, int screenHeight)
 	web_view->set_menu_listener(event_handler);
 	web_view->set_view_listener(event_handler);
 
-	mainObject = web_view->ExecuteJavascriptWithResult(WSLit("window"), WSLit("")).ToObject();
-	mainObject.SetCustomMethod(WSLit("ConsoleLog"), false);
+	js_handler->init(web_view->ExecuteJavascriptWithResult(WSLit("window"), WSLit("")).ToObject());
 
 	web_view->LoadURL(url);
 	web_view->Focus();
 	while(web_view->IsLoading()) web_core->Update();
 }
-
 void HUD::shutdown()
 {
+	js_handler->shutdown();
 	web_view->Destroy();
 	web_session->Release();
 	WebCore::Shutdown();
@@ -310,7 +311,6 @@ void HUD::shutdown()
 	delete data_source;
 	delete sprite;
 }
-
 void HUD::update()
 {
 	web_core->Update();
@@ -325,15 +325,9 @@ void HUD::update()
 	}
 	delete [] buffer;
 }
-
 void HUD::render()
 {
 	sprite->draw();
-}
-
-bool HUD::shouldCoreMove()
-{
-	return !event_handler->isTextInputFocused();
 }
 
 void HUD::injectEvent(const SDL_Event& event)
@@ -354,9 +348,7 @@ void HUD::injectEvent(const SDL_Event& event)
 	}
 }
 
-void HUD::setTextboxValue(string str)
+bool HUD::shouldCoreMove() const
 {
-	JSArray args;
-	args.Push(WSLit(str.c_str()));
-	mainObject.Invoke(WSLit("setTextboxValue"), args);
+	return !event_handler->isTextInputFocused();
 }

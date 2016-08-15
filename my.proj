@@ -12,3 +12,4 @@ Texture2D
 ResourceManager
 HUDDataSource
 HUDEventHandler
+JSHandler

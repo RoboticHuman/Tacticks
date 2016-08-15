@@ -1,6 +1,6 @@
 #pragma once
 #include <Awesomium/WebCore.h>
-
+class JSHandler;
 class HUDEventHandler : public Awesomium::JSMethodHandler, public Awesomium::WebViewListener::Menu, public Awesomium::WebViewListener::View
 {
 //JSMethodHandler
@@ -19,10 +19,12 @@ class HUDEventHandler : public Awesomium::JSMethodHandler, public Awesomium::Web
 	void OnChangeTooltip(Awesomium::WebView*, const Awesomium::WebString&);
 	void OnChangeCursor(Awesomium::WebView*, Awesomium::Cursor);
 	void OnChangeFocus(Awesomium::WebView*, Awesomium::FocusedElementType);
-	void OnShowCreatedWebView (Awesomium::WebView*, Awesomium::WebView*, const Awesomium::WebURL&, const Awesomium::WebURL&, const Awesomium::Rect&, bool);
+	void OnShowCreatedWebView(Awesomium::WebView*, Awesomium::WebView*, const Awesomium::WebURL&, const Awesomium::WebURL&, const Awesomium::Rect&, bool);
 
 private:
 	bool textInputFocused = false;
+	JSHandler* js_handler;
 public:
+	HUDEventHandler(JSHandler*);
 	bool isTextInputFocused();
 };

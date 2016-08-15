@@ -1,4 +1,3 @@
-#include <string>
 #include <cstdio>
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
@@ -13,6 +12,11 @@
 using namespace std;
 using namespace glm;
 
+void Core::loadMesh(string fpath, bool resetCam){
+	models.push_back(new Model(fpath.c_str()));
+	if(resetCam) cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0));
+}
+
 void Core::preLoop()
 {
 	glEnable(GL_CULL_FACE);
@@ -22,7 +26,7 @@ void Core::preLoop()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	models.push_back(new Model("models/envCheck/Crate1.obj"));
+	//loadMesh("models/envCheck/Crate1.obj");
 	cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0));
 	transformLocation = ResourceManager::getShader("meshShader")->getUniformLocation("transform");
 }
@@ -32,7 +36,7 @@ void Core::render()
 
 	glEnable(GL_DEPTH_TEST);
 	ResourceManager::getShader("meshShader")->use();
-	models[0]->draw(ResourceManager::getShader("meshShader"));
+	for(Model *m : models) m->draw(ResourceManager::getShader("meshShader"));
 
 	glDisable(GL_DEPTH_TEST);
 	coreHUD.render();
@@ -126,7 +130,6 @@ void Core::start()
 	SDL_Event event;
 	preLoop();
 	int textBoxValue = 0;
-	coreHUD.setTextboxValue(to_string(textBoxValue));
 	while(!exitFlag){
 		const double MIN_FRAME_TIME = 1.0f / 40.0f;
 		cameraAngle = vec2(0,0);
@@ -144,12 +147,6 @@ void Core::start()
 					switch(event.key.keysym.sym){
 						case SDLK_ESCAPE:
 							exitFlag = true;
-						break;
-						case SDLK_KP_PLUS:
-							coreHUD.setTextboxValue(to_string(++textBoxValue));
-						break;
-						case SDLK_KP_MINUS:
-							coreHUD.setTextboxValue(to_string(--textBoxValue));
 						break;
 					}
 				break;

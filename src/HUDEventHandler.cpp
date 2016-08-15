@@ -1,14 +1,13 @@
 #include <Awesomium/STLHelpers.h>
 #include <iostream>
+#include "JSHandler.h"
 #include "HUDEventHandler.h"
 using namespace std;
 using namespace Awesomium;
 
 //JSMethodHandler
 void HUDEventHandler::OnMethodCall(WebView* webView, unsigned int objID, const WebString& method, const JSArray& args){
-	if(method == WSLit("ConsoleLog"))
-		cout << args.At(0).ToString() << endl;
-	else cout << "Unknown Method " << method << endl;
+	js_handler->callback(ToString(method), args);
 }
 JSValue HUDEventHandler::OnMethodCallWithReturnValue(WebView* webView, unsigned int objID, const WebString& method, const JSArray& args){
 	cout << "Unknown Method " << method << endl;
@@ -26,7 +25,7 @@ void HUDEventHandler::OnShowContextMenu(WebView* caller, const WebContextMenuInf
 
 }
 
-//
+//WebViewListener::View
 void HUDEventHandler::OnAddConsoleMessage(WebView* caller, const WebString& message, int line_number, const WebString& source)
 {
 	cout << ToString(message) + "at line number: " + std::to_string(line_number) << endl;
@@ -62,6 +61,10 @@ void HUDEventHandler::OnShowCreatedWebView(WebView* caller, WebView* new_view, c
 }
 
 //
+HUDEventHandler::HUDEventHandler(JSHandler* jsh)
+{
+	js_handler = jsh;
+}
 bool HUDEventHandler::isTextInputFocused()
 {
 	return textInputFocused;

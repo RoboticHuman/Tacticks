@@ -12,7 +12,7 @@
 				float : left;
 			}
 			.dropbtn {
-			    
+
 			}
 
 			.dropbtn:after {
@@ -54,12 +54,12 @@
 		</style>
 		<script src="jquery-3.1.0.min.js"></script>
 		<script type="text/javascript">
-		
+
 			function setTextboxValue(val){
 				alert("hmmm");
 				document.getElementById("MyTextBox").value = val;
 			}
-			
+
 			function onDropDownClick(){
 				document.getElementById("optionsDropDown").classList.toggle('show');
 			}
@@ -89,9 +89,9 @@
 		    </div>
 		</div>
 		<div>
-			<input type="button" value="Print Value" onclick="ConsoleLog(document.getElementById('MyTextBox').value)">
-			<input type="text" id="MyTextBox">
+			<input type="button" value="Print Value" onclick="loadMesh(document.getElementById('MyTextBox').value)">
+			<input type="text" id="MyTextBox" value="models/envCheck/Crate1.obj">
 		</div>
-		
+
 	</body>
 </html>
