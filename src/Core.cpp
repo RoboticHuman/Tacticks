@@ -18,8 +18,8 @@ mat4 tempTranslationMat; ///TO BE DELTED ONLY FOR TEST RAYCAST
 void Core::loadMesh(string fpath, bool resetCam){
 	if(!models.empty()) delete models[0];
 	if(models.empty()) models.push_back(nullptr);
-	//models[0] = new Model(fpath.c_str());
-	models[0] = new Model("models/envCheck/Crate1.obj");
+	models[0] = new Model(fpath.c_str());
+	//models[0] = new Model("models/envCheck/Crate1.obj");
 
 	if(models.size() < 2) models.push_back(nullptr);
 	models[1] = new Model("models/envCheck/Crate1.obj");
@@ -143,7 +143,7 @@ void Core::start()
 		const double MIN_FRAME_TIME = 1.0f / 40.0f;
 		cameraAngle = vec2(0,0);
 		double dt = timer.GetDelta();
-		if ( dt < MIN_FRAME_TIME){
+		if(dt < MIN_FRAME_TIME){
 			int ms = (int)((MIN_FRAME_TIME - dt) * 1000.0f);
 			if (ms > 10) ms = 10;
 			if (ms >= 0) SDL_Delay(ms);

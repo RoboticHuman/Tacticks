@@ -29,7 +29,8 @@ public:
 
 		vec3 as = start - a;
 		t = dot(as, norm);
-		if(t < 0 || t > d) return false;
+		if(t < 0) return false;
+		//if(t > d) return false;
 
 		vec3 e = cross(ray, as);
 		float v = dot(ac, e);
