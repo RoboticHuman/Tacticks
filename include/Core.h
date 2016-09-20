@@ -24,8 +24,6 @@ private:
 	float moveSpeed = 1.0f;
 	float mouseSensitivity = 1.0f;
 	bool shouldRotateView = false;
-	glm::vec2 mousePos = glm::vec2(0,0);
-	glm::vec2 origMousePos = glm::vec2(0,0);
 	glm::vec2 cameraAngle = glm::vec2(0,0);
 	glm::vec2 origCameraAngle = glm::vec2(0,0);
 	SDL_Window *mainwindow = nullptr;

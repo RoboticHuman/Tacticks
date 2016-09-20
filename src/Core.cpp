@@ -18,8 +18,12 @@ mat4 tempTranslationMat; ///TO BE DELTED ONLY FOR TEST RAYCAST
 void Core::loadMesh(string fpath, bool resetCam){
 	if(!models.empty()) delete models[0];
 	if(models.empty()) models.push_back(nullptr);
-	models[0] = new Model(fpath.c_str());
+	//models[0] = new Model(fpath.c_str());
+	models[0] = new Model("models/envCheck/Crate1.obj");
+
+	if(models.size() < 2) models.push_back(nullptr);
 	models[1] = new Model("models/envCheck/Crate1.obj");
+
 	if(resetCam) cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
 }
 
@@ -163,16 +167,15 @@ void Core::start()
 						case SDL_BUTTON_RIGHT:
 							shouldRotateView = true;
 							origCameraAngle=cameraAngle;
-							origMousePos = mousePos;
 						break;
 						case SDL_BUTTON_LEFT:
 							vec3 ray[2];
-							ray[0] = cam.screenToWorld(vec3(mousePos, 0.0));
-							ray[1] = cam.screenToWorld(vec3(mousePos, 1.0));
+							ray[0] = cam.screenToWorld(vec3(event.button.x, event.button.y, 0.0));
+							ray[1] = cam.screenToWorld(vec3(event.button.x, event.button.y, 1.0));
 							vec3 pos;
 							if(!models.empty() && models[0]->raycast(ray[0], ray[1], pos)){
 								cout << glm::to_string(pos) << endl;
-								tempTranslationMat = translate(mat4(), -pos);
+								tempTranslationMat = translate(mat4(), pos);
 							}
 							//There is still more to do don't compile yet! :D
 						break;
@@ -230,8 +233,11 @@ void Core::start()
 		render();
 
 		//Temporary Testing
-		ResourceManager::getShader("meshShader")->use();
-		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()*tempTranslationMat));
+		if(models.size() > 1) {
+			ResourceManager::getShader("meshShader")->use();
+			glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()*tempTranslationMat));
+			models[1]->draw(ResourceManager::getShader("meshShader"));
+		}
 
 		SDL_GL_SwapWindow(mainwindow);
 	}
