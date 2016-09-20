@@ -85,7 +85,7 @@ void JSHandler::loadMesh(JSArray args)
 
 JSValue JSHandler::getDefaultPath(JSArray args)
 {
-	return JSValue(WSLit("models/envCheck/Crate1.obj"));
+	return JSValue(WSLit("models/Small Tropical Island/Small Tropical Island.obj"));
 }
 
 void JSHandler::JSCallExamples(string str){	//P.S. This calls a function "setTextboxValue" with 1 string argument P.S. Not intended to be called just there for reference
