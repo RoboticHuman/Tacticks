@@ -3,7 +3,7 @@
 #include "Camera.h"
 using namespace glm;
 
-void Camera::setup(float fov, float aspectRatio, vec3 position, vec3 at){
+void Camera::setup(float fov, float aspectRatio, vec3 position, vec3 at, vec2 winXY, vec2 winWH){
 	this->fov = fov;
 	this->aspectRatio = aspectRatio;
 	this->near = 0.1;	//Fixed for now
@@ -11,12 +11,9 @@ void Camera::setup(float fov, float aspectRatio, vec3 position, vec3 at){
 	this->position = position;
 	this->at = at;
 
-	updateAxies();
-}
+	viewPort = vec4(winXY, winWH);
 
-glm::vec3 Camera::getCameraWorldPosition()
-{
-	return this->position;
+	updateAxies();
 }
 
 void Camera::updateAxies(){
@@ -26,10 +23,17 @@ void Camera::updateAxies(){
 }
 
 mat4 Camera::getViewMatrix() const{
-
 	mat4 projection = perspective(fov, aspectRatio, near, far);
 	mat4 transformation = lookAt(position, at, up);
 	return projection * transformation;
+}
+
+vec3 Camera::getCameraWorldPosition(){
+	return this->position;
+}
+
+vec3 Camera::screenToWorld(vec3 windowCoordinate){
+	return unProject(windowCoordinate, lookAt(position, at, up), perspective(fov, aspectRatio, near, far), viewPort);
 }
 
 void Camera::moveUp(float amount){

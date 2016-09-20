@@ -4,8 +4,9 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <algorithm>
 #include "Shader.h"
-
+using namespace glm;
 
 Model::Model(string path)
 {
@@ -151,4 +152,19 @@ GLuint Model::textureFromFile(const char* path, string containingDir)
     glBindTexture(GL_TEXTURE_2D, 0);
     SOIL_free_image_data(image);
     return textureID;
+}
+
+bool Model::raycast(vec3 start, vec3 end, vec3& hitPos)
+{
+	float tmin = 1.0, t;
+	bool hit = false;
+
+	for(Mesh m : meshes)
+		if(m.raycast(start, end, t)){
+			tmin = std::min(tmin, t);
+			hit = true;
+		}
+
+	hitPos = start + (end - start) * t;
+	return hit;
 }

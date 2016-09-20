@@ -5,6 +5,7 @@
 #include <map>
 #include <SOIL/SOIL.h>
 #include "Mesh.h"
+#include <glm/vec3.hpp>
 using namespace std;
 
 class aiNode;
@@ -26,6 +27,8 @@ public:
 	 * @param      shader  The shader used for drawing this model
 	 */
 	void draw(Shader *shader);
+
+	bool raycast(glm::vec3, glm::vec3, glm::vec3&);
 private:
 	vector<Mesh> meshes;
 	string containingDir;

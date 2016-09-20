@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <glm/vec3.hpp>
 #include "Core.h"
 #include "Model.h"
@@ -12,9 +13,14 @@
 using namespace std;
 using namespace glm;
 
+mat4 tempTranslationMat; ///TO BE DELTED ONLY FOR TEST RAYCAST
+
 void Core::loadMesh(string fpath, bool resetCam){
-	models.push_back(new Model(fpath.c_str()));
-	if(resetCam) cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0));
+	if(!models.empty()) delete models[0];
+	if(models.empty()) models.push_back(nullptr);
+	models[0] = new Model(fpath.c_str());
+	models[1] = new Model("models/envCheck/Crate1.obj");
+	if(resetCam) cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
 }
 
 void Core::preLoop()
@@ -26,8 +32,7 @@ void Core::preLoop()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//loadMesh("models/envCheck/Crate1.obj");
-	cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0));
+	cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
 	transformLocation = ResourceManager::getShader("meshShader")->getUniformLocation("transform");
 }
 void Core::render()
@@ -160,6 +165,17 @@ void Core::start()
 							origCameraAngle=cameraAngle;
 							origMousePos = mousePos;
 						break;
+						case SDL_BUTTON_LEFT:
+							vec3 ray[2];
+							ray[0] = cam.screenToWorld(vec3(mousePos, 0.0));
+							ray[1] = cam.screenToWorld(vec3(mousePos, 1.0));
+							vec3 pos;
+							if(!models.empty() && models[0]->raycast(ray[0], ray[1], pos)){
+								cout << glm::to_string(pos) << endl;
+								tempTranslationMat = translate(mat4(), -pos);
+							}
+							//There is still more to do don't compile yet! :D
+						break;
 					}
 				break;
 				case SDL_MOUSEWHEEL:
@@ -212,6 +228,10 @@ void Core::start()
 		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
 
 		render();
+
+		//Temporary Testing
+		ResourceManager::getShader("meshShader")->use();
+		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()*tempTranslationMat));
 
 		SDL_GL_SwapWindow(mainwindow);
 	}

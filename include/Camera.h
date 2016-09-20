@@ -16,6 +16,8 @@ class Camera{
 	glm::vec3 forward = glm::vec3(0.0, 0.0, 1.0);
 	glm::vec3 right = glm::vec3(1.0, 0.0, 0.0);
 
+	glm::vec4 viewPort = glm::vec4(0.0, 0.0, 1.0, 1.0);
+
 	void updateAxies();
 public:
 	Camera() = default;
@@ -23,7 +25,7 @@ public:
 	/**
 	 * @brief		This functions sets up the initial camera position and settings.
 	 */
-	void setup(float, float, glm::vec3, glm::vec3);
+	void setup(float, float, glm::vec3, glm::vec3, glm::vec2, glm::vec2);
 	/**
 	 *	@breif		Returns the View transformation materix.
 	 */
@@ -32,6 +34,9 @@ public:
 	 *	@breif		return the position parameter
 	 */
 	glm::vec3 getCameraWorldPosition();
+
+	glm::vec3 screenToWorld(glm::vec3);
+
 	/**
 	 *	@breif		Moves the camera upwards.
 	 */

@@ -43,6 +43,7 @@ public:
 	 * @param[in]  shader  The shader program to use for drawing the mesh
 	 */
 	void draw(Shader *shader);
+	bool raycast(glm::vec3, glm::vec3, float&);
 private:
 	//OpenGL buffers
 	//Vertex array, Vertext buffer and Element Buffer

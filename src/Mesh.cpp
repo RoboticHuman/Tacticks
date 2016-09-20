@@ -1,6 +1,64 @@
 #include "Mesh.h"
 #include "Shader.h"
+#include <glm/glm.hpp>
+#include <algorithm>
 #include <iostream>
+using namespace glm;
+using namespace std;
+
+class Triangle{
+private:
+	vec3 a, b, c;
+	vec3 ab, ac;
+	vec3 norm;
+public:
+	Triangle(Vertex va, Vertex vb, Vertex vc){
+		a = va.position;
+		b = vb.position;
+		c = vc.position;
+
+		ab = b - a;
+		ac = c - a;
+
+		norm = cross(ab, ac);
+	}
+	bool getIntersect(vec3 start, vec3 end, float& t){
+		vec3 ray = start - end;
+		float d = dot(ray, norm);
+		if(d <= 0) return false;
+
+		vec3 as = start - a;
+		t = dot(as, norm);
+		if(t < 0 || t > d) return false;
+
+		vec3 e = cross(ray, as);
+		float v = dot(ac, e);
+		if(v < 0 || v > d) return false;
+		float w = -dot(ab, e);
+		if(w < 0 || v + w > d) return false;
+
+		t /= d;
+		return true;
+/*
+		vec3 ray = end - start;
+		float d = dot(ray, norm);
+		if(d >= 0) return false;
+
+		vec3 as = start - a;
+		t = dot(as, norm);
+		if(t < 0 || t > d) return false;
+
+		vec3 e = cross(as, ray);
+		float v = dot(ac, e);
+		if(v < 0 || v > d) return false;
+		float w = -dot(ab, e);
+		if(w < 0 || v + w > d) return false;
+
+		t /= d;
+		return true;
+*/
+	}
+};
 
 Mesh::Mesh(vector<Vertex> &vertices, vector<GLuint> &indices, vector<Texture> &textures)
 {
@@ -67,4 +125,18 @@ void Mesh::draw(Shader *shader)
 	glBindVertexArray(0);
 
 
+}
+
+bool Mesh::raycast(vec3 start, vec3 end, float& tmin){
+	tmin = 1.0;
+	float t;
+	bool hit = false;
+	for(int i = 2; i < indices.size(); i+=3){
+		Triangle tri(vertices[indices[i-2]], vertices[indices[i-1]], vertices[indices[i]]);
+		if(tri.getIntersect(start, end, t)){
+			tmin = std::min(tmin, t);
+			hit = true;
+		}
+	}
+	return hit;
 }
