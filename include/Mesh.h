@@ -43,6 +43,15 @@ public:
 	 * @param[in]  shader  The shader program to use for drawing the mesh
 	 */
 	void draw(Shader *shader);
+	/**
+	 * @brief      Raycasts a ray with all triangles in a mesh
+	 *
+	 * @param[in]  start  start of the ray
+	 * @param[in]  end  end of the ray
+	 * @param      t  the scaling factor based on the distance of the hit point along the ray direction from the start of the ray.
+	 *
+	 * @return     Whether a hit was captured or not.
+	 */
 	bool raycast(glm::vec3, glm::vec3, float&);
 private:
 	//OpenGL buffers

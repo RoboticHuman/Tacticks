@@ -26,5 +26,10 @@ private:
 	JSHandler* js_handler;
 public:
 	HUDEventHandler(JSHandler*);
+	/**
+	 * @brief      Determines if text input focused.
+	 *
+	 * @return     True if text input focused, False otherwise.
+	 */
 	bool isTextInputFocused();
 };

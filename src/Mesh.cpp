@@ -6,6 +6,9 @@
 using namespace glm;
 using namespace std;
 
+/**
+ * @brief      Class for triangle data structure.
+ */
 class Triangle{
 private:
 	vec3 a, b, c;
@@ -22,6 +25,15 @@ public:
 
 		norm = cross(ab, ac);
 	}
+	/**
+	 * @brief      Gets the intersect location along the ray
+	 *
+	 * @param[in]  start  The start
+	 * @param[in]  end    The end
+	 * @param      t      the scaling factor based on the distance of the hit point along the ray direction from the start of the ray.
+	 *
+	 * @return     Whether an intersection/hit was captured or not.
+	 */
 	bool getIntersect(vec3 start, vec3 end, float& t){
 		vec3 ray = start - end;
 		float d = dot(ray, norm);

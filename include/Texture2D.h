@@ -10,27 +10,62 @@
 
 #include <GL/glew.h>
 
-// Texture2D is able to store and configure a texture in OpenGL.
-// It also hosts utility functions for easy management.
+/**
+ * @brief      Texture2D is able to store and configure a texture in OpenGL.It also hosts utility functions for easy management.
+ */
 class Texture2D
 {
 public:
-    // Holds the ID of the texture object, used for all texture operations to reference to this particlar texture
+    /**
+     * Holds the ID of the texture object, used for all texture operations to reference to this particlar texture
+     */
     GLuint ID;
-    // Texture image dimensions
-    GLuint Width, Height; // Width and height of loaded image in pixels
-    // Texture Format
-    GLuint Internal_Format; // Format of texture object
-    GLuint Image_Format; // Format of loaded image
-    // Texture configuration
-    GLuint Wrap_S; // Wrapping mode on S axis
-    GLuint Wrap_T; // Wrapping mode on T axis
-    GLuint Filter_Min; // Filtering mode if texture pixels < screen pixels
-    GLuint Filter_Max; // Filtering mode if texture pixels > screen pixels
-    // Constructor (sets default texture modes)
+    /**
+     * Width of the image in pixels.
+     */
+    GLuint Width;
+    /**
+     * Height of the image in pixels.
+     */
+    GLuint Height; 
+    /**
+     * Format of texture object
+     */
+    GLuint Internal_Format;
+    /**
+     * Format of loaded image
+     */
+    GLuint Image_Format; 
+    /**
+     * Wrapping mode on S axis
+     */
+    GLuint Wrap_S;
+    /**
+     * Wrapping mode on T axis
+     */
+    GLuint Wrap_T; 
+    /**
+     * Filtering mode if texture pixels < screen pixels
+     */
+    GLuint Filter_Min;
+    /**
+     * Filtering mode if texture pixels > screen pixels
+     */
+    GLuint Filter_Max; 
+    /**
+     * @brief      Constructor (sets default texture modes)
+     */
     Texture2D();
-    // Generates texture from image data
+    /**
+     * @brief      Generates texture from image data
+     *
+     * @param[in]  width   The width
+     * @param[in]  height  The height
+     * @param      data    The data
+     */
     void Generate(GLuint width, GLuint height, unsigned char* data);
-    // Binds the texture as the current active GL_TEXTURE_2D texture object
+    /**
+     * @brief      Binds the texture as the current active GL_TEXTURE_2D texture object
+     */
     void Bind() const;
 };
