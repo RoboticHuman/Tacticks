@@ -24,8 +24,8 @@ public:
 
 		AgentIterator(const std::unordered_map<int, PrivateAgent>::iterator&);
 	public:
-		Agent* operator->() const;
-		Agent& operator*() const;
+		const Agent* operator->() const;
+		const Agent& operator*() const;
 	};
 
 	class GroupIterator
@@ -36,8 +36,8 @@ public:
 
 		GroupIterator(const std::unordered_map<int, AgentGroup*>::iterator&);
 	public:
-		AgentGroup* operator->() const;
-		AgentGroup& operator*() const;
+		const AgentGroup* operator->() const;
+		const AgentGroup& operator*() const;
 	};
 
 private:

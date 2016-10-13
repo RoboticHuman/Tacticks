@@ -6,11 +6,11 @@ BehaviourModuleData::AgentIterator::AgentIterator(const std::unordered_map<int, 
 {
 
 }
-Agent* BehaviourModuleData::AgentIterator::operator->() const
+const Agent* BehaviourModuleData::AgentIterator::operator->() const
 {
 	return iterator->second.agent;
 }
-Agent& BehaviourModuleData::AgentIterator::operator*() const
+const Agent& BehaviourModuleData::AgentIterator::operator*() const
 {
 	return *(iterator->second.agent);
 }
@@ -20,11 +20,11 @@ BehaviourModuleData::GroupIterator::GroupIterator(const std::unordered_map<int, 
 {
 
 }
-AgentGroup* BehaviourModuleData::GroupIterator::operator->() const
+const AgentGroup* BehaviourModuleData::GroupIterator::operator->() const
 {
 	return iterator->second;
 }
-AgentGroup& BehaviourModuleData::GroupIterator::operator*() const
+const AgentGroup& BehaviourModuleData::GroupIterator::operator*() const
 {
 	return *(iterator->second);
 }
