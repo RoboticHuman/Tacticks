@@ -3,7 +3,7 @@
 #ifndef MilestonesBehaviourModule_h
 #define MilestonesBehaviourModule_h
 
-class MilestonesBehaviourModule {
+class MilestonesBehaviourModule : public AbstractBehaviourModule{
     
 };
 

@@ -3,8 +3,8 @@
 #ifndef ForcesBehaviourModule_h
 #define ForcesBehaviourModule_h
 
-class ForcesBehaviourModule {
-    
+class ForcesBehaviourModule : public AbstractBehaviourModule{
+
 };
 
 #endif

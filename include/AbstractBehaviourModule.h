@@ -1,10 +1,10 @@
 #ifndef AbstractBehaviourModule_h
 #define AbstractBehaviourModule_h
 
-class AbstractBehaviourModule {
-    
+class AbstractBehaviourModule
+{
 public:
-    // virtual Event functions
+    //virtual void eventX(...) {};
 };
 
 #endif
