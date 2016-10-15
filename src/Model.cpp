@@ -165,6 +165,6 @@ bool Model::raycast(vec3 start, vec3 end, vec3& hitPos)
 			hit = true;
 		}
 
-	hitPos = start + (end - start) * t;
+	hitPos = start + (end - start) * tmin;
 	return hit;
 }

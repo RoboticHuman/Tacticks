@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+ <head>
+
+   <style type="text/css">
+
+     body{
+       background-color: transparent;
+     }
+
+     /*
+     * Dropdown menu to work with Awesomium
+     */
+     .dropbtn {
+     }
+
+     .dropbtn:after {
+         border: 0.35em solid transparent; /* 5 pixels wide */
+         border-bottom: none;  /* helps the drop-down arrow stay in the vertical centre of the parent */
+         border-top-color: #000000;   /* colour of the drop-down arrow */
+         content: ''; /* content of the arrow, you want to keep this empty */
+         vertical-align: middle;
+         display: inline-block;
+         position: relative;
+         right: -0.35em; /* 5 pixels right of the menu text*/
+     }
+
+     .dropdown {
+         position: relative;
+         display: inline-block;
+     }
+
+     .dropdown-content {
+         display: none;
+         position: absolute;
+         background-color: #f9f9f9;
+         min-width: 160px;
+         overflow: auto;
+         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+     }
+
+     .dropdown-content a {
+         color: black;
+         padding: 12px 16px;
+         text-decoration: none;
+         display: block;
+     }
+
+     .dropdown a:hover {background-color: #f1f1f1}
+
+     .show {display:block;}
+     color : rgb(255, 0, 0);
+     padding: 5px;
+   </style>
+
+   <script src="jquery-3.1.0.min.js"></script>
+   <script type="text/javascript">
+
+   /*
+   * Starting the tree collapsed
+   */
+   $(function () {
+         //start the tree in an autocollapsed state
+         $('#Groups ul').hide(400);
+         $('#Groups li').on('click', function (e) {
+             e.stopPropagation(); // prevent links from toggling the nodes
+             $(this).children('ul').slideToggle();
+         });
+     });
+     /*
+     * Checking for ints
+     */
+     function isInt(evt) {
+          evt = (evt) ? evt : window.event;
+          var charCode = (evt.which) ? evt.which : evt.keyCode;
+          if (charCode !=8 &&(charCode < 48 || charCode > 57)) {
+              return false;
+          }
+          return true;
+      }
+      /*
+      * Checking for floats
+      */
+      function isFloat(evt) {
+           evt = (evt) ? evt : window.event;
+           var charCode = (evt.which) ? evt.which : evt.keyCode;
+           if ((charCode != 46 && charCode != 8) && (charCode < 48 || charCode > 57)) {
+               return false;
+           }
+           return true;
+       }
+     /*
+     * Clicking the Dropdown
+     */
+     function onDropDownClick(){
+       document.getElementById("optionsDropDown").classList.toggle('show');
+     }
+
+     /*
+     * Close the dropdown if the user clicks outside of it
+     */
+     window.onclick = function(event) {
+       if (!$(event.target).hasClass("dropbtn")) {
+
+         var dropdowns = document.getElementsByClassName("dropdown-content");
+         var i;
+         for (i = 0; i < dropdowns.length; i++) {
+           var openDropdown = dropdowns[i];
+           if (openDropdown.classList.contains('show')) {
+       openDropdown.classList.remove('show');
+           }
+         }
+       }
+     }
+
+
+
+   </script>
+ </head>
+
+ <body onload="tree">
+   <div style="width:20%;height:100%;float:left">
+
+     <div class="Dropdown" >
+       <button onclick="onDropDownClick()" class="dropbtn">Enums</button>
+           <div id="optionsDropDown" class="dropdown-content">
+         <a href="#option1">Enum 1</a>
+         <a href="#option2">Enum 2</a>
+         <a href="#option3">Enum 3</a>
+           </div>
+     </div>
+   <div>
+     <div>
+     Normal TextBox
+     <input type="text">
+     <br>
+     Ints TextBox
+     <input type="number" min="0" max="100" step="1" onkeypress="return isInt(event)"/>
+     <br>
+     Floats Textbox
+     <input type="number" min="0" max="100" step="0.01" onkeypress="return isFloat(event)"/>
+     <br>
+     <input type="range" min="0" max="100"/>
+     <br>
+     <input type="checkbox" name="BEH" value="Attrivbute">CheckMe<br>
+
+
+     <ul id="Groups">
+             <li class="level1">Group 1
+     	        <ul>
+                   <li><a href="#">Agent 1</a></li>
+                   <li><a href="#">Agent 2</a></li>
+             </ul>
+            </li>
+            <li class="level1">Group 2
+             <ul>
+                  <li><a href="#">Agent 1</a></li>
+                  <li><a href="#">Agent 2</a></li>
+                  <li><a href="#">Agent 3</a></li>
+            </ul>
+           </li>
+    </ul>
+
+
+   </div>
+
+ </body>
+</html>

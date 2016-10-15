@@ -42,7 +42,7 @@ public:
 		vec3 as = start - a;
 		t = dot(as, norm);
 		if(t < 0) return false;
-		//if(t > d) return false;
+		if(t > d) return false;
 
 		vec3 e = cross(ray, as);
 		float v = dot(ac, e);
@@ -147,6 +147,7 @@ bool Mesh::raycast(vec3 start, vec3 end, float& tmin){
 	for(int i = 2; i < indices.size(); i+=3){
 		Triangle tri(vertices[indices[i-2]], vertices[indices[i-1]], vertices[indices[i]]);
 		if(tri.getIntersect(start, end, t)){
+			cout<<t<<endl;
 			tmin = std::min(tmin, t);
 			hit = true;
 		}

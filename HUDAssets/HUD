@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
  <head>
-
+   /*
+   * CSS
+   */
    <style type="text/css">
 
      body{
        background-color: transparent;
      }
 
+     div {
+       background: rgba(255, 255, 255, 0.75);
+       color : rgb(255, 0, 0);
+       padding: 5px;
+     }
      /*
      * Dropdown menu to work with Awesomium
      */
@@ -49,38 +56,35 @@
      .dropdown a:hover {background-color: #f1f1f1}
 
      .show {display:block;}
-     color : rgb(255, 0, 0);
-     padding: 5px;
    </style>
 
-   <script src="jquery-3.1.1.min.js"></script>
+   <script src="jquery-3.1.0.min.js"></script>
    <script type="text/javascript">
 
-   /*
-   * Starting the tree collapsed
-   */
-   $(function () {
-         //start the tree in an autocollapsed state
-         $('#Groups ul').hide(400);
-         $('#Groups li').on('click', function (e) {
-             e.stopPropagation(); // prevent links from toggling the nodes
-             $(this).children('ul').slideToggle();
-         });
-     });
+    /*
+    * Setting Textbox Values
+    */
+    ///  @param[in] val   The value the textbox is set with
+     function setTextboxValue(val){
+       document.getElementById("MyTextBox").value = val;
+     }
      /*
      * Checking for ints
      */
+     ///  @param[in] evt   Keypress event
      function isInt(evt) {
           evt = (evt) ? evt : window.event;
           var charCode = (evt.which) ? evt.which : evt.keyCode;
-          if (charCode !=8 &&(charCode < 48 || charCode > 57)) {
+          if (charCode !=8 &&)(charCode < 48 || charCode > 57)) {
               return false;
           }
           return true;
       }
+
       /*
       * Checking for floats
       */
+      ///  @param[in] evt   Keypress event
       function isFloat(evt) {
            evt = (evt) ? evt : window.event;
            var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -112,56 +116,29 @@
          }
        }
      }
-
-
-
    </script>
  </head>
 
- <body onload="tree">
+ <body onload="document.getElementById('MyTextBox').value = getDefaultPath()">
    <div style="width:20%;height:100%;float:left">
-
      <div class="Dropdown" >
-       <button onclick="onDropDownClick()" class="dropbtn">Enums</button>
+       <button onclick="onDropDownClick()" class="dropbtn">Groups</button>
            <div id="optionsDropDown" class="dropdown-content">
-         <a href="#option1">Enum 1</a>
-         <a href="#option2">Enum 2</a>
-         <a href="#option3">Enum 3</a>
+         <a href="#option1">Option 1</a>
+         <a href="#option2">Option 2</a>
+         <a href="#option3">Option 3</a>
            </div>
      </div>
    <div>
      <div>
-     Normal TextBox
-     <input type="text">
+     <input type="button" value="Print Value" onclick="loadMesh(document.getElementById('MyTextBox').value)">
+     <input type="text" id="MyTextBox" >
      <br>
-     Ints TextBox
+     <input type="checkbox" name="XYZ" value="ThingBeingChecked">CheckThis<br>
      <input type="number" min="0" max="100" step="1" onkeypress="return isInt(event)"/>
-     <br>
-     Floats Textbox
      <input type="number" min="0" max="100" step="0.01" onkeypress="return isFloat(event)"/>
-     <br>
-     <input type="range" min="0" max="100"/>
-     <br>
-     <input type="checkbox" name="BEH" value="Attrivbute">CheckMe<br>
-
-
-     <ul id="Groups">
-             <li class="level1">Group 1
-     	        <ul>
-                   <li><a href="#">Agent 1</a></li>
-                   <li><a href="#">Agent 2</a></li>
-             </ul>
-            </li>
-            <li class="level1">Group 2
-             <ul>
-                  <li><a href="#">Agent 1</a></li>
-                  <li><a href="#">Agent 2</a></li>
-                  <li><a href="#">Agent 3</a></li>
-            </ul>
-           </li>
-    </ul>
-
-
+     //<input type="range" min="0" max="100"/>
+     range
    </div>
 
  </body>

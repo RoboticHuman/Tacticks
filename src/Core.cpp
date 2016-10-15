@@ -170,8 +170,8 @@ void Core::start()
 						break;
 						case SDL_BUTTON_LEFT:
 							vec3 ray[2];
-							ray[0] = cam.screenToWorld(vec3(event.button.x, event.button.y, 0.0));
-							ray[1] = cam.screenToWorld(vec3(event.button.x, event.button.y, 1.0));
+							ray[0] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 0.0));
+							ray[1] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 1.0));
 							vec3 pos;
 							if(!models.empty() && models[0]->raycast(ray[0], ray[1], pos)){
 								cout << glm::to_string(pos) << endl;
@@ -221,7 +221,7 @@ void Core::start()
 			if(keyState[SDL_SCANCODE_S]) cam.moveForward(-moveSpeed * dt);
 			if(keyState[SDL_SCANCODE_D]) cam.moveRight(moveSpeed * dt);
 			if(keyState[SDL_SCANCODE_A]) cam.moveRight(-moveSpeed * dt);
-			if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 5.f; else moveSpeed=1.0f;
+			if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 50.f; else moveSpeed=10.0f;
 			cam.updateCameraAngle(glm::radians(cameraAngle.y)* dt , glm::radians(cameraAngle.x) * dt);
 		}
 		coreHUD.update();
