@@ -173,11 +173,11 @@ void Core::start()
 							ray[0] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 0.0));
 							ray[1] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 1.0));
 							vec3 pos;
-							if(!models.empty() && models[0]->raycast(ray[0], ray[1], pos)){
+							float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
+							if(!models.empty() && models[0]->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
 								cout << glm::to_string(pos) << endl;
-								tempTranslationMat = translate(mat4(), pos);
+								models[1]->setPosition(pos);
 							}
-							//There is still more to do don't compile yet! :D
 						break;
 					}
 				break;
@@ -197,12 +197,6 @@ void Core::start()
 					}
 				break;
 				case SDL_MOUSEMOTION:
-					/* //TODO: try to have the rotation based on an angle from mouse movement instead of relative motion.
-					int sdlMousex,sdlMousey;
-					SDL_GetMouseState(&sdlMousex,&sdlMousey);
-					mousePos.x = sdlMousex;
-					mousePos.y = screenHeight-1 - sdlMousey;
-					*/
 					if(shouldRotateView)
 					{
 						cameraAngle.x = -(float)event.motion.yrel * mouseSensitivity;
@@ -231,13 +225,6 @@ void Core::start()
 		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
 
 		render();
-
-		//Temporary Testing
-		if(models.size() > 1) {
-			ResourceManager::getShader("meshShader")->use();
-			glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()*tempTranslationMat));
-			models[1]->draw(ResourceManager::getShader("meshShader"));
-		}
 
 		SDL_GL_SwapWindow(mainwindow);
 	}

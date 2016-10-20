@@ -5,6 +5,7 @@
 #include <map>
 #include <SOIL/SOIL.h>
 #include "Mesh.h"
+#include <assimp/matrix4x4.h>
 #include <glm/vec3.hpp>
 using namespace std;
 
@@ -12,6 +13,15 @@ class aiNode;
 class aiScene;
 class aiMesh;
 class aiString;
+
+struct Node
+{
+	glm::mat4 transformation;
+	vector<int> meshes;
+	vector<Node*> nodes;
+	vector<Mesh>* meshReferences;
+};
+
 class Model
 {
 public:
@@ -21,6 +31,8 @@ public:
 	 * @param[in]  path  The path to the model file
 	 */
 	Model(string path);
+
+	Model();
 	/**
 	 * @brief      The drawing function, it draws all the internal meshes of the model
 	 *
@@ -28,11 +40,18 @@ public:
 	 */
 	void draw(Shader *shader);
 
-	bool raycast(glm::vec3, glm::vec3, glm::vec3&);
+	bool raycast(const glm::vec3& start, const glm::vec3& end, glm::vec3& hitPos, float &tmin);
+
+	void move(const glm::vec3 &offset);
+	void setPosition(const glm::vec3 &newPosition);
 private:
 	vector<Mesh> meshes;
+	vector<Model> nodes;
+	glm::mat4 globalTransform;
 	string containingDir;
 	vector<Texture> texturesLoaded;
+	void copyAiMat(const aiMatrix4x4 *from, glm::mat4 &to);
+
 	map<string, int> loadedTexturePaths;
 	/**
 	 * @brief      This function starts the loading process and is called by the constructor
@@ -46,7 +65,7 @@ private:
 	 * @param      node   The node
 	 * @param[in]  scene  ASSIMP's scene data structure
 	 */
-	void processNode(aiNode* node, const aiScene* scene);
+	void processNode(aiNode* node, const aiScene* scene,Model& rootNode);
 	/**
 	 * @brief      Loads an internal mesh and does the binding of buffers and and textures.
 	 *

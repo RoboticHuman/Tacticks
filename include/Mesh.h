@@ -5,6 +5,8 @@
 #include <string>
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
+#include <glm/mat4x4.hpp>
+
 using namespace std;
 class Shader;
 /**
@@ -36,11 +38,12 @@ public:
 	 * @param[in]  indices   The indices
 	 * @param[in]  textures  The textures
 	 */
-	Mesh(vector<Vertex> &vertices, vector<GLuint> &indices, vector<Texture> &textures);
+	 Mesh(vector<Vertex> &vertices, vector<GLuint> &indices, vector<Texture> &textures, glm::mat4& parentTransform);
 	/**
 	 * @brief      This function is responsible for issuing the draw calls
 	 *
 	 * @param[in]  shader  The shader program to use for drawing the mesh
+	 * @param[in]  parentTransform  The transform of the parent
 	 */
 	void draw(Shader *shader);
 	/**
@@ -52,7 +55,7 @@ public:
 	 *
 	 * @return     Whether a hit was captured or not.
 	 */
-	bool raycast(glm::vec3, glm::vec3, float&);
+	bool raycast(const glm::vec3&, const glm::vec3&, float&);
 private:
 	//OpenGL buffers
 	//Vertex array, Vertext buffer and Element Buffer
@@ -60,6 +63,7 @@ private:
 	vector<Vertex> vertices;
 	vector<GLuint> indices;
 	vector<Texture> textures;
+	glm::mat4& globalTransform;
 	bool textureSetupDone = false;
 	/**
 	 * @brief      Setup the necessary buffers to receive the data loaded into the mesh

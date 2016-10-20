@@ -1,8 +1,11 @@
 #include "Mesh.h"
 #include "Shader.h"
-#include <glm/glm.hpp>
 #include <algorithm>
 #include <iostream>
+#include <glm/gtc/type_ptr.hpp>
+#include <ResourceManager.h>
+#define GLM_SWIZZLE_XYZW
+#include <glm/glm.hpp>
 using namespace glm;
 using namespace std;
 
@@ -71,9 +74,15 @@ public:
 		return true;
 */
 	}
+	void updateVertices(glm::mat4& transform)
+	{
+		a = vec3(transform* vec4(a,1.0) );
+		b = vec3(transform* vec4(b,1.0) );
+		c = vec3(transform*vec4(c,1.0) );
+	}
 };
 
-Mesh::Mesh(vector<Vertex> &vertices, vector<GLuint> &indices, vector<Texture> &textures)
+Mesh::Mesh(vector<Vertex> &vertices, vector<GLuint> &indices, vector<Texture> &textures, glm::mat4& parentTransform):globalTransform(parentTransform)
 {
 	this->vertices = vertices;
     this->indices = indices;
@@ -133,19 +142,20 @@ void Mesh::draw(Shader *shader)
 		glActiveTexture(GL_TEXTURE0);
 		textureSetupDone= true;
 
+	GLuint transformLocation = ResourceManager::getShader("meshShader")->getUniformLocation("meshTransform");
+	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(globalTransform));
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT,0);
 	glBindVertexArray(0);
-
-
 }
 
-bool Mesh::raycast(vec3 start, vec3 end, float& tmin){
+bool Mesh::raycast(const vec3& start, const vec3& end, float& tmin){
 	tmin = 1.0;
 	float t;
 	bool hit = false;
 	for(int i = 2; i < indices.size(); i+=3){
 		Triangle tri(vertices[indices[i-2]], vertices[indices[i-1]], vertices[indices[i]]);
+		tri.updateVertices(globalTransform);
 		if(tri.getIntersect(start, end, t)){
 			cout<<t<<endl;
 			tmin = std::min(tmin, t);
