@@ -4,7 +4,9 @@
 class Agent
 {
 	static int nextAgentID;
-    // Attribute Container
+    
+    // Attribute Container Placeholder
+    
     int groupID;
     const int agentID;
 

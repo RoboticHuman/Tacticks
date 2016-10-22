@@ -2,37 +2,53 @@
 #include "Agent.h"
 #include "AgentGroup.h"
 
-BehaviourModuleData::AgentIterator::AgentIterator(const std::unordered_map<int, PrivateAgent>::iterator& it) : iterator(it)
-{
 
-}
-const Agent* BehaviourModuleData::AgentIterator::operator->() const
+// AgentIterator Implementation
+//################################################
+AgentIterator::AgentIterator(const std::unordered_map<int, PrivateAgent>::iterator& it) : iterator(it){}
+
+const Agent* AgentIterator::operator->() const
 {
 	return iterator->second.agent;
 }
-const Agent& BehaviourModuleData::AgentIterator::operator*() const
+const Agent& AgentIterator::operator*() const
 {
 	return *(iterator->second.agent);
 }
-
-
-BehaviourModuleData::GroupIterator::GroupIterator(const std::unordered_map<int, AgentGroup*>::iterator& it) : iterator(it)
+void AgentIterator::operator++() const
 {
-
+    iterator++;
 }
-const AgentGroup* BehaviourModuleData::GroupIterator::operator->() const
+//#################################################
+
+// GroupIterator Implementation
+//#################################################
+GroupIterator::GroupIterator(const std::unordered_map<int, AgentGroup*>::iterator& it) : iterator(it){}
+
+const AgentGroup* GroupIterator::operator->() const
 {
 	return iterator->second;
 }
-const AgentGroup& BehaviourModuleData::GroupIterator::operator*() const
+const AgentGroup& GroupIterator::operator*() const
 {
 	return *(iterator->second);
 }
+void GroupIterator::operator++() const
+{
+    iterator++;
+}
+//#################################################
 
-
-void BehaviourModuleData::addAgent(Agent* agent){
+// BehaviourModuleData Implementation
+//#################################################
+void BehaviourModuleData::addAgent(Agent* agentPtr){
 	PrivateAgent& ref = agents[agent->getAgentID()];
-	ref.agent = agent;
+	ref.agent = agentPtr;
+    /*
+        TODO:
+        Add the following functionality as soon as the targetPosition
+        is available in the agent class
+    */
 	//ref.targetPosition = agent->globalTargetPosition();
 	//ref.targetVelocity = agent->position() - ref.targetPosition;
 }
@@ -45,40 +61,41 @@ glm::vec3 BehaviourModuleData::getTargetPositionVector(const int agentID) const
 {
 	return agents.at(agentID).targetPosition;
 }
-glm::vec3 BehaviourModuleData::getTargetPositionVector(const Agent* agent) const
+glm::vec3 BehaviourModuleData::getTargetPositionVector(const Agent* agentPtr) const
 {
-	return agents.at(agent->getAgentID()).targetPosition;
+	return agents.at(agentPtr->getAgentID()).targetPosition;
 }
 glm::vec3 BehaviourModuleData::getTargetVelocityVector(const int agentID) const
 {
 	return agents.at(agentID).targetVelocity;
 }
-glm::vec3 BehaviourModuleData::getTargetVelocityVector(const Agent* agent) const
+glm::vec3 BehaviourModuleData::getTargetVelocityVector(const Agent* agentPtr) const
 {
-	return agents.at(agent->getAgentID()).targetVelocity;
+	return agents.at(agentPtr->getAgentID()).targetVelocity;
 }
-Agent* BehaviourModuleData::getAgentByID(int agentID) const
+const Agent * BehaviourModuleData::getAgentByID(int agentID) const
 {
 	return agents.at(agentID).agent;
 }
-AgentGroup* BehaviourModuleData::getGroupByID(int groupID) const
+const AgentGroup * BehaviourModuleData::getGroupByID(int groupID) const
 {
 	return groups.at(groupID);
 }
-
-BehaviourModuleData::AgentIterator BehaviourModuleData::BeginAgent()
+AgentIterator BehaviourModuleData::firstAgent()
 {
 	return AgentIterator(agents.begin());
 }
-BehaviourModuleData::AgentIterator BehaviourModuleData::EndAgent()
+AgentIterator BehaviourModuleData::lastAgent()
 {
 	return AgentIterator(agents.end());
 }
-BehaviourModuleData::GroupIterator BehaviourModuleData::BeginGroup()
+GroupIterator BehaviourModuleData::firstGroup()
 {
 	return GroupIterator(groups.begin());
 }
-BehaviourModuleData::GroupIterator BehaviourModuleData::EndGroup()
+GroupIterator BehaviourModuleData::lastGroup()
 {
 	return GroupIterator(groups.end());
 }
+//#################################################
+

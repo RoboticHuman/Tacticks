@@ -13,14 +13,16 @@ public:
 
 private:
 	const int groupID;
-    std::vector<int> agentIDs;	// TODO: Benchmark vector usage vs unordered_set
+    /* 
+        TODO: Benchmark vector usage vs unordered_set
+     */
+    std::vector<int> agentIDs;
 
 public:
 	AgentGroup();
 	int getGroupID() const;
 
-	void addAgent(int);
-	void addAgent(Agent*);
+	void addAgent(Agent* agentPtr);
 };
 
 #endif

@@ -13,8 +13,8 @@ int AgentGroup::getGroupID() const
 	return groupID;
 }
 
-void AgentGroup::addAgent(Agent* agent)
+void AgentGroup::addAgent(Agent* agentPtr)
 {
-	agentIDs.push_back(agent->getAgentID());
-	agent->setGroupID(groupID);
+	agentIDs.push_back(agentPtr->getAgentID());
+	agentPtr->setGroupID(groupID);
 }
