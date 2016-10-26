@@ -1,43 +1,64 @@
-#include <string>
 #include <cstdio>
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <glm/vec3.hpp>
 #include "Core.h"
 #include "Model.h"
 #include "Shader.h"
 #include "Model.h"
+#include "Globals.h"
+#include "ResourceManager.h"
+
 using namespace std;
 using namespace glm;
 
+mat4 tempTranslationMat; ///TO BE DELTED ONLY FOR TEST RAYCAST
+
+void Core::loadMesh(string fpath, bool resetCam){
+	if(!models.empty()) delete models[0];
+	if(models.empty()) models.push_back(nullptr);
+	models[0] = new Model(fpath.c_str());
+	//models[0] = new Model("models/envCheck/Crate1.obj");
+
+	if(models.size() < 2) models.push_back(nullptr);
+	models[1] = new Model("models/envCheck/Crate1.obj");
+
+	if(resetCam) cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
+}
+
 void Core::preLoop()
 {
-	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	glEnable (GL_BLEND);
 	glClearColor(0, 0, 0, 1.0);
 
-	shader.push_back(new Shader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs"));
-	shader[0]->use();
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	models.push_back(new Model("models/envCheck/Crate1.obj"));
-
-	cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0));
-	transformLocation = shader[0]->getUniformLocation("transform");
+	cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
+	transformLocation = ResourceManager::getShader("meshShader")->getUniformLocation("transform");
 }
 void Core::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	models[0]->draw(shader[0]);
 
+	glEnable(GL_DEPTH_TEST);
+	ResourceManager::getShader("meshShader")->use();
+	for(Model *m : models) m->draw(ResourceManager::getShader("meshShader"));
+
+	glDisable(GL_DEPTH_TEST);
+	coreHUD.render();
 }
 void Core::postLoop()
 {
-	for(Shader *s : shader) delete s;
 	for(Model *m : models) delete m;
 }
 
 void Core::shutdown()
 {
+	coreHUD.shutdown();
+	ResourceManager::cleanup();
 	SDL_GL_DeleteContext(maincontext);
 	SDL_DestroyWindow(mainwindow);
 	SDL_Quit();
@@ -59,7 +80,6 @@ bool Core::init()
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
 
 	// 4x MSAA.
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
@@ -103,26 +123,31 @@ bool Core::init()
 		shutdown();
 		return false;
 	}
-	return true;
 
+	ResourceManager::loadShader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs","meshShader");
+	ResourceManager::loadShader("shaders/VSHUD.vs", "shaders/FSHUD.fs","hudShader");
+	coreHUD.init(screenWidth,screenHeight);
+
+	return true;
 }
 
 void Core::start()
 {
 	SDL_Event event;
 	preLoop();
-
+	int textBoxValue = 0;
 	while(!exitFlag){
 		const double MIN_FRAME_TIME = 1.0f / 40.0f;
 		cameraAngle = vec2(0,0);
 		double dt = timer.GetDelta();
-		if ( dt < MIN_FRAME_TIME){
+		if(dt < MIN_FRAME_TIME){
 			int ms = (int)((MIN_FRAME_TIME - dt) * 1000.0f);
 			if (ms > 10) ms = 10;
 			if (ms >= 0) SDL_Delay(ms);
 		}
 
 		while(SDL_PollEvent(&event)){	//Handeling events
+			coreHUD.injectEvent(event);
 			switch(event.type){
 				case SDL_KEYDOWN:
 					switch(event.key.keysym.sym){
@@ -135,51 +160,70 @@ void Core::start()
 					exitFlag = true;
 				break;
 				case SDL_MOUSEBUTTONDOWN:
-					if (event.button.button == SDL_BUTTON_RIGHT)
-					{
-						shouldRotateView = true;
-						origCameraAngle=cameraAngle;
-						origMousePos = mousePos;
+					switch(event.button.button){
+						case SDL_BUTTON_RIGHT:
+							shouldRotateView = true;
+							origCameraAngle=cameraAngle;
+						break;
+						case SDL_BUTTON_LEFT:
+							vec3 ray[2];
+							ray[0] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 0.0));
+							ray[1] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 1.0));
+							vec3 pos;
+							float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
+							if(!models.empty() && models[0]->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
+								cout << glm::to_string(pos) << endl;
+								models[1]->setPosition(pos);
+							}
+						break;
 					}
 				break;
 				case SDL_MOUSEWHEEL:
-				cout<<"Current mouse sensitivity: "<<mouseSensitivity<<endl;
 					if(shouldRotateView)
-					{	const float mouseSen = mouseSensitivity;
+					{
+						const float mouseSen = mouseSensitivity;
 						if (event.wheel.y > 0) mouseSensitivity = glm::clamp(mouseSen + 1.f,1.f,10.f);
 						else mouseSensitivity = glm::clamp(mouseSen-1.f,1.f,10.f);
 					}
 				break;
 				case SDL_MOUSEBUTTONUP:
-					if (event.button.button == SDL_BUTTON_RIGHT)
-					{
-						shouldRotateView = false;
+					switch(event.button.button){
+						case SDL_BUTTON_RIGHT:
+							shouldRotateView = false;
+						break;
 					}
-					break;
+				break;
 				case SDL_MOUSEMOTION:
 					if(shouldRotateView)
 					{
 						cameraAngle.x = -(float)event.motion.yrel * mouseSensitivity * 10;
 						cameraAngle.y = (float)event.motion.xrel * mouseSensitivity * 10;
 					}
-					break;
+				break;
 			}
-
 		}
-		const Uint8 *keyState = SDL_GetKeyboardState(nullptr);
 
-		if(keyState[SDL_SCANCODE_T]) cam.moveUp(moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_G]) cam.moveUp(-moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_W]) cam.moveForward(moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_S]) cam.moveForward(-moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_D]) cam.moveRight(moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_A]) cam.moveRight(-moveSpeed * dt);
-		if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 5.f; else moveSpeed=2.5f;
-		cam.updateCameraAngle(glm::radians(cameraAngle.y)* dt , glm::radians(cameraAngle.x) * dt);
+		if(coreHUD.shouldCoreMove())
+		{
+			const Uint8 *keyState = SDL_GetKeyboardState(nullptr);
 
+			if(keyState[SDL_SCANCODE_T]) cam.moveUp(moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_G]) cam.moveUp(-moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_W]) cam.moveForward(moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_S]) cam.moveForward(-moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_D]) cam.moveRight(moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_A]) cam.moveRight(-moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 50.f; else moveSpeed=10.0f;
+			cam.updateCameraAngle(glm::radians(cameraAngle.y)* dt , glm::radians(cameraAngle.x) * dt);
+		}
+		coreHUD.update();
+
+		//need to use the shader before the operation after it, TODO: need to fix this crap...
+		ResourceManager::getShader("meshShader")->use();
 		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
 
 		render();
+
 		SDL_GL_SwapWindow(mainwindow);
 	}
 	postLoop();

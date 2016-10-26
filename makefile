@@ -8,12 +8,16 @@ HDir = ./include
 BDir = ./Build
 CompileFlags = -std=c++11
 LinkFlags = `sdl2-config --libs`
+<<<<<<< HEAD
 ifeq ($(shell uname),Darwin)	# Mac OS X
 	Libs = -lSOIL -framework OpenGL -lGLEW -lassimp
 else
 	Libs = -lSOIL -lGL -lGLEW -lassimp
 endif
 
+=======
+Libs = -lSOIL -lGL -lGLEW -lassimp -lawesomium-1-7
+>>>>>>> HUD
 Objects = $(addsuffix .o, $(addprefix $(BDir)/, $(shell cat $(FileSrc))))
 FolderList = $(sort $(SDir)/ $(HDir)/ $(BDir)/ $(dir $(Objects)) $(dir $(AppName)))
 

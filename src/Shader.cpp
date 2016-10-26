@@ -3,6 +3,12 @@
 #include <cstdio>
 Shader::Shader(const char* vsfpath, const char* fsfpath)
 {
+	loadAndBind(vsfpath, fsfpath);
+}
+
+void Shader::loadAndBind(const char* vsfpath, const char* fsfpath)
+{
+	if(shaderProgram != 0) glDeleteProgram(shaderProgram);
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	GLchar* vertexSource = readAllFile(vsfpath);
 	glShaderSource(vertexShader, 1, &vertexSource, NULL);

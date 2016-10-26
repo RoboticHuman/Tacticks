@@ -4,8 +4,22 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <algorithm>
+#include <iostream>
 #include "Shader.h"
+using namespace std;
+using namespace glm;
 
+void Model::copyAiMat(const aiMatrix4x4 *from, glm::mat4 &to) {
+	to[0][0] = from->a1; to[1][0] = from->a2;
+	to[2][0] = from->a3; to[3][0] = from->a4;
+	to[0][1] = from->b1; to[1][1] = from->b2;
+	to[2][1] = from->b3; to[3][1] = from->b4;
+	to[0][2] = from->c1; to[1][2] = from->c2;
+	to[2][2] = from->c3; to[3][2] = from->c4;
+	to[0][3] = from->d1; to[1][3] = from->d2;
+	to[2][3] = from->d3; to[3][3] = from->d4;
+}
 
 Model::Model(string path)
 {
@@ -18,6 +32,28 @@ void Model::draw(Shader *shader)
 	{
 		meshes[i].draw(shader);
 	}
+	for(int i=0;i<nodes.size();i++)
+	{
+		nodes[i].draw(shader);
+	}
+}
+
+void Model::move(const glm::vec3 &offset)
+{
+	globalTransform = translate(globalTransform,offset);
+	for(Model &node: nodes)
+	{
+		node.move(offset);
+	}
+}
+
+void Model::setPosition(const glm::vec3 &newPosition)
+{
+	glm::vec3 offset = glm::vec3(newPosition[0]-globalTransform[3][0],
+									newPosition[1]-globalTransform[3][1],
+									newPosition[2]-globalTransform[3][2]);
+
+	move(offset);
 }
 
 void Model::loadModel(string path)
@@ -32,24 +68,57 @@ void Model::loadModel(string path)
 	}
 
 	containingDir = path.substr(0, path.find_last_of('/'));
-
-	processNode(scene->mRootNode, scene);
+	processNode(scene->mRootNode, scene, *this);
 }
 
-void Model::processNode(aiNode *node, const aiScene *scene)
+Model::Model()
+{
+
+}
+
+void Model::processNode(aiNode *node, const aiScene *scene,Model &rootModel)
 {
 	for(GLuint i=0;i<node->mNumMeshes;i++)
 	{
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(loadMesh(mesh,scene));
+		rootModel.meshes.push_back(loadMesh(mesh,scene));
+		copyAiMat(&(node->mTransformation),rootModel.globalTransform);
+		cout<<"finished"<<endl;
 	}
 
 	for (GLuint i=0;i<node->mNumChildren;i++)
 	{
-		processNode(node->mChildren[i],scene);
-	}
+		rootModel.nodes.push_back(Model());
+		rootModel.nodes.back().containingDir = rootModel.containingDir;
+		processNode(node->mChildren[i],scene,rootModel.nodes[i]);
 
+	}
 }
+
+/*
+rootNode = new Node;
+rootNode->meshReferences=&meshes;
+processNode(scene->mRootNode, scene, rootNode);
+}
+
+void Model::processNode(aiNode *node, const aiScene *scene,Node *rootNode)
+{
+for(GLuint i=0;i<node->mNumMeshes;i++)
+{
+	aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+	meshes.push_back(loadMesh(mesh,scene));
+	copyAiMat(&(node->mTransformation),rootNode->transformation);
+	rootNode->meshes.push_back(meshes.size()-1);
+}
+
+for (GLuint i=0;i<node->mNumChildren;i++)
+{
+	rootNode->nodes.push_back(new Node);
+	rootNode->nodes.back()->meshReferences=&meshes;
+	processNode(node->mChildren[i],scene,rootNode->nodes[i]);
+}
+}
+*/
 
 Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
 {
@@ -127,7 +196,7 @@ Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
 
 	}
 
-	return Mesh(vertices, indices, textures);
+	return Mesh(vertices, indices, textures, globalTransform);
 }
 
 GLuint Model::textureFromFile(const char* path, string containingDir)
@@ -151,4 +220,21 @@ GLuint Model::textureFromFile(const char* path, string containingDir)
     glBindTexture(GL_TEXTURE_2D, 0);
     SOIL_free_image_data(image);
     return textureID;
+}
+
+bool Model::raycast(const vec3& start, const vec3& end, vec3& hitPos, float &tmin)
+{
+	float t;
+	bool hit = false;
+	for(Mesh &m : meshes) {
+		if(m.raycast(start, end, t)) {
+			tmin = std::min(tmin, t);
+			hit = true;
+		}
+	}
+	hitPos = start + (end - start) * tmin;
+	for (int i=0; i<nodes.size(); i++) {
+		hit |= nodes[i].raycast(start, end, hitPos, tmin);
+	}
+	return hit;
 }

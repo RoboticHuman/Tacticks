@@ -2,9 +2,11 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <vector>
+#include <string>
 #include "Camera.h"
 #include "Timer.h"
 #include <cmath>
+#include "HUD.h"
 
 class Shader;
 class Model;
@@ -22,8 +24,6 @@ private:
 	float moveSpeed = 1.0f;
 	float mouseSensitivity = 5.0f;
 	bool shouldRotateView = false;
-	glm::vec2 mousePos = glm::vec2(0,0);
-	glm::vec2 origMousePos = glm::vec2(0,0);
 	glm::vec2 cameraAngle = glm::vec2(0,0);
 	glm::vec2 origCameraAngle = glm::vec2(0,0);
 	SDL_Window *mainwindow = nullptr;
@@ -33,6 +33,7 @@ private:
 	std::vector<Shader *> shader;
 	Camera cam;
 	Timer timer;
+	HUD coreHUD;
 
 	GLuint transformLocation;
 
@@ -65,4 +66,6 @@ public:
 	 * @brief      This function takes care of cleaning SDL related structures and quits SDL safely.
 	 */
 	void shutdown();
+
+	void loadMesh(std::string, bool = false);
 };

@@ -9,3 +9,10 @@ Mesh
 Model
 Timer
 Camera
+HUD
+Sprite
+Texture2D
+ResourceManager
+HUDDataSource
+HUDEventHandler
+JSHandler

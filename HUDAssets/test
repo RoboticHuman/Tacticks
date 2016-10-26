@@ -1,0 +1,97 @@
+ <!DOCTYPE html>
+<html>
+	<head>
+		<style type="text/css">
+			body{
+				background-color: transparent;
+			}
+			div{
+				background: rgba(255, 255, 255, 0.75);
+				color : rgb(255, 0, 0);
+				padding: 5px;
+				float : left;
+			}
+			.dropbtn {
+
+			}
+
+			.dropbtn:after {
+			    border: 0.35em solid transparent; /* 5 pixels wide */
+			    border-bottom: none;  /* helps the drop-down arrow stay in the vertical centre of the parent */
+			    border-top-color: #000000;   /* colour of the drop-down arrow */
+			    content: ''; /* content of the arrow, you want to keep this empty */
+			    vertical-align: middle;
+			    display: inline-block;
+			    position: relative;
+			    right: -0.35em; /* 5 pixels right of the menu text*/
+			}
+
+
+			.dropdown {
+			    position: relative;
+			    display: inline-block;
+			}
+
+			.dropdown-content {
+			    display: none;
+			    position: absolute;
+			    background-color: #f9f9f9;
+			    min-width: 160px;
+			    overflow: auto;
+			    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+			}
+
+			.dropdown-content a {
+			    color: black;
+			    padding: 12px 16px;
+			    text-decoration: none;
+			    display: block;
+			}
+
+			.dropdown a:hover {background-color: #f1f1f1}
+
+			.show {display:block;}
+		</style>
+		<script src="jquery-3.1.0.min.js"></script>
+		<script type="text/javascript">
+
+			function setTextboxValue(val){
+				alert("hmmm");
+				document.getElementById("MyTextBox").value = val;
+			}
+
+			function onDropDownClick(){
+				document.getElementById("optionsDropDown").classList.toggle('show');
+			}
+			// Close the dropdown if the user clicks outside of it
+			window.onclick = function(event) {
+			  if (!$(event.target).hasClass("dropbtn")) {
+
+			    var dropdowns = document.getElementsByClassName("dropdown-content");
+			    var i;
+			    for (i = 0; i < dropdowns.length; i++) {
+			      var openDropdown = dropdowns[i];
+			      if (openDropdown.classList.contains('show')) {
+				openDropdown.classList.remove('show');
+			      }
+			    }
+			  }
+			}
+		</script>
+	</head>
+	<body onload="document.getElementById('MyTextBox').value = getDefaultPath()">
+		<div class="dropdown">
+		<button onclick="onDropDownClick()" class="dropbtn">Options</button>
+		    <div id="optionsDropDown" class="dropdown-content">
+			<a href="#option1">Option 1</a>
+			<a href="#option2">Option 2</a>
+			<a href="#option3">Option 3</a>
+		    </div>
+		</div>
+		<div>
+			<input type="button" value="Print Value" onclick="loadMesh(document.getElementById('MyTextBox').value)">
+			<input type="text" id="MyTextBox" >
+		</div>
+
+	</body>
+</html>
