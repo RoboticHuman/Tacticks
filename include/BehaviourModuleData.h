@@ -6,43 +6,16 @@
 
 class Agent;
 class AgentGroup;
-
-// AgentIterator Prototype
-//################################################
-class AgentIterator
-{
-    friend BehaviourModuleData;
-private:
-    std::unordered_map<int, PrivateAgent>::iterator iterator;
-    
-    AgentIterator(const std::unordered_map<int, PrivateAgent>::iterator&);
-public:
-    const Agent* operator->() const;
-    const Agent& operator*() const;
-    void operator++() const;
-};
-//################################################
-
-// GroupIterator Prototype
-//################################################
-class GroupIterator
-{
-    friend BehaviourModuleData;
-private:
-    std::unordered_map<int, AgentGroup*>::iterator iterator;
-    
-    GroupIterator(const std::unordered_map<int, AgentGroup*>::iterator&);
-public:
-    const AgentGroup* operator->() const;
-    const AgentGroup& operator*() const;
-    void operator++() const;
-};
-//################################################
+class AgentIterator;
+class GroupIterator;
 
 // BehaviourModuleData Prototype
 //################################################
 class BehaviourModuleData
 {
+	friend AgentIterator;
+	friend GroupIterator;
+private:
 	struct PrivateAgent
 	{
 		Agent* agent;
@@ -56,7 +29,7 @@ private:
 
 public:
     /*
-        TODO: 
+        TODO:
         Move addAgent and addGroup functionality to a place
         not accessible by the Behaviour Modules
     */
@@ -70,11 +43,46 @@ public:
 	const Agent* getAgentByID(int agentID) const;
 	const AgentGroup* getGroupByID(int groupID) const;
 
-	AgentIterator firstAgent();
-	AgentIterator lastAgent();
-	GroupIterator firstGroup();
-	GroupIterator lastGroup();
+	AgentIterator beginAgent();
+	AgentIterator endAgent();
+	GroupIterator beginGroup();
+	GroupIterator endGroup();
 };
 //################################################
+
+// AgentIterator Prototype
+//################################################
+class AgentIterator
+{
+	friend BehaviourModuleData;
+private:
+    std::unordered_map<int, BehaviourModuleData::PrivateAgent>::iterator iterator;
+
+    AgentIterator(const std::unordered_map<int, BehaviourModuleData::PrivateAgent>::iterator&);
+public:
+    const Agent* operator->() const;
+    const Agent& operator*() const;
+	AgentIterator& operator++();
+    AgentIterator operator++(int);
+};
+//################################################
+
+// GroupIterator Prototype
+//################################################
+class GroupIterator
+{
+	friend BehaviourModuleData;
+private:
+    std::unordered_map<int, AgentGroup*>::iterator iterator;
+
+    GroupIterator(const std::unordered_map<int, AgentGroup*>::iterator&);
+public:
+    const AgentGroup* operator->() const;
+    const AgentGroup& operator*() const;
+	GroupIterator& operator++();
+    GroupIterator operator++(int);
+};
+//################################################
+
 
 #endif

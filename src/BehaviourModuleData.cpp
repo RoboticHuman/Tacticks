@@ -5,7 +5,7 @@
 
 // AgentIterator Implementation
 //################################################
-AgentIterator::AgentIterator(const std::unordered_map<int, PrivateAgent>::iterator& it) : iterator(it){}
+AgentIterator::AgentIterator(const std::unordered_map<int, BehaviourModuleData::PrivateAgent>::iterator& it) : iterator(it){}
 
 const Agent* AgentIterator::operator->() const
 {
@@ -15,9 +15,16 @@ const Agent& AgentIterator::operator*() const
 {
 	return *(iterator->second.agent);
 }
-void AgentIterator::operator++() const
+AgentIterator& AgentIterator::operator++()
 {
-    iterator++;
+	++iterator;
+    return *this;
+}
+AgentIterator AgentIterator::operator++(int)
+{
+	AgentIterator ret = *this;
+	++iterator;
+    return ret;
 }
 //#################################################
 
@@ -33,16 +40,23 @@ const AgentGroup& GroupIterator::operator*() const
 {
 	return *(iterator->second);
 }
-void GroupIterator::operator++() const
+GroupIterator& GroupIterator::operator++()
 {
-    iterator++;
+	++iterator;
+    return *this;
+}
+GroupIterator GroupIterator::operator++(int)
+{
+	GroupIterator ret = *this;
+	++iterator;
+    return ret;
 }
 //#################################################
 
 // BehaviourModuleData Implementation
 //#################################################
 void BehaviourModuleData::addAgent(Agent* agentPtr){
-	PrivateAgent& ref = agents[agent->getAgentID()];
+	PrivateAgent& ref = agents[agentPtr->getAgentID()];
 	ref.agent = agentPtr;
     /*
         TODO:
@@ -81,21 +95,20 @@ const AgentGroup * BehaviourModuleData::getGroupByID(int groupID) const
 {
 	return groups.at(groupID);
 }
-AgentIterator BehaviourModuleData::firstAgent()
+AgentIterator BehaviourModuleData::beginAgent()
 {
 	return AgentIterator(agents.begin());
 }
-AgentIterator BehaviourModuleData::lastAgent()
+AgentIterator BehaviourModuleData::endAgent()
 {
 	return AgentIterator(agents.end());
 }
-GroupIterator BehaviourModuleData::firstGroup()
+GroupIterator BehaviourModuleData::beginGroup()
 {
 	return GroupIterator(groups.begin());
 }
-GroupIterator BehaviourModuleData::lastGroup()
+GroupIterator BehaviourModuleData::endGroup()
 {
 	return GroupIterator(groups.end());
 }
 //#################################################
-
