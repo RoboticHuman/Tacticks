@@ -1,41 +1,28 @@
-.PHONY: first build clean run envCheck
+.PHONY: first clean engine editor libraries
 RootDir = $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
-FileSrc = my.proj
-AppName = Tacticks.out
-CleanFiles = *.log
-SDir = ./src
-HDir = ./include
-BDir = ./Build
-CompileFlags = -std=c++11
-LinkFlags = `sdl2-config --libs`
+EditorAppName = TacticksEditor.out
+EngineLibName = Tacticks.so
+InstallFolder = Install
+CleanFiles = *.log $(InstallFolder)
+MakeFlags = --no-print-directory
+first: all
 
-ifeq ($(shell uname),Darwin)	# Mac OS X
-	Libs = -lSOIL -framework OpenGL -lGLEW -lassimp -lawesomium-1-7
-else
-	Libs = -lSOIL -lGL -lGLEW -lassimp -lawesomium-1-7
-endif
+all: engine editor libraries
 
-Objects = $(addsuffix .o, $(addprefix $(BDir)/, $(shell cat $(FileSrc))))
-FolderList = $(sort $(SDir)/ $(HDir)/ $(BDir)/ $(dir $(Objects)) $(dir $(AppName)))
+editor: engine
+	@(cd Editor/ && make $(MakeFlags) IPath=../$(InstallFolder)/include LPath=../$(InstallFolder)/lib)
 
-first: build
+engine:
+	@(cd Engine/ && make $(MakeFlags) install InstallFolder=../$(InstallFolder))
 
-build: $(AppName)
+libraries:
+	@(cd Libraries/ && make $(MakeFlags) IPath=../$(InstallFolder)/include )
 
 clean:
-	rm -rf $(BDir)/* $(AppName) $(CleanFiles) *.out
+	@(cd Engine/ && make $(MakeFlags) clean)
+	@(cd Editor/ && make $(MakeFlags) clean)
+	@(cd Libraries/ && make $(MakeFlags) clean)
+	rm -rf $(CleanFiles) *.out *.so *.dll
 
-run: $(AppName)
-	./$(AppName)
-
-$(AppName): $(Objects) | $(FolderList)
-	$(CXX) $(Objects) -o $(AppName) $(LinkFlags) $(Libs)
-
-$(BDir)/%.o: $(SDir)/%.cpp | $(FolderList)
-	$(CXX) -c $< -o $@ -I$(HDir) $(CompileFlags)
-
-$(FolderList):
-	mkdir -p $@
-
-envCheck:
-	@make AppName=envCheck.out FileSrc=envCheck.proj build run -s
+run:
+	@(cd Editor/ && make run)

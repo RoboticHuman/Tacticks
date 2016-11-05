@@ -7,7 +7,6 @@
 #include "Model.h"
 #include "Shader.h"
 #include "Model.h"
-#include "Globals.h"
 #include "ResourceManager.h"
 
 using namespace std;
@@ -19,10 +18,9 @@ void Core::loadMesh(string fpath, bool resetCam){
 	if(!models.empty()) delete models[0];
 	if(models.empty()) models.push_back(nullptr);
 	models[0] = new Model(fpath.c_str());
-	//models[0] = new Model("models/envCheck/Crate1.obj");
 
 	if(models.size() < 2) models.push_back(nullptr);
-	models[1] = new Model("models/envCheck/Crate1.obj");
+	models[1] = new Model("models/Crate1.obj");
 
 	if(resetCam) cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
 }
@@ -124,7 +122,7 @@ bool Core::init()
 		return false;
 	}
 
-	ResourceManager::loadShader("shaders/envCheck/VSTest.vs", "shaders/envCheck/FSTest.fs","meshShader");
+	ResourceManager::loadShader("shaders/VS.vs", "shaders/FS.fs","meshShader");
 	ResourceManager::loadShader("shaders/VSHUD.vs", "shaders/FSHUD.fs","hudShader");
 	coreHUD.init(screenWidth,screenHeight);
 

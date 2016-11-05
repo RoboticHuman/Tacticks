@@ -3,9 +3,9 @@
 #include <GL/glew.h>
 #include <vector>
 #include <string>
+#include <cmath>
 #include "Camera.h"
 #include "Timer.h"
-#include <cmath>
 #include "HUD.h"
 
 class Shader;
