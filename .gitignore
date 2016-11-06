@@ -1,9 +1,10 @@
 # Compiled Object files
-Buid/*.slo
-Buid/*.lo
-Buid/*.o
-Buid/*.obj
-Build/*
+*.slo
+*.lo
+*.o
+*.obj
+*/Build
+Install/*
 
 # Precompiled Headers
 *.gch
