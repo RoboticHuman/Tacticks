@@ -11,7 +11,7 @@ first: all
 
 all:
 	$(foreach beh, $(BehList), @(cd $(beh) && make IPath=../../$(IPath)))
-#$(foreach nav, $(NavList), @(cd $(nav) && make IPath=$(IPath)))
+#$(foreach nav, $(NavList), @(cd $(nav) && make IPath=../../$(IPath)))
 
 clean:
 	$(foreach beh, $(BehList), @(cd $(beh) && make clean))
