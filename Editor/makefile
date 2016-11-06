@@ -29,7 +29,7 @@ clean:
 	rm -rf $(BDir)/* $(AppName) $(CleanFiles) *.out *.so *.dll
 
 run: $(AppName)
-	./$(AppName)
+	@./$(AppName)
 
 $(AppName): $(Objects) | $(FolderList)
 	$(CXX) $(Objects) -o $(AppName) $(Libs) $(LinkFlags) -L$(LPath)

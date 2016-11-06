@@ -24,5 +24,5 @@ clean:
 	@(cd Libraries/ && make $(MakeFlags) clean)
 	rm -rf $(CleanFiles) *.out *.so *.dll
 
-run:
-	@(cd Editor/ && make run)
+run: all
+	@(export LD_LIBRARY_PATH=$(RootDir)Install/lib/:$$LD_LIBRARY_PATH && cd Editor/ && make $(MakeFlags) run)

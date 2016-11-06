@@ -1,8 +1,8 @@
 #include <cstdio>
 #include <cstring>
 #include <unistd.h>
+#include <dlfcn.h>
 #include "BehaviourModuleFactory.h"
-#include "DummyBeh.h"
 using namespace std;
 
 //Behaviour Implementation
@@ -12,18 +12,31 @@ bool Behaviour::validity() const
 }
 
 //BehaviourModuleFactory Implementation:
-const string BehaviourModuleFactory::libraryPath = "Behaviour/";
+const string BehaviourModuleFactory::libraryPath = "../Libraries/Behaviour/";
 
-AbstractBehaviourModule* BehaviourModuleFactory::construct(std::string behName)
+AbstractBehaviourModule* BehaviourModuleFactory::construct(std::string behName, BehaviourModuleData* data)
 {
 	//Checks if behaviour file exist and have read permission.
-	if(access((libraryPath + behName + ".beh").c_str(), F_OK | R_OK) == -1) return nullptr;
+	if(access((libraryPath + behName + "/" + behName + ".beh").c_str(), F_OK | R_OK) == -1) return nullptr;
 
 	/*
-		TODO: Read file content, build, link shared object, ... etc.
+		TODO: Read file content, build shared object, ... etc.
 	*/
 
-	return new Dummy();
+	//Loading Shared Object
+	void* handle = dlopen((libraryPath + behName + "/" + behName + ".so").c_str(), RTLD_NOW);
+	if(handle == nullptr) return nullptr;
+
+	typedef AbstractBehaviourModule* (*newBeh_t)(BehaviourModuleData*);
+	newBeh_t newBeh = (newBeh_t)dlsym(handle, "newBeh");
+	if(newBeh == nullptr) return nullptr;
+
+	/*
+		TODO: Proper shared object clean up is required
+		dlclose(handle);
+	*/
+
+	return newBeh(data);
 }
 
 Behaviour BehaviourModuleFactory::getMetaData(std::string behName)
