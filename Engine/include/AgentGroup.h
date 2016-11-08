@@ -1,7 +1,6 @@
 #include <vector>
 
-#ifndef AgentGroup_hpp
-#define AgentGroup_hpp
+#pragma once
 
 class Agent;
 
@@ -24,5 +23,3 @@ public:
 
 	void addAgent(Agent* agentPtr);
 };
-
-#endif

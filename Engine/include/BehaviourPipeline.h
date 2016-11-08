@@ -2,8 +2,7 @@
 #include <ForcesBehaviourModule.h>
 #include <MilestonesBehaviourModule.h>
 
-#ifndef BehaviourPipeline_hpp
-#define BehaviourPipeline_hpp
+#pragma once
 
 class BehaviourPipeline
 {
@@ -34,6 +33,3 @@ public:
     
     
 };
-
-
-#endif

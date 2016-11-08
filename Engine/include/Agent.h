@@ -1,5 +1,4 @@
-#ifndef Agent_hpp
-#define Agent_hpp
+#pragma once
 
 class Agent
 {
@@ -17,6 +16,3 @@ public:
 	int getGroupID() const;
 	int getAgentID() const;
 };
-
-
-#endif

@@ -1,11 +1,8 @@
 #include "AbstractBehaviourModule.h"
 
-#ifndef MilestonesBehaviourModule_h
-#define MilestonesBehaviourModule_h
+#pragma once
 
 class MilestonesBehaviourModule : public AbstractBehaviourModule{
 protected:
 	MilestonesBehaviourModule(BehaviourModuleData* data);
 };
-
-#endif

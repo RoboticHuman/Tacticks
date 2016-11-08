@@ -10,9 +10,9 @@ NavList = $(sort $(dir $(wildcard $(NavDir)/*/)))
 first: all
 
 all:
-	$(foreach beh, $(BehList), @(cd $(beh) && make IPath=../../$(IPath)))
-#$(foreach nav, $(NavList), @(cd $(nav) && make IPath=../../$(IPath)))
+	$(foreach beh, $(BehList), @(cd $(beh) && make LPath=../../$(LPath) IPath=../../$(IPath)))
+	$(foreach nav, $(NavList), @(cd $(nav) && make LPath=../../$(LPath) IPath=../../$(IPath)))
 
 clean:
 	$(foreach beh, $(BehList), @(cd $(beh) && make clean))
-#$(foreach nav, $(NavList), @(cd $(nav) && make clean))
+	$(foreach nav, $(NavList), @(cd $(nav) && make clean))

@@ -1,11 +1,12 @@
 #include "Recast/Include/Recast.h"
-#include "NLerror.h"
+#include "Tacticks/DebugFactory.h"
 #include <limits>
 #include <cmath>
+#include <cstring>
+#include <memory>
 template <typename> class NavLibContainer;
 
-#ifndef NLrcHeightfield_h
-#define NLrcHeightfield_h
+#pragma once
 
 ///  \addtogroup navlib
 ///  @{
@@ -14,7 +15,7 @@ template <typename> class NavLibContainer;
 class NLrcHeightfield {
     friend class NLrcCompactHeightfield;
     friend class NavLibContainer<NLrcHeightfield>;
-
+    
 private:
     // Stores parameters used to construct this wraper
     struct constructionParameters {
@@ -23,14 +24,39 @@ private:
         float cs; float ch; int flagMergeThr;
     };
     
+    std::shared_ptr<DebugMesh> debugMesh;
     constructionParameters inputData;
+    
+    void constructDebugMesh(){
+        debugMesh=DebugFactory::createDebugMesh("heightfield");
+        const float* origin = data->bmin;
+        const float cs = data->cs;
+        const float ch = data->ch;
+        
+        const int gridWidth = data->width;
+        const int gridHeight = data->height;
+        
+        for(int z=0;z<gridHeight;z++)
+        {
+            for(int x=0;x<gridWidth;x++)
+            {
+                float fx = origin[0] + x*cs;
+                float fz = origin[2] + z*cs;
+                const rcSpan* spanList = data->spans[x+z*gridWidth];
+                while(spanList)
+                {
+                    debugMesh->drawCuboid(fx,origin[1]+spanList->smin*ch,fz,fx+cs,origin[1]+spanList->smax*ch,fz+cs,235,255,131);
+                    spanList=spanList->next;
+                }
+            }
+        }
+    }
     
 public:
     /// Actual data of the navigation library
     rcHeightfield* data;
     
-protected:
-
+    
     ///  @param[in]     bmin                The minimum bounds in world space. [(x, y, z)]
     ///  @param[in]     bmax                The maximum bounds in world space. [(x, y, z)]
     ///  @param[in]		walkableHeight      Minimum floor to 'ceiling' height that will still allow the floor area to
@@ -55,15 +81,15 @@ protected:
         
         // Store parameters used to construct this wraper
         ////////////////////////////////////////////////////
-        memcpy(inputData.bmin,bmin,sizeof inputData.bmin);
-        memcpy(inputData.bmax,bmax,sizeof inputData.bmax);
+        std::memcpy(inputData.bmin,bmin,sizeof inputData.bmin);
+        std::memcpy(inputData.bmax,bmax,sizeof inputData.bmax);
         inputData.walkableHeight = walkableHeight;
         inputData.walkableClimb = walkableClimb;
         inputData.walkableSlopeAngle = walkableSlopeAngle;
-
-        memcpy(inputData.verts,verts,sizeof (float) * nv);
+        
+        std::memcpy(inputData.verts,verts,sizeof (float) * nv);
         inputData.nv = nv;
-        memcpy(inputData.tris,tris,sizeof (int) * nt);
+        std::memcpy(inputData.tris,tris,sizeof (int) * nt);
         inputData.nt = nt;
         inputData.cs = cs;
         inputData.ch = ch;
@@ -87,21 +113,21 @@ protected:
         if (!rcRasterizeTriangles (&ctx, verts, nv, tris, areas, nt, *data, flagMergeThr))
             throw NLerror("Call to rcRasterizeTriangles failed");
         
-        rcFilterWalkableLowHeightSpans (&ctx, walkableHeight,*data);
+        rcFilterLowHangingWalkableObstacles (&ctx, walkableClimb,*data);
         
         rcFilterLedgeSpans (&ctx, walkableHeight, walkableClimb, *data);
         
         rcFilterWalkableLowHeightSpans	(&ctx, walkableHeight, *data);
         ////////////////////////////////////////////////////
-
+        
     };
     
     
     bool constructedWithSameParams(
-                                  const float* bmin, const float* bmax, const int walkableHeight, const int walkableClimb,
-                                  const float walkableSlopeAngle, const float* verts, const int nv, const int* tris, const int nt,
-                                  float cs, float ch, const int flagMergeThr
-                                  )
+                                   const float* bmin, const float* bmax, const int walkableHeight, const int walkableClimb,
+                                   const float walkableSlopeAngle, const float* verts, const int nv, const int* tris, const int nt,
+                                   float cs, float ch, const int flagMergeThr
+                                   )
     {
         // return value, true if all values match the inputData
         bool ret = true;
@@ -120,7 +146,7 @@ protected:
         for (int i=0; i<nv; i++)
             ret &= (std::abs(verts[i] - inputData.verts[i]) <= std::numeric_limits<float>::epsilon());
         // check if the triangles are the same
-        ret &= !memcmp(inputData.tris, tris, sizeof(int)*nt);
+        ret &= !std::memcmp(inputData.tris, tris, sizeof(int)*nt);
         // check for the rest
         ret &= (std::abs(inputData.walkableSlopeAngle - walkableSlopeAngle) <= std::numeric_limits<float>::epsilon());
         ret &= (std::abs(inputData.cs - cs) <= std::numeric_limits<float>::epsilon());
@@ -137,13 +163,3 @@ protected:
     }
 };
 /// @}
-
-
-#endif
-
-
-
-
-
-
-

@@ -1,8 +1,7 @@
 #include <unordered_map>
 #include <glm/vec3.hpp>
 
-#ifndef BehaviourModuleData_hpp
-#define BehaviourModuleData_hpp
+#pragma once
 
 class Agent;
 class AgentGroup;
@@ -83,6 +82,3 @@ public:
     GroupIterator operator++(int);
 };
 //################################################
-
-
-#endif

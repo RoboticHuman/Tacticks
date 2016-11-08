@@ -1,11 +1,8 @@
 #include "AbstractBehaviourModule.h"
 
-#ifndef ForcesBehaviourModule_h
-#define ForcesBehaviourModule_h
+#pragma once
 
 class ForcesBehaviourModule : public AbstractBehaviourModule{
 protected:
 	ForcesBehaviourModule(BehaviourModuleData* data);
 };
-
-#endif

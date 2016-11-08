@@ -26,7 +26,7 @@ first: build
 build: $(AppName)
 
 clean:
-	rm -rf $(BDir)/* $(AppName) $(CleanFiles) *.out *.so *.dll
+	rm -rf $(BDir) $(AppName) $(CleanFiles) *.out *.so *.dll *.o
 
 run: $(AppName)
 	@./$(AppName)

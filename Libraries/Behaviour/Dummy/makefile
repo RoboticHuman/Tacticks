@@ -10,7 +10,7 @@ IPath = .
 LPath = .
 CompileFlags = -std=c++11 -fPIC
 LinkFlags = -shared
-Libs =
+Libs = -lTacticks
 
 Objects = $(addsuffix .o, $(addprefix $(BDir)/, $(shell cat $(FileSrc))))
 FolderList = $(sort $(SDir)/ $(HDir)/ $(BDir)/ $(dir $(Objects)) $(dir $(AppName)))
@@ -20,7 +20,7 @@ first: build
 build: $(AppName)
 
 clean:
-	rm -rf $(BDir)/* $(AppName) $(CleanFiles) *.out *.so *.dll
+	rm -rf $(BDir)/* $(AppName) $(CleanFiles) *.out *.so *.dll *.o
 
 run: $(AppName)
 	./$(AppName)

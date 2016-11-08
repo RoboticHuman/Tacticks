@@ -5,8 +5,7 @@
 #include <memory>
 #include <utility>
 
-#ifndef NavLibContainer_h
-#define NavLibContainer_h
+#pragma once
 
 ///
 /// @defgroup navlib Navigation Libraries
@@ -40,11 +39,12 @@ template <typename ...argTypes>
 std::shared_ptr<NavLibType> NavLibContainer<NavLibType>::getNavigationLibrary (argTypes... args)
 {
     // Check if there exists a previously constructed Navigation Library similar to the one the user wants to create
-    for (int i=0; i<navLibCache.size(); i++){
+    for (int i=0; i<navLibCache.size();){
         
         if (!navLibCache[i].expired()) {
             if (navLibCache[i].lock()->constructedWithSameParams(args...))
                 return navLibCache[i].lock();
+            i++;
         }
         else {
             std::iter_swap(navLibCache.begin()+i, navLibCache.end() - 1);
@@ -60,5 +60,3 @@ std::shared_ptr<NavLibType> NavLibContainer<NavLibType>::getNavigationLibrary (a
     return temp;
     
 }
-
-#endif
