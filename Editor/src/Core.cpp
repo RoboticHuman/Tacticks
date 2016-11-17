@@ -20,7 +20,7 @@ void Core::loadMesh(string fpath, bool resetCam){
 	models[0] = new Model(fpath.c_str());
 
 	if(models.size() < 2) models.push_back(nullptr);
-	models[1] = new Model("models/Crate1.obj");
+	models[1] = new Model("EditorAssets/models/Crate1.obj");
 
 	if(resetCam) cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
 }
@@ -122,8 +122,8 @@ bool Core::init()
 		return false;
 	}
 
-	ResourceManager::loadShader("shaders/VS.vs", "shaders/FS.fs","meshShader");
-	ResourceManager::loadShader("shaders/VSHUD.vs", "shaders/FSHUD.fs","hudShader");
+	ResourceManager::loadShader("EditorAssets/shaders/VS.vs", "EditorAssets/shaders/FS.fs","meshShader");
+	ResourceManager::loadShader("EditorAssets/shaders/VSHUD.vs", "EditorAssets/shaders/FSHUD.fs","hudShader");
 	coreHUD.init(screenWidth,screenHeight);
 
 	return true;

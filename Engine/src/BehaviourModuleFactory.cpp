@@ -12,7 +12,7 @@ bool Behaviour::validity() const
 }
 
 //BehaviourModuleFactory Implementation:
-const string BehaviourModuleFactory::libraryPath = "../Libraries/Behaviour/";
+const string BehaviourModuleFactory::libraryPath = "Libraries/Behaviour/";
 
 AbstractBehaviourModule* BehaviourModuleFactory::construct(std::string behName, BehaviourModuleData* data)
 {

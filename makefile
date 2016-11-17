@@ -25,4 +25,4 @@ clean:
 	rm -rf $(CleanFiles) *.out *.so *.dll
 
 run: all
-	@(export LD_LIBRARY_PATH=$(RootDir)Install/lib/:$$LD_LIBRARY_PATH && cd Editor/ && make $(MakeFlags) run)
+	@(export LD_LIBRARY_PATH=$(RootDir)Install/lib/:$$LD_LIBRARY_PATH && ./Editor/TacticksEditor.out)
