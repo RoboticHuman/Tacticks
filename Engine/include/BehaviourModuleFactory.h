@@ -3,9 +3,9 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 class AbstractBehaviourModule;
-class BehaviourModuleFactory;
 class BehaviourModuleData;
 
 struct Behaviour
@@ -30,8 +30,11 @@ class BehaviourModuleFactory
 	~BehaviourModuleFactory() = delete;
 private:
 	static const std::string libraryPath;
+	static std::map<std::string, void*> behSOHandle;
 public:
-	static AbstractBehaviourModule* construct(std::string behName, BehaviourModuleData* data);
+	static bool load(std::string behName);
+	static void unload(std::string behName);
+	static AbstractBehaviourModule* newBeh(std::string behName, BehaviourModuleData* data);
 	static Behaviour getMetaData(std::string behName);
 };
 

@@ -13,11 +13,12 @@ bool Behaviour::validity() const
 
 //BehaviourModuleFactory Implementation:
 const string BehaviourModuleFactory::libraryPath = "Libraries/Behaviour/";
+map<string, void*> BehaviourModuleFactory::behSOHandle;
 
-AbstractBehaviourModule* BehaviourModuleFactory::construct(std::string behName, BehaviourModuleData* data)
+bool BehaviourModuleFactory::load(string behName)
 {
 	//Checks if behaviour file exist and have read permission.
-	if(access((libraryPath + behName + "/" + behName + ".beh").c_str(), F_OK | R_OK) == -1) return nullptr;
+	if(access((libraryPath + behName + "/" + behName + ".beh").c_str(), F_OK | R_OK) == -1) return false;
 
 	/*
 		TODO: Read file content, build shared object, ... etc.
@@ -25,22 +26,34 @@ AbstractBehaviourModule* BehaviourModuleFactory::construct(std::string behName, 
 
 	//Loading Shared Object
 	void* handle = dlopen((libraryPath + behName + "/" + behName + ".so").c_str(), RTLD_NOW);
-	if(handle == nullptr) return nullptr;
+	if(handle == nullptr) return false;
+
+	behSOHandle[behName] = handle;
+	return true;
+}
+void BehaviourModuleFactory::unload(string behName)
+{
+	if(behSOHandle.count(behName) == 0) return;
+	dlclose(behSOHandle[behName]);
+	behSOHandle.erase(behName);
+}
+AbstractBehaviourModule* BehaviourModuleFactory::newBeh(std::string behName, BehaviourModuleData* behData)
+{
+	if(behSOHandle.count(behName) == 0) return nullptr;
+	void* handle = behSOHandle[behName];
 
 	typedef AbstractBehaviourModule* (*newBeh_t)(BehaviourModuleData*);
 	newBeh_t newBeh = (newBeh_t)dlsym(handle, "newBeh");
 	if(newBeh == nullptr) return nullptr;
 
-	/*
-		TODO: Proper shared object clean up is required
-		dlclose(handle);
-	*/
-
-	return newBeh(data);
+	return newBeh(behData);
 }
 
 Behaviour BehaviourModuleFactory::getMetaData(std::string behName)
 {
+	/*
+	*	TODO: Proper Parsing for the beh files
+	*/
 	//Constructs an invalid Behaviour
 	Behaviour ret; ret.type = Behaviour::Type::Null;
 
@@ -66,5 +79,7 @@ Behaviour BehaviourModuleFactory::getMetaData(std::string behName)
 	//Navigation Dependencies
 	while(fscanf(behFile, "%[^;\n]%*[;\n]", buf) != EOF)
 		ret.navDependencies.push_back(string(buf));
+
+	fclose(behFile);
 	return ret;
 }

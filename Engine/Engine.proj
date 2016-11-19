@@ -6,3 +6,6 @@ BehaviourModuleFactory
 BehaviourPipeline
 ForcesBehaviourModule
 MilestonesBehaviourModule
+NavigationFactory
+AbstractNavigation
+PassObject
