@@ -5,9 +5,10 @@ IPath = .
 LPath = .
 CompileFlags = -std=c++11 -fPIC
 LinkFlags = -shared
-Libs = 
+Libs =
+tempIPath = ./Recast/Include
 
-Objects = $(addsuffix .o, $(basename $(wildcard *.cpp)))
+Objects = $(addsuffix .o, $(basename $(wildcard *.cpp) $(wildcard Recast/Source/*.cpp)))
 
 first: build
 
@@ -20,4 +21,4 @@ $(AppName): $(Objects)
 	$(CXX) $(Objects) -o $(AppName) $(LinkFlags) $(Libs) -L$(LPath)
 
 %.o: %.cpp
-	$(CXX) -c $< -o $@ $(CompileFlags) -I$(HDir) -I$(IPath)
+	$(CXX) -c $< -o $@ $(CompileFlags) -I$(IPath) -I$(tempIPath)

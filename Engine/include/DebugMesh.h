@@ -1,11 +1,17 @@
-#include "Mesh.h"
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
+#include <GL/glew.h>
+#include <vector>
+#include <string>
+#include <glm/vec3.hpp>
+#include <glm/vec2.hpp>
+#include <glm/mat4x4.hpp>
+#include "../../Editor/include/Shader.h"
+
 
 #pragma once
 
-
-class DebugMesh : public Mesh
+class DebugMesh
 {
     /**
      * @brief      A vertex structure that holds per vertex info.
@@ -15,21 +21,32 @@ class DebugMesh : public Mesh
         glm::vec4 color;
     };
 
-    std::vector<Vertex> vertices;
+    GLuint VAO, VBO, EBO;
+    glm::mat4& globalTransform;
 
-    virtual void setupBuffers() override;
-    int getVertex(float x, float y, float z, short r, short g, short b, short a);
+
+    int getVertex(float x, float y, float z, float r, float g, float b, float a);
 
 public:
-    virtual void draw(Shader *shader) override;
+	// $$$$$$$$$$$$$$
+	// TESTING PUT BACK IN PRIVATE
+    void setupBuffers();
+	std::vector<GLuint> indices;
+    std::vector<Vertex> vertices;
+
+
+
+
+
+    void draw(Shader* shader);
     DebugMesh(glm::mat4& parentTransform);
 
     // Drawing Functions
     //////////////////////////////////////////
     void drawCuboid(float minX, float minY, float minZ, float maxX, float maxY, float maxZ,
-            unsigned char r=255, unsigned char g=255, unsigned char b=255, unsigned char a=255);
+             float r=1,  float g=1,  float b=1,  float a=1);
 
-    void drawConvexPolygon(vector<glm::vec3>& coord,
-            unsigned char r=255, unsigned char g=255, unsigned char b=255, unsigned char a=255);
+    void drawConvexPolygon(std::vector<glm::vec3>& coord,
+             float r=1,  float g=1,  float b=1,  float a=1);
     //////////////////////////////////////////
 };

@@ -6,3 +6,5 @@ BehaviourModuleFactory
 BehaviourPipeline
 ForcesBehaviourModule
 MilestonesBehaviourModule
+DebugMesh
+DebugFactory

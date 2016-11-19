@@ -5,6 +5,7 @@
 using namespace std;
 
 glm::mat4 DebugFactory::identity(1.0);
+std::vector <std::pair <std::string, std::weak_ptr<DebugMesh> > > DebugFactory::debugMeshCache;
 
 shared_ptr<DebugMesh> DebugFactory::createDebugMesh(const string& meshName, glm::mat4& parentTransform)
 {
