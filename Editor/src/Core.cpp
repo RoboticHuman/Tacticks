@@ -8,21 +8,73 @@
 #include "Shader.h"
 #include "Model.h"
 #include "ResourceManager.h"
+#include "../../Libraries/Navigation/NLrcHeightfield/NLrcHeightfield.h"
+#include "../../Libraries/Navigation/NLrcHeightfield/NLrcCompactHeightfield.cpp"
+#include "../../Libraries/Navigation/NLrcHeightfield/Recast/Include/Recast.h"
 
 using namespace std;
 using namespace glm;
 
-mat4 tempTranslationMat; ///TO BE DELTED ONLY FOR TEST RAYCAST
+
+shared_ptr<NLrcHeightfield> t1 = nullptr;
+shared_ptr<NLrcCompactHeightfield> t2 = nullptr;
+vector<float> tempVerts;
+vector<int> tempInds;
+
+float agentHeight = 2;
+float agentRadius = 0.6;
+float maxClimb = 0.9;
+float cs = 0.3;
+float ch = 0.2;
+
+void tempCreateHeightField(const Model& m)
+{
+	for (int i=0; i<m.nodes[0].meshes[0].indices.size(); i++) {
+		tempInds.push_back(m.nodes[0].meshes[0].indices[i]);
+	}
+
+	for (int i=0; i<m.nodes[0].meshes[0].vertices.size(); i++) {
+		tempVerts.push_back(m.nodes[0].meshes[0].vertices[i].position.x);
+		tempVerts.push_back(m.nodes[0].meshes[0].vertices[i].position.y);
+		tempVerts.push_back(m.nodes[0].meshes[0].vertices[i].position.z);
+	}
+
+	float* bmin = new float[3];
+	float* bmax = new float[3];
+
+	rcCalcBounds(&tempVerts[0], tempVerts.size()/3, bmin, bmax);
+
+	 t1 = shared_ptr<NLrcHeightfield> (new NLrcHeightfield(
+		                     bmin, bmax, agentHeight/ch, maxClimb/ch,
+		                     45, &tempVerts[0], tempVerts.size()/3, &tempInds[0], tempInds.size()/3,
+		                     cs, ch));
+	t1->debugMesh->setupBuffers();
+}
+
+void tempCreateCompactHeightfield() {
+
+	t2 = shared_ptr<NLrcCompactHeightfield> ( new NLrcCompactHeightfield(
+                           t1, agentRadius,agentRadius+3,2,4));
+	t2->debugMesh->setupBuffers();
+}
+
+
+// TESTING CALL THIS WHILE DRAWING
+void tempDrawDebugMeshes()
+{
+	//t1->debugMesh->draw(ResourceManager::getShader("debugMeshShader"));
+	t2->debugMesh->draw(ResourceManager::getShader("debugMeshShader"));
+}
 
 void Core::loadMesh(string fpath, bool resetCam){
 	if(!models.empty()) delete models[0];
 	if(models.empty()) models.push_back(nullptr);
 	models[0] = new Model(fpath.c_str());
-
 	if(models.size() < 2) models.push_back(nullptr);
 	models[1] = new Model("models/Crate1.obj");
-
 	if(resetCam) cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
+	tempCreateHeightField(*models[0]);
+	tempCreateCompactHeightfield();
 }
 
 void Core::preLoop()
@@ -36,6 +88,7 @@ void Core::preLoop()
 
 	cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
 	transformLocation = ResourceManager::getShader("meshShader")->getUniformLocation("transform");
+
 }
 void Core::render()
 {
@@ -44,6 +97,9 @@ void Core::render()
 	glEnable(GL_DEPTH_TEST);
 	ResourceManager::getShader("meshShader")->use();
 	for(Model *m : models) m->draw(ResourceManager::getShader("meshShader"));
+	ResourceManager::getShader("debugMeshShader")->use();
+	if (t2 != nullptr)
+		tempDrawDebugMeshes();
 
 	glDisable(GL_DEPTH_TEST);
 	coreHUD.render();
@@ -124,6 +180,7 @@ bool Core::init()
 
 	ResourceManager::loadShader("shaders/VS.vs", "shaders/FS.fs","meshShader");
 	ResourceManager::loadShader("shaders/VSHUD.vs", "shaders/FSHUD.fs","hudShader");
+	ResourceManager::loadShader("shaders/DebugMesh.vs", "shaders/DebugMesh.fs","debugMeshShader");
 	coreHUD.init(screenWidth,screenHeight);
 
 	return true;
@@ -219,6 +276,8 @@ void Core::start()
 		//need to use the shader before the operation after it, TODO: need to fix this crap...
 		ResourceManager::getShader("meshShader")->use();
 		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
+		ResourceManager::getShader("debugMeshShader")->use();
+		glUniformMatrix4fv(ResourceManager::getShader("debugMeshShader")->getUniformLocation("transform"), 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
 
 		render();
 

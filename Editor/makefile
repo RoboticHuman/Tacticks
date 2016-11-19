@@ -7,10 +7,13 @@ SDir = ./src
 HDir = ./include
 BDir = ./Build
 IPath = .
-LPath = .
+# TESTING REMOVE WHEN DONE
+bibii = ../Install/lib/libTacticks.so
+bibii += ../Libraries/Navigation/NLrcHeightfield/NLrcHeightfield.so
+
 CompileFlags = -std=c++11
 LinkFlags = `sdl2-config --libs`
-Libs = -lSOIL -lGLEW -lassimp -lawesomium-1-7 -lTacticks
+Libs = -lSOIL -lGLEW -lassimp -lawesomium-1-7
 
 ifeq ($(shell uname), Darwin)
 	Libs += -framework OpenGL
@@ -32,7 +35,7 @@ run: $(AppName)
 	@./$(AppName)
 
 $(AppName): $(Objects) | $(FolderList)
-	$(CXX) $(Objects) -o $(AppName) $(Libs) $(LinkFlags) -L$(LPath)
+	$(CXX) $(Objects) -o $(AppName) $(Libs) $(LinkFlags) $(bibii)
 
 $(BDir)/%.o: $(SDir)/%.cpp | $(FolderList)
 	$(CXX) -c $< -o $@ $(CompileFlags) -I$(HDir) -I$(IPath)

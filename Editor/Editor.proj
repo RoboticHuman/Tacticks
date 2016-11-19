@@ -5,7 +5,6 @@ HUDDataSource
 HUDEventHandler
 JSHandler
 Main
-Mesh
 Model
 ResourceManager
 Shader
@@ -13,3 +12,4 @@ Sprite
 Texture2D
 Timer
 Utility
+StandardMesh

@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "StandardMesh.h"
 #include "Shader.h"
 #include <algorithm>
 #include <iostream>
@@ -59,17 +59,14 @@ public:
 		vec3 ray = end - start;
 		float d = dot(ray, norm);
 		if(d >= 0) return false;
-
 		vec3 as = start - a;
 		t = dot(as, norm);
 		if(t < 0 || t > d) return false;
-
 		vec3 e = cross(as, ray);
 		float v = dot(ac, e);
 		if(v < 0 || v > d) return false;
 		float w = -dot(ab, e);
 		if(w < 0 || v + w > d) return false;
-
 		t /= d;
 		return true;
 */
@@ -82,7 +79,7 @@ public:
 	}
 };
 
-Mesh::Mesh(vector<Vertex> &vertices, vector<GLuint> &indices, vector<Texture> &textures, glm::mat4& parentTransform):globalTransform(parentTransform)
+StandardMesh::StandardMesh(vector<Vertex> &vertices, vector<GLuint> &indices, vector<Texture> &textures, glm::mat4& parentTransform):globalTransform(parentTransform)
 {
 	this->vertices = vertices;
     this->indices = indices;
@@ -90,7 +87,7 @@ Mesh::Mesh(vector<Vertex> &vertices, vector<GLuint> &indices, vector<Texture> &t
 	this->setupBuffers();
 }
 
-void Mesh::setupBuffers()
+void StandardMesh::setupBuffers()
 {
 	//generate vertex array
 	glGenVertexArrays(1, &VAO);
@@ -125,7 +122,7 @@ void Mesh::setupBuffers()
     glBindVertexArray(0);
 }
 
-void Mesh::draw(Shader *shader)
+void StandardMesh::draw(Shader *shader)
 {
 
 		GLuint diffuseSamplerIndex = 1;
@@ -149,7 +146,7 @@ void Mesh::draw(Shader *shader)
 	glBindVertexArray(0);
 }
 
-bool Mesh::raycast(const vec3& start, const vec3& end, float& tmin){
+bool StandardMesh::raycast(const vec3& start, const vec3& end, float& tmin){
 	tmin = 1.0;
 	float t;
 	bool hit = false;
