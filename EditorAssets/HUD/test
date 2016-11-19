@@ -1,97 +1,197 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-	<head>
-		<style type="text/css">
-			body{
-				background-color: transparent;
-			}
-			div{
-				background: rgba(255, 255, 255, 0.75);
-				color : rgb(255, 0, 0);
-				padding: 5px;
-				float : left;
-			}
-			.dropbtn {
+ <head>
+   <style type="text/css">
+     body{
+       background-color: transparent;
+     }
 
-			}
-
-			.dropbtn:after {
-			    border: 0.35em solid transparent; /* 5 pixels wide */
-			    border-bottom: none;  /* helps the drop-down arrow stay in the vertical centre of the parent */
-			    border-top-color: #000000;   /* colour of the drop-down arrow */
-			    content: ''; /* content of the arrow, you want to keep this empty */
-			    vertical-align: middle;
-			    display: inline-block;
-			    position: relative;
-			    right: -0.35em; /* 5 pixels right of the menu text*/
-			}
+     div{
+       background: trasnparent;
+       color : BLACK;
+     }
 
 
-			.dropdown {
-			    position: relative;
-			    display: inline-block;
-			}
 
-			.dropdown-content {
-			    display: none;
-			    position: absolute;
-			    background-color: #f9f9f9;
-			    min-width: 160px;
-			    overflow: auto;
-			    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-			}
 
-			.dropdown-content a {
-			    color: black;
-			    padding: 12px 16px;
-			    text-decoration: none;
-			    display: block;
-			}
+      li {
+        color: grey;
+        list-style-type: none;
+        width: 100%;
+        color: inherit;
+        font-size: inherit;
+      }
 
-			.dropdown a:hover {background-color: #f1f1f1}
+      ul {
+          text-align: light;
+          width: 100%;
+          color: white;
+          font-size: 60%;
+      }
 
-			.show {display:block;}
-		</style>
-		<script src="jquery-3.1.0.min.js"></script>
-		<script type="text/javascript">
 
-			function setTextboxValue(val){
+      #forcesandmilestones {
+        color: white;
+        float:right;
+        width:15%;
+        background:grey;
+        Height:100%;
+
+      }
+
+
+     .navbar{
+         background-color: grey;
+         border: none;
+         color: white;
+         width 100%;
+         padding: 5px 5px;
+         text-align: center;
+         text-decoration: none;
+         display: inline-block;
+         font-size: 16px;
+     }
+
+     #Milestones { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+     #Milestones li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+     #Milestones li span { position: absolute; margin-left: -1.3em; }
+
+     #Forces { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+     #Forces li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+     #Forces li span { position: absolute; margin-left: -1.3em; }
+
+     #AvailableBehaviorModules { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+     #AvailableBehaviorModules li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+     #AvailableBehaviorModules li span { position: absolute; margin-left: -1.3em; }
+
+   </style>
+
+   <script src="jquery-3.1.0.min.js"></script>
+   <script src="jquery-ui.js"></script>
+   <script type="text/javascript">
+
+     function createProjectHUD(){
+          document.getElementById("saveProject").disabled = false;
+	      createProject(projectName);
+     }
+
+     function setTextboxValue(val){
 				alert("hmmm");
 				document.getElementById("MyTextBox").value = val;
 			}
 
-			function onDropDownClick(){
-				document.getElementById("optionsDropDown").classList.toggle('show');
-			}
-			// Close the dropdown if the user clicks outside of it
-			window.onclick = function(event) {
-			  if (!$(event.target).hasClass("dropbtn")) {
+     function selectModule(){
+    		var selected = 0;
+    		$('#Add').dialog({
+    		  buttons: {
+    		    "First": function() {
+    		      selected = 1;
+    		    },
+    		    "Second": function() {
+    		      selected = 2;
+    		    },
+    		    "Third": function() {
+    		      selected = 3;
+    		    },
+    		    "Fourth": function() {
+    		      selected = 4;
+    		    }
+    		  }
+    		});
+     }
 
-			    var dropdowns = document.getElementsByClassName("dropdown-content");
-			    var i;
-			    for (i = 0; i < dropdowns.length; i++) {
-			      var openDropdown = dropdowns[i];
-			      if (openDropdown.classList.contains('show')) {
-				openDropdown.classList.remove('show');
-			      }
-			    }
-			  }
-			}
-		</script>
-	</head>
-	<body onload="document.getElementById('MyTextBox').value = getDefaultPath()">
-		<div class="dropdown">
-		<button onclick="onDropDownClick()" class="dropbtn">Options</button>
-		    <div id="optionsDropDown" class="dropdown-content">
-			<a href="#option1">Option 1</a>
-			<a href="#option2">Option 2</a>
-			<a href="#option3">Option 3</a>
-		    </div>
-		</div>
-		<div>
-			<input type="button" value="Print Value" onclick="loadMesh(document.getElementById('MyTextBox').value)">
-			<input type="text" id="MyTextBox" >
-		</div>
 
-	</body>
+
+     $(document).ready(function(){
+         $("#hide").click(function(){
+             $("#createProject").hide();
+             $("#hide").hide();
+             document.getElementById("saveProject").enable;
+         });
+         $("#show").click(function(){
+             $("#createProject").show();
+         });
+     })
+
+   </script>
+   <script>
+        $( function() {
+          $( "#Milestones" ).sortable();
+          $( "#Milestones" ).disableSelection();
+        } );
+    </script>
+ </head>
+ <body onload="document.getElementById('MyTextBox').value = getDefaultPath()">
+
+
+   <div class="navbar">
+       <input type="text" name="Project Name" id="createProject">
+       <input id="hide" type="button" value="Create Project" onclick="createProjectHUD()">
+       <input id= "saveProject" type="button" value="Save Project" onclick="saveMesh()" disabled>
+       <input type="button" value="Print Value" onclick="loadMesh(document.getElementById('MyTextBox').value)">
+       <input type="text" id="MyTextBox" >
+   </div>
+
+
+
+
+  <div id="forcesandmilestones">
+
+      <div>
+          <h3>Milestones</h3>
+          <ul id="Milestones">
+        	  <li>Behavioral Module X<input type="button" value="-"/></li>
+        	  <li>Behavioral Module A<input type="button" value="-"/></li>
+        	  <li>Behavioral Module Z<input type="button" value="-"/></li>
+        	  <li>Behavioral Module B<input type="button" value="-"/></li>
+        	  <li>Behavioral Module L<input type="button" value="-"/></li>
+              <li>Behavioral Module M<input type="button" value="-"/></li>
+          </ul>
+     </div>
+
+      <hr>
+      <h3>Forces</h3>
+      <ul id="Forces">
+         <li>Behavioral Module X<input type="button" value="-"/></li>
+         <li>Behavioral Module A<input type="button" value="-"/></li>
+         <li>Behavioral Module Z<input type="button" value="-"/></li>
+         <li>Behavioral Module B<input type="button" value="-"/></li>
+         <li>Behavioral Module L<input type="button" value="-"/></li>
+         <li>Behavioral Module M<input type="button" value="-"/></li>
+         <li>Behavioral Module Don<input type="button" value="-"/></li>
+         <li>Behavioral Module Dan<input type="button" value="-"/></li>
+      </ul>
+
+      <hr><hr>
+      <h3>BehaviorModules</h3>
+      <ul id="AvailableBehaviorModules">
+         <li>Behavioral Module 1<input type="button" value="+"/></li>
+         <li>Behavioral Module 2<input type="button" value="+"/></li>
+         <li>Behavioral Module 3<input type="button" value="+"/></li>
+         <li>Behavioral Module 4<input type="button" value="+"/></li>
+         <li>Behavioral Module 5<input type="button" value="+"/></li>
+         <li>Behavioral Module 6<input type="button" value="+"/></li>
+         <li>Behavioral Module 7<input type="button" value="+"/></li>
+         <li>Behavioral Module 8<input type="button" value="+"/></li>
+      </ul>
+
+  </div>
+
+
+
+ </body>
+ <script type="text/javascript">
+     $('#Milestones input').on('click', function(e){
+        $(this).parent().remove();
+     });
+     $('#Forces input').on('click', function(e){
+        $(this).parent().remove();
+     });
+</script>
+ <script type="text/javascript">
+     $('#AvailableBehaviorModules input').on('click', function(e){
+        $("#Forces").append($("<li>").text($(this).text);
+
+     });
+ </script>
 </html>
