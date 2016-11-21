@@ -9,12 +9,12 @@
 
 class DebugFactory
 {
-    static std::vector <std::pair <std::string, std::weak_ptr<DebugMesh> > > debugMeshCache;
+    static std::vector <std::weak_ptr<DebugMesh> > debugMeshCache;
     static glm::mat4 identity;
 
 public:
 
     static std::shared_ptr<DebugMesh> createDebugMesh(const std::string& meshName, glm::mat4& parentTransform = identity);
     static void update();
-    static const std::vector<std::pair<std::string, std::weak_ptr<DebugMesh> > >& getDebugMeshCacheReference();
+    static const std::vector<std::weak_ptr<DebugMesh> >& getDebugMeshCacheReference();
 };

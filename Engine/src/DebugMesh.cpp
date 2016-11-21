@@ -18,6 +18,7 @@ DebugMesh::DebugMesh(glm::mat4& parentTransform):globalTransform(parentTransform
 int DebugMesh::getVertex(float x, float y, float z, float r, float g, float b, float a)
 {
     /*
+    TODO: FIND A WAY TO MAKE MORE EFFICIENT CHECKS
     for (int i=0; i<vertices.size(); i++) {
         if (std::abs(x - vertices[i].position.x) > numeric_limits<float>::epsilon()) continue;
         if (std::abs(y - vertices[i].position.y) > numeric_limits<float>::epsilon()) continue;
@@ -134,50 +135,4 @@ void DebugMesh::drawConvexPolygon(vector<glm::vec3>& coord,
         indices.push_back(inds[i+1]);
     }
 
-}
-
-void DebugMesh::draw(Shader *shader)
-{
-    GLuint transformLocation = ResourceManager::getShader("debugMeshShader")->getUniformLocation("meshTransform");
-    glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(globalTransform));
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT,0);
-    glBindVertexArray(0);
-}
-
-
-void DebugMesh::setupBuffers()
-{
-    //generate vertex array
-    glGenVertexArrays(1, &VAO);
-    //generate vertex buffer object to store vertex data
-    glGenBuffers(1, &VBO);
-    //generate element buffer object to allow for indexed drawing
-    glGenBuffers(1, &EBO);
-
-    //let OpenGL bind to the vertex array we generated above
-    glBindVertexArray(VAO);
-    //let OpenGL bind to the vertex buffer object before we can copy vertex data
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-    //copy vertex data into vertex buffer object
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof (Vertex), &vertices[0], GL_STATIC_DRAW);
-    //let OpenGL bind to the element buffer so that we copy the vertex indices to it.
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
-
-    // $$$$$$$$$$$$$$$$$$$$$$$
-    // TODO BING ATTRIBUTES WHEN SHADER IS READY
-
-
-    //enable vertex attribute "position" in vertex shader at layout location 0.
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),(GLvoid*)0);
-
-    //enable vertex attribute "normals" in vertex shader at layout location 1.
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, color));
-
-    glBindVertexArray(0);
 }

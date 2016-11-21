@@ -8,6 +8,7 @@
 #include "Shader.h"
 #include "Model.h"
 #include "ResourceManager.h"
+#include "DebugMeshRenderer.h"
 #include "../../Libraries/Navigation/NLrcHeightfield/NLrcHeightfield.h"
 #include "../../Libraries/Navigation/NLrcHeightfield/NLrcCompactHeightfield.cpp"
 #include "../../Libraries/Navigation/NLrcHeightfield/Recast/Include/Recast.h"
@@ -26,6 +27,7 @@ float agentRadius = 0.6;
 float maxClimb = 0.9;
 float cs = 0.3;
 float ch = 0.2;
+DebugMeshRenderer dRenderer;
 
 void tempCreateHeightField(const Model& m)
 {
@@ -48,22 +50,19 @@ void tempCreateHeightField(const Model& m)
 		                     bmin, bmax, agentHeight/ch, maxClimb/ch,
 		                     45, &tempVerts[0], tempVerts.size()/3, &tempInds[0], tempInds.size()/3,
 		                     cs, ch));
-	t1->debugMesh->setupBuffers();
 }
 
 void tempCreateCompactHeightfield() {
 
 	t2 = shared_ptr<NLrcCompactHeightfield> ( new NLrcCompactHeightfield(
                            t1, agentRadius,agentRadius+3,2,4));
-	t2->debugMesh->setupBuffers();
 }
 
 
 // TESTING CALL THIS WHILE DRAWING
 void tempDrawDebugMeshes()
 {
-	//t1->debugMesh->draw(ResourceManager::getShader("debugMeshShader"));
-	t2->debugMesh->draw(ResourceManager::getShader("debugMeshShader"));
+	dRenderer.draw();
 }
 
 void Core::loadMesh(string fpath, bool resetCam){
@@ -75,6 +74,8 @@ void Core::loadMesh(string fpath, bool resetCam){
 	if(resetCam) cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
 	tempCreateHeightField(*models[0]);
 	tempCreateCompactHeightfield();
+	dRenderer.update();
+	dRenderer.bDrawDebugMeshes.back() = true;
 }
 
 void Core::preLoop()
