@@ -6,10 +6,9 @@
        background-color: transparent;
      }
 
-     div{
-       background: trasnparent;
-       color : BLACK;
-     }
+       div{
+         background: trasnparent;
+       }
 
 
 
@@ -20,23 +19,44 @@
         width: 100%;
         color: inherit;
         font-size: inherit;
+	      word-wrap:break-word;
       }
 
       ul {
           text-align: light;
           width: 100%;
           color: white;
+	        word-wrap:break-word;
           font-size: 60%;
+      }
+
+      #agentsandgroups {
+	color: white;
+        float:left;
+        width:22%;
+        background:grey;
+        Height:100%;
+	word-wrap:break-word;
+
       }
 
 
       #forcesandmilestones {
         color: white;
         float:right;
-        width:15%;
+        width:22%;
         background:grey;
-        Height:100%;
+        height:100%;
+	word-wrap:break-word;
 
+      }
+
+      #attributesList{
+	color: black;
+        float:left;
+        width:100%;
+        background:lightgrey;
+        Height:100%;
       }
 
 
@@ -44,26 +64,63 @@
          background-color: grey;
          border: none;
          color: white;
-         width 100%;
+         width: 100%;
          padding: 5px 5px;
+	 float: right:
          text-align: center;
          text-decoration: none;
          display: inline-block;
          font-size: 16px;
      }
 
-     #Milestones { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-     #Milestones li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+           /*
+      * Dropdown menu to work with Awesomium
+      */
+      .dropbtn {
+	    cursor: pointer;
+	}
+
+	.dropbtn:hover, .dropbtn:focus {
+	    background-color: #3e8e41;
+	}
+
+	.dropdown {
+	    position: relative;
+	    display: inline-block;
+	}
+
+	.dropdown-content {
+	    display: none;
+	    position: absolute;
+	    background-color: #f9f9f9;
+	    min-width: 160px;
+	    overflow: auto;
+	    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	}
+
+	.dropdown-content a {
+	    color: black;
+	    padding: 12px 16px;
+	    text-decoration: none;
+	    display: block;
+	}
+
+	.dropdown a:hover {background-color: #f1f1f1}
+
+	.show {display:block;}
+
+
+     #Milestones { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+     #Milestones li { margin: 0 3px 3px 3px; padding: 0; padding-left: 1.5em; padding-top: -1.5em; font-size: 1.4em; height: 18px; }
      #Milestones li span { position: absolute; margin-left: -1.3em; }
 
      #Forces { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-     #Forces li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+     #Forces li { margin: 0 3px 3px 3px; padding: 0; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
      #Forces li span { position: absolute; margin-left: -1.3em; }
 
-     #AvailableBehaviorModules { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-     #AvailableBehaviorModules li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
-     #AvailableBehaviorModules li span { position: absolute; margin-left: -1.3em; }
-
+     #AvailableBehMod { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+     #AvailableBehMod li { margin: 0 3px 3px 3px; padding: 0; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+     #AvailableBehMod li span { position: absolute; margin-left: -1.3em; }
    </style>
 
    <script src="jquery-3.1.0.min.js"></script>
@@ -76,29 +133,28 @@
      }
 
      function setTextboxValue(val){
-				alert("hmmm");
 				document.getElementById("MyTextBox").value = val;
 			}
+      /* When the user clicks on the button,
+	toggle between hiding and showing the dropdown content */
+	function myFunction() {
+	    document.getElementById("myDropdown").classList.toggle("show");
+	}
 
-     function selectModule(){
-    		var selected = 0;
-    		$('#Add').dialog({
-    		  buttons: {
-    		    "First": function() {
-    		      selected = 1;
-    		    },
-    		    "Second": function() {
-    		      selected = 2;
-    		    },
-    		    "Third": function() {
-    		      selected = 3;
-    		    },
-    		    "Fourth": function() {
-    		      selected = 4;
-    		    }
-    		  }
-    		});
-     }
+      // Close the dropdown if the user clicks outside of it
+      window.onclick = function(event) {
+        if (!$(event.target).hasClass("dropbtn")) {
+
+          var dropdowns = document.getElementsByClassName("dropdown-content");
+          var i;
+          for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+            }
+          }
+        }
+      }
 
 
 
@@ -113,33 +169,90 @@
          });
      })
 
+
+    	function toggle(elementID){
+    		var ele = document.getElementById(elementID);
+    		if (ele.style.display == "block"){
+    			ele.style.display = "none";
+    		}
+    		else {
+    			ele.style.display = "block";
+    		}
+    	}
+      $( function() {
+        $( "#Milestones" ).sortable();
+        $( "#Milestones" ).disableSelection();
+      } );
+
+      var currentpipeline;
+      $('#Milestones input').on('click', function(e){
+         $(this).parent().remove();
+         currentpipeline.updatePipeline($(this).parent());
+      });
+      $('#Forces input').on('click', function(e){
+         $(this).parent().remove();
+         currentpipeline.updatePipeline($(this).parent());
+      });
+      $('#AvailableBehMod input').on('click', function(e){
+              $("#Forces ul").append($("<li>").text($(this).parent().innerText));
+              currentpipeline.updatePipeline($(this).parent());
+       });
    </script>
-   <script>
-        $( function() {
-          $( "#Milestones" ).sortable();
-          $( "#Milestones" ).disableSelection();
-        } );
-    </script>
+
  </head>
+
  <body onload="document.getElementById('MyTextBox').value = getDefaultPath()">
 
 
    <div class="navbar">
        <input type="text" name="Project Name" id="createProject">
        <input id="hide" type="button" value="Create Project" onclick="createProjectHUD()">
-       <input id= "saveProject" type="button" value="Save Project" onclick="saveMesh()" disabled>
-       <input type="button" value="Print Value" onclick="loadMesh(document.getElementById('MyTextBox').value)">
+       <input id= "saveProject" type="button" value="Save Project" onclick="saveProject()" disabled>
+       <input type="button" value="Load Mesh" onclick="loadMesh(document.getElementById('MyTextBox').value)">
        <input type="text" id="MyTextBox" >
    </div>
 
+   <div id="agentsandgroups">
+     <br><br>
+
+               <!-- TODO: Delete this. Dummy setup, div setup by loadAttribute Function. -->
+       <div id="attributesList">
+
+            <br><br>
+
+            Mental State:
+            <div class="dropdown">
+		<button onclick="myFunction()" class="dropbtn">-</button>
+		  <div id="myDropdown" class="dropdown-content">
+		    <a href="#home">Sad</a>
+		    <a href="#about">Happy</a>
+		    <a href="#contact">Angry</a>
+		  </div>
+		</div>
+
+             <br>
+             Weight
+             <br>
+             <input type="number" min="0" max="400" step="1" onkeypress="return isInt(event)"/>
+             <br>
+             Height
+             <br>
+             <input type="number" min="0" max="2" step="0.01" onkeypress="return isFloat(event)"/>
+             <br>
+             Priority
+             <br>
+             <input type="range" min="0" max="50"/>
+       </div>
+
+    </div>
 
 
 
   <div id="forcesandmilestones">
 
       <div>
-          <h3>Milestones</h3>
-          <ul id="Milestones">
+          <h3 onclick="javascript:toggle('Milestones')">Milestones</h3>
+          <ul id="Milestones" style="display:block" href="javascript:toggle();">
         	  <li>Behavioral Module X<input type="button" value="-"/></li>
         	  <li>Behavioral Module A<input type="button" value="-"/></li>
         	  <li>Behavioral Module Z<input type="button" value="-"/></li>
@@ -150,7 +263,9 @@
      </div>
 
       <hr>
-      <h3>Forces</h3>
+
+
+      <h3 onclick="javascript:toggle('Forces')">Forces</h3>
       <ul id="Forces">
          <li>Behavioral Module X<input type="button" value="-"/></li>
          <li>Behavioral Module A<input type="button" value="-"/></li>
@@ -162,9 +277,9 @@
          <li>Behavioral Module Dan<input type="button" value="-"/></li>
       </ul>
 
-      <hr><hr>
-      <h3>BehaviorModules</h3>
-      <ul id="AvailableBehaviorModules">
+      <hr>
+      <h3 onclick="javascript:toggle('AvailableBehaviorModules')">BehaviorModules</h3>
+      <ul id="AvailableBehMod">
          <li>Behavioral Module 1<input type="button" value="+"/></li>
          <li>Behavioral Module 2<input type="button" value="+"/></li>
          <li>Behavioral Module 3<input type="button" value="+"/></li>
@@ -172,26 +287,10 @@
          <li>Behavioral Module 5<input type="button" value="+"/></li>
          <li>Behavioral Module 6<input type="button" value="+"/></li>
          <li>Behavioral Module 7<input type="button" value="+"/></li>
-         <li>Behavioral Module 8<input type="button" value="+"/></li>
+         <li>Behavioral Module 8<input type="button" value="+"/></li><br>
       </ul>
 
   </div>
-
-
-
  </body>
- <script type="text/javascript">
-     $('#Milestones input').on('click', function(e){
-        $(this).parent().remove();
-     });
-     $('#Forces input').on('click', function(e){
-        $(this).parent().remove();
-     });
-</script>
- <script type="text/javascript">
-     $('#AvailableBehaviorModules input').on('click', function(e){
-        $("#Forces").append($("<li>").text($(this).text);
 
-     });
- </script>
 </html>
