@@ -9,9 +9,7 @@ void HUDDataSource::OnRequest(int request_id,const Awesomium::ResourceRequest& r
   SendResponse(request_id,strlen(str),(const unsigned char*)str,Awesomium::WSLit("text/html"));
 }
 
-//FUCK AWESOMIUM...
-#ifdef __linux__
-  Awesomium::DataSource::~DataSource()
-  {
-  }
-#endif
+// Awesomium Fix
+Awesomium::DataSource::~DataSource()
+{
+}

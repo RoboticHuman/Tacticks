@@ -10,12 +10,14 @@ IPath = .
 LPath = .
 CompileFlags = -std=c++11
 LinkFlags = `sdl2-config --libs`
-Libs = -lSOIL -lGLEW -lassimp -lawesomium-1-7 -lTacticks
+Libs = -lSOIL -lGLEW -lassimp -lTacticks
 
 ifeq ($(shell uname), Darwin)
-	Libs += -framework OpenGL
+	CompileFlags += -m32
+	LinkFlags += -m32
+	Libs += -L ../install/lib -framework OpenGL -framework Awesomium
 else
-	Libs += -lGL
+	Libs += -lGL -lawesomium-1-7 
 endif
 
 Objects = $(addsuffix .o, $(addprefix $(BDir)/, $(shell cat $(FileSrc))))

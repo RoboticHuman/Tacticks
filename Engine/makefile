@@ -11,6 +11,11 @@ CompileFlags = -std=c++11 -fPIC
 LinkFlags = -shared
 Libs = -ldl
 
+ifeq ($(shell uname), Darwin)
+	CompileFlags += -m32
+	LinkFlags += -m32
+endif
+
 Objects = $(addsuffix .o, $(addprefix $(BDir)/, $(shell cat $(FileSrc))))
 FolderList = $(sort $(SDir)/ $(HDir)/ $(BDir)/ $(InstallFolder)/lib $(InstallFolder)/include/Tacticks $(dir $(Objects)) $(dir $(AppName)))
 
