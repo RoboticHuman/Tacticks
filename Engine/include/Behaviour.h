@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-
 class AbstractBehaviourModule;
 class BehaviourModuleData;
 
@@ -21,7 +20,7 @@ struct BehaviourInfo
 class Behaviour
 {
 	Behaviour() = delete;
-	Behaviour(const Behaviour& cpy) = delete;
+	Behaviour(const Behaviour&) = delete;
 private:
 	void* soHandle;
 	AbstractBehaviourModule* beh;
@@ -36,7 +35,7 @@ public:
 	bool load(const char* soPath);
 	void unload();
 	bool isValid() const;
-	AbstractBehaviourModule* construct(BehaviourModuleData* behData);
+	AbstractBehaviourModule* newBeh(BehaviourModuleData* behData);
 	AbstractBehaviourModule* getBeh();
 };
 

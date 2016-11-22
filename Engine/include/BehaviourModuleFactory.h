@@ -13,7 +13,7 @@ class BehaviourModuleFactory
 private:
 	static const std::string libraryPath;
 public:
-	static Behaviour newBeh(std::string behName);
+	static Behaviour getBeh(std::string behName);
 };
 
 #endif

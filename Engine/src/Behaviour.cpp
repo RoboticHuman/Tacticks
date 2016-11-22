@@ -1,14 +1,14 @@
 #include "Behaviour.h"
-#include <cstdio>
 #include <cstring>
 #include <unistd.h>
 #include <dlfcn.h>
+#include "AbstractBehaviourModule.h"
 using namespace std;
 
 Behaviour::Behaviour(const char* name, const char* soPath) : behName(name)
 {
 	soHandle = beh = nullptr;
-	behType = Null;
+	behInfo.behType = BehaviourInfo::Type::Null;
 	if(soPath != nullptr) load(soPath);
 }
 Behaviour::Behaviour(Behaviour&& cpy)
@@ -16,12 +16,12 @@ Behaviour::Behaviour(Behaviour&& cpy)
 	soHandle = cpy.soHandle; cpy.soHandle = nullptr;
 	beh = cpy.beh; cpy.beh = nullptr;
 	behName = cpy.behName;
-	behType = move(cpy.behInfo);
+	behInfo = move(cpy.behInfo);
 }
 Behaviour::~Behaviour()
 {
 	if(soHandle != nullptr) unload();
-	if(beh != nullptr) delete;
+	if(beh != nullptr) delete beh;
 }
 
 bool Behaviour::load(const char* soPath)
@@ -35,6 +35,7 @@ bool Behaviour::load(const char* soPath)
 	typedef BehaviourInfo (*declDep_t)();
 	declDep_t declDep = (declDep_t)dlsym(soHandle, "declareDependencies");
 	if(declDep == nullptr) return false;
+
 	behInfo = move(declDep());
 	return true;
 }
@@ -46,21 +47,21 @@ void Behaviour::unload()
 }
 bool Behaviour::isValid() const
 {
-	return name.size() != 0 && type != Type::Null;
+	return behName.size() != 0 && behInfo.behType != BehaviourInfo::Type::Null;
 }
 
-AbstractBehaviourModule* BehaviourModuleFactory::construct(BehaviourModuleData* behData)
+AbstractBehaviourModule* Behaviour::newBeh(BehaviourModuleData* behData)
 {
 	if(soHandle == nullptr) return nullptr;
 	if(beh != nullptr) return beh;
 
 	typedef AbstractBehaviourModule* (*newBeh_t)(BehaviourModuleData*);
-	newBeh_t newBeh = (newBeh_t)dlsym(soHandle, "newBeh");
-	if(newBeh == nullptr) return nullptr;
+	newBeh_t newBeh_ptr = (newBeh_t)dlsym(soHandle, "newBeh");
+	if(newBeh_ptr == nullptr) return nullptr;
 
-	return beh = newBeh(behData);
+	return beh = newBeh_ptr(behData);
 }
-AbstractBehaviourModule* BehaviourModuleFactory::getBeh()
+AbstractBehaviourModule* Behaviour::getBeh()
 {
 	if(soHandle == nullptr) return nullptr;
 	return beh;

@@ -1,19 +1,9 @@
 #ifndef NavigationFactory_H
 #define NavigationFactory_H
 
-#include <vector>
 #include <map>
 #include <string>
-
-class AbstractNavigation;
-
-struct Navigation
-{
-	std::string name;
-	std::vector<std::string> navDependencies;
-public:
-	bool validity() const;
-};
+#include "Navigation.h"
 
 class NavigationFactory
 {
@@ -23,12 +13,9 @@ class NavigationFactory
 	~NavigationFactory() = delete;
 private:
 	static const std::string libraryPath;
-	static std::map<std::string, void*> navSOHandle;
+	static std::map<std::string, Navigation*> nav;
 public:
-	static bool load(std::string navName);
-	static void unload(std::string navName);
-	static AbstractNavigation* newNav(std::string navName);
-	static Navigation getMetaData(std::string navName);
+	static Navigation& getNav(std::string navName);
 };
 
 #endif
