@@ -1,14 +1,17 @@
 #include <vector>
-#include <ForcesBehaviourModule.h>
-#include <MilestonesBehaviourModule.h>
+#include "ForcesBehaviourModule.h"
+#include "MilestonesBehaviourModule.h"
+#include "BehaviourModuleData.h"
+#include "Agent.h"
+#include "AgentGroup.h"
 
-#ifndef BehaviourPipeline_hpp
-#define BehaviourPipeline_hpp
+#pragma once
 
 class BehaviourPipeline
 {
     std::vector<ForcesBehaviourModule*> forcesPipeline;
     std::vector<MilestonesBehaviourModule*> milestonesPipeline;
+    BehaviourModuleData behData;
 public:
     template<typename t>
     ForcesBehaviourModule* addForcesModule();
@@ -26,6 +29,14 @@ public:
     
     bool moveForcesModuleToIndex(unsigned int originalIndex, unsigned int targetIndex);
     bool moveMilestonesModuleToIndex(unsigned int originalIndex, unsigned int targetIndex);
+
+    int addAgent();
+    int addGroup();
+    bool addExternalAgent(Agent* externalAgent);
+    void removeAgentByID(int id);
+    const Agent* getAgentByID(int id);
+    const AgentGroup* getGroupByID(int id);
+
     
     ForcesBehaviourModule* getForcesModuleAtIndex(unsigned int index);
     MilestonesBehaviourModule* getMilestonesModuleAtIndex(unsigned int index);
@@ -34,6 +45,3 @@ public:
     
     
 };
-
-
-#endif

@@ -6,3 +6,8 @@ BehaviourModuleFactory
 BehaviourPipeline
 ForcesBehaviourModule
 MilestonesBehaviourModule
+AgentAttribute
+AgentAttributeInt
+AgentAttributeFloat
+AgentAttributeEnum
+AgentAttributeBool

@@ -1,5 +1,4 @@
-#ifndef AbstractBehaviourModule_h
-#define AbstractBehaviourModule_h
+#pragma once
 
 class BehaviourModuleData;
 
@@ -12,5 +11,3 @@ protected:
 public:
     //virtual void eventX(...) {};
 };
-
-#endif

@@ -1,15 +1,14 @@
 #include <vector>
 
-#ifndef AgentGroup_hpp
-#define AgentGroup_hpp
+#pragma once
 
 class Agent;
+class BehaviourModuleData;
 
 class AgentGroup
 {
+	friend BehaviourModuleData;
 	static int nextGroupID;
-public:
-	const static int nullGroupID = 0;
 
 private:
 	const int groupID;
@@ -19,10 +18,10 @@ private:
     std::vector<int> agentIDs;
 
 public:
+	const static int nullGroupID = 0;
+
 	AgentGroup();
 	int getGroupID() const;
 
 	void addAgent(Agent* agentPtr);
 };
-
-#endif

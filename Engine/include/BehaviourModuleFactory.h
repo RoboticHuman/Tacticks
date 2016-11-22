@@ -1,5 +1,4 @@
-#ifndef BEHAVIOUR_MODULE_FACTORY_H
-#define BEHAVIOUR_MODULE_FACTORY_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -34,5 +33,3 @@ public:
 	static AbstractBehaviourModule* construct(std::string behName, BehaviourModuleData* data);
 	static Behaviour getMetaData(std::string behName);
 };
-
-#endif

@@ -1,13 +1,14 @@
 #include <unordered_map>
 #include <glm/vec3.hpp>
+#include "AgentGroup.h"
 
-#ifndef BehaviourModuleData_hpp
-#define BehaviourModuleData_hpp
+#pragma once
 
 class Agent;
 class AgentGroup;
 class AgentIterator;
 class GroupIterator;
+class BehaviourPipeline;
 
 // BehaviourModuleData Prototype
 //################################################
@@ -15,6 +16,7 @@ class BehaviourModuleData
 {
 	friend AgentIterator;
 	friend GroupIterator;
+	friend BehaviourPipeline;
 private:
 	struct PrivateAgent
 	{
@@ -23,18 +25,19 @@ private:
 		glm::vec3 targetVelocity;
 	};
 
-private:
+	std::unordered_map<int, Agent> internallyStoredAgents;
     std::unordered_map<int, PrivateAgent> agents;
-    std::unordered_map<int, AgentGroup*> groups;
-
-public:
+    std::unordered_map<int, AgentGroup> groups;
     /*
         TODO:
-        Move addAgent and addGroup functionality to a place
-        not accessible by the Behaviour Modules
+        Add removeGroupByID()
     */
-	void addAgent(Agent*);
-	void addGroup(AgentGroup*);
+	int addAgent();
+	int addGroup();
+	bool addExternalAgent(Agent* externalAgent);
+	void removeAgentByID(int id);
+
+public:
 
 	glm::vec3 getTargetPositionVector(const int agentID) const;
 	glm::vec3 getTargetPositionVector(const Agent* agentPtr) const;
@@ -73,9 +76,9 @@ class GroupIterator
 {
 	friend BehaviourModuleData;
 private:
-    std::unordered_map<int, AgentGroup*>::iterator iterator;
+    std::unordered_map<int, AgentGroup>::iterator iterator;
 
-    GroupIterator(const std::unordered_map<int, AgentGroup*>::iterator&);
+    GroupIterator(const std::unordered_map<int, AgentGroup>::iterator&);
 public:
     const AgentGroup* operator->() const;
     const AgentGroup& operator*() const;
@@ -83,6 +86,3 @@ public:
     GroupIterator operator++(int);
 };
 //################################################
-
-
-#endif

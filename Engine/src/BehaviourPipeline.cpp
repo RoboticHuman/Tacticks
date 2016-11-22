@@ -95,6 +95,26 @@ bool BehaviourPipeline::moveMilestonesModuleToIndex(unsigned int originalIndex, 
         return true;
     }
 }
+
+int BehaviourPipeline::addAgent() 
+{
+    return behData.addAgent();
+}
+
+const Agent* BehaviourPipeline::getAgentByID(int id) 
+{
+    return behData.getAgentByID(id);
+}
+
+int BehaviourPipeline::addGroup() 
+{
+    return behData.addGroup();
+}
+const AgentGroup* BehaviourPipeline::getGroupByID(int id) 
+{
+    return behData.getGroupByID(id);
+}
+
 ForcesBehaviourModule* BehaviourPipeline::getForcesModuleAtIndex(unsigned int index)
 {
     if (index >= forcesPipeline.size())

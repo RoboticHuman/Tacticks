@@ -1,11 +1,17 @@
-#ifndef Agent_hpp
-#define Agent_hpp
+#include <cmath>
+#include <unordered_map>
+#include "AgentAttribute.h"
+
+#pragma once
+
+class BehaviourModuleData;
 
 class Agent
 {
+	friend BehaviourModuleData;
 	static int nextAgentID;
 
-    // Attribute Container Placeholder
+    std::unordered_map<int,AgentAttribute*> attributes;
 
     int groupID;
     const int agentID;
@@ -17,6 +23,3 @@ public:
 	int getGroupID() const;
 	int getAgentID() const;
 };
-
-
-#endif
