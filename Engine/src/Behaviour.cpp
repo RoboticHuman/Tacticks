@@ -30,6 +30,7 @@ Behaviour& Behaviour::operator=(Behaviour&& cpy)
 	beh = cpy.beh; cpy.beh = nullptr;
 	behName = cpy.behName;
 	behInfo = move(cpy.behInfo);
+	return *this;
 }
 
 bool Behaviour::load(const char* soPath)

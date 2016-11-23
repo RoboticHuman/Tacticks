@@ -13,6 +13,7 @@ PassArray::PassArray(const std::vector<PassObject>& list) : lst(list)
 PassArray& PassArray::operator=(const PassArray& cpy)
 {
 	lst = cpy.lst;
+	return *this;
 }
 PassArray& PassArray::operator+=(const PassObject& val)
 {
@@ -74,10 +75,11 @@ PassObject::PassObject(const string& name, const PassArray& val)
 	this->data.arr = val;
 }
 
-PassObject PassObject::operator=(const PassObject& cpy)
+PassObject& PassObject::operator=(const PassObject& cpy)
 {
 	name = cpy.name;
 	data = cpy.data;
+	return *this;
 }
 PassArray PassObject::operator+(const PassObject& val)
 {
@@ -174,4 +176,5 @@ PassObject::Data& PassObject::Data::operator=(const Data& cpy)
 	else if(type == Decimal) f = cpy.f;
 	else if(type == String) str = cpy.str;
 	else if(type == Array) arr = cpy.arr;
+	return *this;
 }

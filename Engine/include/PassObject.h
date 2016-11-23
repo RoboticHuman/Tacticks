@@ -60,7 +60,7 @@ public:
 	PassObject(PassObject&&) = default;
 	~PassObject() = default;
 
-	PassObject operator=(const PassObject& cpy);
+	PassObject& operator=(const PassObject& cpy);
 	PassArray operator+(const PassObject& val);
 
 	void setName(const std::string& val);
