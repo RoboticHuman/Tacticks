@@ -2,20 +2,46 @@
 
 #include <vector>
 #include <utility>
+#include "ForcesBehaviourModule.h"
+#include "MilestonesBehaviourModule.h"
+#include "BehaviourModuleFactory.h"
+#include "NavigationFactory.h"
 using namespace std;
 
-template<typename t>
-ForcesBehaviourModule* BehaviourPipeline::addForcesModule()
+Navigation* BehaviourPipeline::addNavigationLibrary(std::string navName)
 {
-    forcesPipeline.push_back(new t);
-    return forcesPipeline.back();
+	return &NavigationFactory::getNav(navName);
+}
+Navigation* BehaviourPipeline::getNavigationLibrary(std::string navName)
+{
+	return &NavigationFactory::getNav(navName);
+}
+void BehaviourPipeline::removeNavigationLibrary(std::string navName)
+{
+	NavigationFactory::rmNav(navName);
 }
 
-template<typename t>
-MilestonesBehaviourModule* BehaviourPipeline::addMilestonesModule()
+
+Behaviour* BehaviourPipeline::addForcesModule(string behName)
 {
-    milestonesPipeline.push_back(new t);
-    return milestonesPipeline.back();
+    forcesPipeline.push_back(BehaviourModuleFactory::getBeh(behName));
+	if(forcesPipeline.back().behInfo.behType != BehaviourInfo::Type::Force)
+	{
+		forcesPipeline.pop_back();
+		return nullptr;
+	}
+    return &forcesPipeline.back();
+}
+
+Behaviour* BehaviourPipeline::addMilestonesModule(string behName)
+{
+	milestonesPipeline.push_back(BehaviourModuleFactory::getBeh(behName));
+	if(milestonesPipeline.back().behInfo.behType != BehaviourInfo::Type::Milestone)
+	{
+		milestonesPipeline.pop_back();
+		return nullptr;
+	}
+    return &milestonesPipeline.back();
 }
 
 bool BehaviourPipeline::deleteForcesModule(unsigned int index)
@@ -23,7 +49,6 @@ bool BehaviourPipeline::deleteForcesModule(unsigned int index)
     if (index >= forcesPipeline.size())
         return false;
     else {
-        delete forcesPipeline[index];
         forcesPipeline.erase(forcesPipeline.begin()+index);
         return true;
     }
@@ -33,7 +58,6 @@ bool BehaviourPipeline::deleteMilestonesModule(unsigned int index)
     if (index >= milestonesPipeline.size())
         return false;
     else {
-        delete milestonesPipeline[index];
         milestonesPipeline.erase(milestonesPipeline.begin()+index);
         return true;
     }
@@ -115,17 +139,16 @@ const AgentGroup* BehaviourPipeline::getGroupByID(int id)
     return behData.getGroupByID(id);
 }
 
-ForcesBehaviourModule* BehaviourPipeline::getForcesModuleAtIndex(unsigned int index)
+
+Behaviour* BehaviourPipeline::getForcesModuleAtIndex(unsigned int index)
 {
     if (index >= forcesPipeline.size())
         return nullptr;
-    return forcesPipeline[index];
+    return &forcesPipeline[index];
 }
-MilestonesBehaviourModule* BehaviourPipeline::getMilestonesModuleAtIndex(unsigned int index)
+Behaviour* BehaviourPipeline::getMilestonesModuleAtIndex(unsigned int index)
 {
     if (index >= milestonesPipeline.size())
         return nullptr;
-    return milestonesPipeline[index];
+    return &milestonesPipeline[index];
 }
-
-

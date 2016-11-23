@@ -1,6 +1,8 @@
 AbstractBehaviourModule
+AbstractNavigation
 Agent
 AgentGroup
+Behaviour
 BehaviourModuleData
 BehaviourModuleFactory
 BehaviourPipeline
@@ -11,3 +13,6 @@ AgentAttributeInt
 AgentAttributeFloat
 AgentAttributeEnum
 AgentAttributeBool
+Navigation
+NavigationFactory
+PassObject
