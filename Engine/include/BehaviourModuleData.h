@@ -1,5 +1,6 @@
 #include <unordered_map>
 #include <glm/vec3.hpp>
+#include "Agent.h"
 #include "AgentGroup.h"
 
 #pragma once
@@ -20,12 +21,11 @@ class BehaviourModuleData
 private:
 	struct PrivateAgent
 	{
-		Agent* agent;
+		Agent agent;
 		glm::vec3 targetPosition;
 		glm::vec3 targetVelocity;
 	};
 
-	std::unordered_map<int, Agent> internallyStoredAgents;
     std::unordered_map<int, PrivateAgent> agents;
     std::unordered_map<int, AgentGroup> groups;
     /*
@@ -34,7 +34,6 @@ private:
     */
 	int addAgent();
 	int addGroup();
-	bool addExternalAgent(Agent* externalAgent);
 	void removeAgentByID(int id);
 
 public:

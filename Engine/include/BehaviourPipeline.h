@@ -32,7 +32,6 @@ public:
 
     int addAgent();
     int addGroup();
-    bool addExternalAgent(Agent* externalAgent);
     void removeAgentByID(int id);
     const Agent* getAgentByID(int id);
     const AgentGroup* getGroupByID(int id);

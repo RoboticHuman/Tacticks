@@ -10,11 +10,11 @@ AgentIterator::AgentIterator(const std::unordered_map<int, BehaviourModuleData::
 
 const Agent* AgentIterator::operator->() const
 {
-	return iterator->second.agent;
+	return &iterator->second.agent;
 }
 const Agent& AgentIterator::operator*() const
 {
-	return *(iterator->second.agent);
+	return iterator->second.agent;
 }
 AgentIterator& AgentIterator::operator++()
 {
@@ -58,21 +58,8 @@ GroupIterator GroupIterator::operator++(int)
 //#################################################
 int BehaviourModuleData::addAgent()
 {
-	internallyStoredAgents.insert({Agent::nextAgentID,Agent()});
-	agents.insert({Agent::nextAgentID-1,PrivateAgent()}).first->second.agent = &internallyStoredAgents.at(Agent::nextAgentID-1);
+	agents.insert({Agent::nextAgentID,PrivateAgent()});
 	return Agent::nextAgentID-1;
-}
-bool BehaviourModuleData::addExternalAgent(Agent* externalAgent) 
-{
-	
-	auto temp = agents.insert({externalAgent->agentID,PrivateAgent()});
-	if (!temp.second) {
-		return false;
-	}
-	else {
-		temp.first->second.agent = externalAgent;
-		return true;
-	}
 }
 
 int BehaviourModuleData::addGroup()
@@ -82,7 +69,6 @@ int BehaviourModuleData::addGroup()
 }
 void BehaviourModuleData::removeAgentByID(int id) 
 {
-	internallyStoredAgents.erase(id);
 	agents.erase(id);
 }
 
@@ -104,7 +90,7 @@ glm::vec3 BehaviourModuleData::getTargetVelocityVector(const Agent* agentPtr) co
 }
 const Agent* BehaviourModuleData::getAgentByID(int agentID) const
 {
-	return agents.at(agentID).agent;
+	return &agents.at(agentID).agent;
 }
 const AgentGroup* BehaviourModuleData::getGroupByID(int groupID) const
 {
