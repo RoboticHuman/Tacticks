@@ -11,3 +11,11 @@ Navigation& NavigationFactory::getNav(string navName)
 		nav[navName] = new Navigation(navName.c_str(), (libraryPath + navName + "/" + navName + ".so").c_str());
 	return *nav[navName];
 }
+
+void NavigationFactory::rmNav(std::string navName)
+{
+	if(nav.count(navName) != 0){
+		delete nav[navName];
+		nav.erase(navName);
+	}
+}

@@ -16,6 +16,7 @@ private:
 	static std::map<std::string, Navigation*> nav;
 public:
 	static Navigation& getNav(std::string navName);
+	static void rmNav(std::string navName);
 };
 
 #endif
