@@ -32,6 +32,8 @@ public:
 	Behaviour(Behaviour&& cpy);
 	~Behaviour();
 
+	Behaviour& operator=(Behaviour&& cpy);
+
 	bool load(const char* soPath);
 	void unload();
 	bool isValid() const;

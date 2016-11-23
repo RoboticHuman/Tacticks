@@ -24,6 +24,14 @@ Behaviour::~Behaviour()
 	if(beh != nullptr) delete beh;
 }
 
+Behaviour& Behaviour::operator=(Behaviour&& cpy)
+{
+	soHandle = cpy.soHandle; cpy.soHandle = nullptr;
+	beh = cpy.beh; cpy.beh = nullptr;
+	behName = cpy.behName;
+	behInfo = move(cpy.behInfo);
+}
+
 bool Behaviour::load(const char* soPath)
 {
 	//Checks if behaviour file exist and have read permission.

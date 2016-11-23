@@ -1,38 +1,43 @@
 #include <vector>
-#include <ForcesBehaviourModule.h>
-#include <MilestonesBehaviourModule.h>
+#include "Navigation.h"
+#include "Behaviour.h"
 
 #ifndef BehaviourPipeline_hpp
 #define BehaviourPipeline_hpp
 
+class ForcesBehaviourModule;
+class MilestonesBehaviourModule;
+
 class BehaviourPipeline
 {
-    std::vector<ForcesBehaviourModule*> forcesPipeline;
-    std::vector<MilestonesBehaviourModule*> milestonesPipeline;
+    std::vector<Behaviour> forcesPipeline;
+    std::vector<Behaviour> milestonesPipeline;
 public:
-    template<typename t>
-    ForcesBehaviourModule* addForcesModule();
-    template<typename t>
-    MilestonesBehaviourModule* addMilestonesModule();
-    
-    bool deleteForcesModule(unsigned int index);
+	Navigation* addNavigationLibrary(std::string navName);
+	Navigation* getNavigationLibrary(std::string navName);
+	void removeNavigationLibrary(std::string navName);
+
+    Behaviour* addForcesModule(std::string behName);
+    Behaviour* addMilestonesModule(std::string behName);
+
+    bool  deleteForcesModule(unsigned int index);
     bool deleteMilestonesModule(unsigned int index);
-    
+
     bool incrementForcesModuleIndex(unsigned int originalIndex);
     bool incrementMilestonesModuleIndex(unsigned int originalIndex);
-    
+
     bool decrementForcesModuleIndex(unsigned int originalIndex);
     bool decrementMilestonesModuleIndex(unsigned int originalIndex);
-    
+
     bool moveForcesModuleToIndex(unsigned int originalIndex, unsigned int targetIndex);
     bool moveMilestonesModuleToIndex(unsigned int originalIndex, unsigned int targetIndex);
-    
-    ForcesBehaviourModule* getForcesModuleAtIndex(unsigned int index);
-    MilestonesBehaviourModule* getMilestonesModuleAtIndex(unsigned int index);
-    
+
+    Behaviour* getForcesModuleAtIndex(unsigned int index);
+    Behaviour* getMilestonesModuleAtIndex(unsigned int index);
+
     // runBehaviourPipeline placeholder
-    
-    
+
+
 };
 
 
