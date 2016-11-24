@@ -9,9 +9,9 @@ class AgentAttributeFloat : public AgentAttribute
 	float minValue;
 	float maxValue;
 public:
-	AgentAttributeFloat(std::string name, float defaultValue, float minValue, float maxValue);
-	float getValue();
-	float getMinValue();
-	float getMaxValue();
+	AgentAttributeFloat(const std::string& name, float defaultValue, float minValue, float maxValue);
+	float getValue() const;
+	float getMinValue() const;
+	float getMaxValue() const;
 	void setValue(float newValue);
 };

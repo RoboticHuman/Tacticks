@@ -9,8 +9,8 @@ class AgentAttributeEnum : public AgentAttribute
 	int value;
 	std::vector<std::string> possibleValues;
 public:
-	AgentAttributeEnum(std::string name, int defaultValue, std::vector<std::string> possibleValues);
-	int getValue();
-	const std::vector<std::string>& getPossibleValues();
+	AgentAttributeEnum(const std::string& name, int defaultValue, const std::vector<std::string>& possibleValues);
+	int getValue() const;
+	const std::vector<std::string>& getPossibleValues() const;
 	void setValue(int newValue);
 };

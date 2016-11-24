@@ -7,7 +7,7 @@ class AgentAttributeBool : public AgentAttribute
 {
 	bool value;
 public:
-	AgentAttributeBool(std::string name, bool defaultValue);
-	bool getValue();
+	AgentAttributeBool(const std::string& name, bool defaultValue);
+	bool getValue() const;
 	void setValue(bool newValue);
 };

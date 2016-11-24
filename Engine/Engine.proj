@@ -13,6 +13,9 @@ AgentAttributeInt
 AgentAttributeFloat
 AgentAttributeEnum
 AgentAttributeBool
+AgentAttributeVec3
 Navigation
 NavigationFactory
 PassObject
+DependancyManager
+AttributeFactory

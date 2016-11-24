@@ -17,11 +17,13 @@ private:
      */
     std::vector<int> agentIDs;
 
+    AgentGroup(int gID);
 public:
-	const static int nullGroupID = 0;
+	const static int nullGroupID = -1;
 
 	AgentGroup();
 	int getGroupID() const;
 
 	void addAgent(Agent* agentPtr);
+	const std::vector<int>& getAgentList() const;
 };

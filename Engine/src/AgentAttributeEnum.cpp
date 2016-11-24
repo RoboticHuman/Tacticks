@@ -2,11 +2,11 @@
 using namespace std;
 
 
-AgentAttributeEnum::AgentAttributeEnum(std::string name, int defaultValue, vector<std::string> possibleValues):
+AgentAttributeEnum::AgentAttributeEnum(const std::string& name, int defaultValue, const vector<std::string>& possibleValues):
 	AgentAttribute(name),value(defaultValue),possibleValues(possibleValues){}
 
-int AgentAttributeEnum::getValue(){return value;}
-const std::vector<std::string>& AgentAttributeEnum::getPossibleValues(){return possibleValues;}
+int AgentAttributeEnum::getValue() const {return value;}
+const std::vector<std::string>& AgentAttributeEnum::getPossibleValues() const {return possibleValues;}
 void AgentAttributeEnum::setValue(int newValue){value = newValue;}
 
 

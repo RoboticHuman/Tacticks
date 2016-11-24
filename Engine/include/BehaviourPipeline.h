@@ -4,6 +4,8 @@
 #include "AgentGroup.h"
 #include "Navigation.h"
 #include "Behaviour.h"
+#include "DependancyManager.h"
+#include "AttributeFactory.h"
 
 #pragma once
 
@@ -12,15 +14,20 @@ class MilestonesBehaviourModule;
 
 class BehaviourPipeline
 {
-
     BehaviourModuleData behData;
     std::vector<Behaviour> forcesPipeline;
     std::vector<Behaviour> milestonesPipeline;
+    AttributeFactory attrFactory;
+    DependancyManager depManager;
 public:
 	Navigation* addNavigationLibrary(std::string navName);
 	Navigation* getNavigationLibrary(std::string navName);
 	void removeNavigationLibrary(std::string navName);
 
+    BehaviourPipeline();
+
+    // Pipeline Manipulation
+    //////////////////////////////////////////////////////////////////////
     Behaviour* addForcesModule(std::string behName);
     Behaviour* addMilestonesModule(std::string behName);
 
@@ -36,15 +43,20 @@ public:
     bool moveForcesModuleToIndex(unsigned int originalIndex, unsigned int targetIndex);
     bool moveMilestonesModuleToIndex(unsigned int originalIndex, unsigned int targetIndex);
 
+    Behaviour* getForcesModuleAtIndex(unsigned int index);
+    Behaviour* getMilestonesModuleAtIndex(unsigned int index);
+    ///////////////////////////////////////////////////////////////////////
+
+
     int addAgent();
     int addGroup();
     void removeAgentByID(int id);
     const Agent* getAgentByID(int id);
     const AgentGroup* getGroupByID(int id);
-    Behaviour* getForcesModuleAtIndex(unsigned int index);
-    Behaviour* getMilestonesModuleAtIndex(unsigned int index);
 
-    // runBehaviourPipeline placeholder
+    // TODO implement compile properly
+    bool compile();
+    void simulate();
 
 
 };

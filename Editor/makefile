@@ -15,7 +15,7 @@ Libs = -lSOIL -lGLEW -lassimp -lTacticks
 ifeq ($(shell uname), Darwin)
 	CompileFlags += -m32
 	LinkFlags += -m32
-	Libs += -L ../install/lib -framework OpenGL -framework Awesomium
+	Libs += -framework OpenGL -framework Awesomium
 else
 	Libs += -lGL -lawesomium-1-7 
 endif
