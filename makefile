@@ -15,8 +15,8 @@ editor: engine
 engine:
 	@(cd Engine/ && make $(MakeFlags) install InstallFolder=../$(InstallFolder))
 
-libraries:
-	@(cd Libraries/ && make $(MakeFlags) IPath=../$(InstallFolder)/include )
+libraries: engine
+	@(cd Libraries/ && make $(MakeFlags) IPath=../$(InstallFolder)/include LPath=../$(InstallFolder)/lib)
 
 clean:
 	@(cd Engine/ && make $(MakeFlags) clean)
