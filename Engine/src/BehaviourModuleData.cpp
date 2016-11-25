@@ -27,6 +27,15 @@ AgentIterator AgentIterator::operator++(int)
 	++iterator;
     return ret;
 }
+bool AgentIterator::operator==(const AgentIterator& val) const
+{
+	return iterator == val.iterator;
+}
+bool AgentIterator::operator!=(const AgentIterator& val) const
+{
+	return iterator != val.iterator;
+}
+
 //#################################################
 
 // GroupIterator Implementation
@@ -52,14 +61,30 @@ GroupIterator GroupIterator::operator++(int)
 	++iterator;
     return ret;
 }
+bool GroupIterator::operator==(const GroupIterator & val) const
+{
+	return iterator == val.iterator;
+}
+bool GroupIterator::operator!=(const GroupIterator& val) const
+{
+	return iterator != val.iterator;
+}
+
 //#################################################
 
 // BehaviourModuleData Implementation
 //#################################################
+BehaviourModuleData::BehaviourModuleData() : nullGroup(AgentGroup::nullGroupID)
+{
+
+}
+
 int BehaviourModuleData::addAgent()
 {
-	agents.insert({Agent::nextAgentID,PrivateAgent()});
-	return Agent::nextAgentID-1;
+	int agentID = Agent::nextAgentID;
+	agents.insert({agentID,PrivateAgent()});
+	nullGroup.addAgent(&(agents[agentID].agent));
+	return agentID;
 }
 
 int BehaviourModuleData::addGroup()

@@ -13,10 +13,15 @@ Agent::Agent() : agentID(nextAgentID++), groupID(AgentGroup::nullGroupID)
 
 }
 
-void Agent::setGroupID(int ID)
+const AgentAttribute* Agent::getAttribute(std::string attributeToGet) const
 {
-	groupID = ID;
+	// TODO:
+	// Add error handling for if string not found
+	return attributes.find(attributeToGet)->second;
 }
+
+
+
 int Agent::getGroupID() const
 {
 	return groupID;
@@ -24,4 +29,8 @@ int Agent::getGroupID() const
 int Agent::getAgentID() const
 {
 	return agentID;
+}
+void Agent::setGroupID(int ID)
+{
+	groupID = ID;
 }

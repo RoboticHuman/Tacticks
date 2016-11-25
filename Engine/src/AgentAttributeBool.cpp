@@ -2,8 +2,8 @@
 using namespace std;
 
 
-AgentAttributeBool::AgentAttributeBool(string name, bool defaultValue):
+AgentAttributeBool::AgentAttributeBool(const std::string& name, bool defaultValue):
 	AgentAttribute(name),value(defaultValue){}
 
-bool AgentAttributeBool::getValue(){return value;}
+bool AgentAttributeBool::getValue() const {return value;}
 void AgentAttributeBool::setValue(bool newValue){value = newValue;}

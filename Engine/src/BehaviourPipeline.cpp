@@ -1,5 +1,4 @@
 #include "BehaviourPipeline.h"
-
 #include <vector>
 #include <utility>
 #include "ForcesBehaviourModule.h"
@@ -7,6 +6,13 @@
 #include "BehaviourModuleFactory.h"
 #include "NavigationFactory.h"
 using namespace std;
+using namespace glm;
+
+BehaviourPipeline::BehaviourPipeline():behData(),attrFactory(behData.agents),depManager(attrFactory)
+{
+
+}
+
 
 Navigation* BehaviourPipeline::addNavigationLibrary(std::string navName)
 {
@@ -122,7 +128,9 @@ bool BehaviourPipeline::moveMilestonesModuleToIndex(unsigned int originalIndex, 
 
 int BehaviourPipeline::addAgent() 
 {
-    return behData.addAgent();
+    int ret = behData.addAgent();
+    attrFactory.initializeAgentAttributes(ret);
+    return ret;
 }
 
 const Agent* BehaviourPipeline::getAgentByID(int id) 
@@ -152,3 +160,38 @@ Behaviour* BehaviourPipeline::getMilestonesModuleAtIndex(unsigned int index)
         return nullptr;
     return &milestonesPipeline[index];
 }
+
+bool BehaviourPipeline::compile(){return true;}
+void BehaviourPipeline::simulate()
+{
+    for(Behaviour& tBeh : milestonesPipeline){
+        AbstractBehaviourModule* beh = tBeh.getBeh();
+        beh->eventPreSimulate();
+        for(GroupIterator gIt = behData.beginGroup(); gIt != behData.endGroup(); gIt++){
+            vector<pair<int, vec3> > ret = beh->simulateGroup(*gIt);
+            for(auto res : ret){
+                behData.agents[res.first].targetPosition = res.second;
+                //behData.agents[res.first].targetVelocity = res.second - *****curPosition*****;
+            }
+        }
+        for(int aID : behData.nullGroup.getAgentList()){
+            vec3 res = beh->simulateAgent(behData.agents[aID].agent);
+            behData.agents[aID].targetPosition = res;
+            //behData.agents[aID].targetVelocity = res - *****curPosition*****;
+        }
+    }
+
+    for(Behaviour& tBeh : forcesPipeline){
+        AbstractBehaviourModule* beh = tBeh.getBeh();
+        beh->eventPreSimulate();
+        for(GroupIterator gIt = behData.beginGroup(); gIt != behData.endGroup(); gIt++){
+            vector<pair<int, vec3> > ret = beh->simulateGroup(*gIt);
+            for(auto res : ret)
+                behData.agents[res.first].targetVelocity = res.second;
+        }
+        for(int aID : behData.nullGroup.getAgentList())
+            behData.agents[aID].targetVelocity = beh->simulateAgent(behData.agents[aID].agent);
+    }
+}
+
+

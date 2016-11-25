@@ -10,6 +10,7 @@ class AgentGroup;
 class AgentIterator;
 class GroupIterator;
 class BehaviourPipeline;
+class AttributeFactory;
 
 // BehaviourModuleData Prototype
 //################################################
@@ -18,6 +19,7 @@ class BehaviourModuleData
 	friend AgentIterator;
 	friend GroupIterator;
 	friend BehaviourPipeline;
+	friend AttributeFactory;
 private:
 	struct PrivateAgent
 	{
@@ -27,6 +29,7 @@ private:
 	};
 
     std::unordered_map<int, PrivateAgent> agents;
+    AgentGroup nullGroup;
     std::unordered_map<int, AgentGroup> groups;
     /*
         TODO:
@@ -37,7 +40,7 @@ private:
 	void removeAgentByID(int id);
 
 public:
-
+	BehaviourModuleData();
 	glm::vec3 getTargetPositionVector(const int agentID) const;
 	glm::vec3 getTargetPositionVector(const Agent* agentPtr) const;
 	glm::vec3 getTargetVelocityVector(const int agentID) const;
@@ -66,6 +69,8 @@ public:
     const Agent& operator*() const;
 	AgentIterator& operator++();
     AgentIterator operator++(int);
+    bool operator==(const AgentIterator& val) const;
+    bool operator!=(const AgentIterator& val) const;
 };
 //################################################
 
@@ -83,5 +88,7 @@ public:
     const AgentGroup& operator*() const;
 	GroupIterator& operator++();
     GroupIterator operator++(int);
+    bool operator==(const GroupIterator& val) const;
+    bool operator!=(const GroupIterator& val) const;
 };
 //################################################
