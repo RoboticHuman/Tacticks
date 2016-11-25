@@ -45,7 +45,7 @@ public:
 	 * @param[in]  shader  The shader program to use for drawing the mesh
 	 * @param[in]  parentTransform  The transform of the parent
 	 */
-	void draw(Shader *shader);
+	void draw(Shader *shader, glm::mat4& globalTransform);
 	/**
 	 * @brief      Raycasts a ray with all triangles in a mesh
 	 *
@@ -55,7 +55,7 @@ public:
 	 *
 	 * @return     Whether a hit was captured or not.
 	 */
-	bool raycast(const glm::vec3&, const glm::vec3&, float&);
+	bool raycast(const glm::vec3&, const glm::vec3&, float&, glm::mat4& globalTransform);
 private:
 	//OpenGL buffers
 	//Vertex array, Vertext buffer and Element Buffer
@@ -63,7 +63,6 @@ private:
 	vector<Vertex> vertices;
 	vector<GLuint> indices;
 	vector<Texture> textures;
-	glm::mat4& globalTransform;
 	bool textureSetupDone = false;
 	/**
 	 * @brief      Setup the necessary buffers to receive the data loaded into the mesh

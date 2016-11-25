@@ -82,7 +82,7 @@ public:
 	}
 };
 
-Mesh::Mesh(vector<Vertex> &vertices, vector<GLuint> &indices, vector<Texture> &textures, glm::mat4& parentTransform):globalTransform(parentTransform)
+Mesh::Mesh(vector<Vertex> &vertices, vector<GLuint> &indices, vector<Texture> &textures, glm::mat4& parentTransform)
 {
 	this->vertices = vertices;
     this->indices = indices;
@@ -125,7 +125,7 @@ void Mesh::setupBuffers()
     glBindVertexArray(0);
 }
 
-void Mesh::draw(Shader *shader)
+void Mesh::draw(Shader *shader,glm::mat4& globalTransform)
 {
 
 		GLuint diffuseSamplerIndex = 1;
@@ -149,7 +149,7 @@ void Mesh::draw(Shader *shader)
 	glBindVertexArray(0);
 }
 
-bool Mesh::raycast(const vec3& start, const vec3& end, float& tmin){
+bool Mesh::raycast(const vec3& start, const vec3& end, float& tmin, glm::mat4& globalTransform){
 	tmin = 1.0;
 	float t;
 	bool hit = false;

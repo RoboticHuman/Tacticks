@@ -8,11 +8,14 @@
 #include "Shader.h"
 #include "Model.h"
 #include "ResourceManager.h"
+#include "Tacticks/BehaviourPipeline.h"
+
 
 using namespace std;
 using namespace glm;
 
 mat4 tempTranslationMat; ///TO BE DELTED ONLY FOR TEST RAYCAST
+BehaviourPipeline pipeline;
 
 void Core::loadMesh(string fpath, bool resetCam){
 	if(!models.empty()) delete models[0];
@@ -44,6 +47,8 @@ void Core::render()
 	glEnable(GL_DEPTH_TEST);
 	ResourceManager::getShader("meshShader")->use();
 	for(Model *m : models) m->draw(ResourceManager::getShader("meshShader"));
+	ResourceManager::getShader("meshShader")->use();
+	for(auto& drawableAgent : drawableAgents) {drawableAgent.getAgentModel().draw(ResourceManager::getShader("meshShader"));}
 
 	glDisable(GL_DEPTH_TEST);
 	coreHUD.render();
@@ -162,6 +167,7 @@ void Core::start()
 						case SDL_BUTTON_RIGHT:
 							shouldRotateView = true;
 							origCameraAngle=cameraAngle;
+							placeAgents=!placeAgents;
 						break;
 						case SDL_BUTTON_LEFT:
 							vec3 ray[2];
@@ -169,9 +175,20 @@ void Core::start()
 							ray[1] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 1.0));
 							vec3 pos;
 							float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
-							if(!models.empty() && models[0]->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
-								cout << glm::to_string(pos) << endl;
-								models[1]->setPosition(pos);
+							if(placeAgents)
+							{
+
+								if(!models.empty()&&models[0]->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
+									int agentID = pipeline.addAgent();
+									drawableAgents.push_back(DrawableAgent("EditorAssets/models/AgentCylinder.obj",agentID));
+									drawableAgents.back().getAgentModel().setPosition(pos);
+								}
+							}
+							else
+							{
+								for(auto& drawableAgent : drawableAgents){
+									if(drawableAgent.getAgentModel().raycast(ray[0],ray[1],pos,NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)) cout<<drawableAgent.getAgentID()<<endl;
+								}
 							}
 						break;
 					}

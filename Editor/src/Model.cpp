@@ -30,7 +30,7 @@ void Model::draw(Shader *shader)
 {
 	for(GLuint i=0; i<meshes.size();i++)
 	{
-		meshes[i].draw(shader);
+		meshes[i].draw(shader,globalTransform);
 	}
 	for(int i=0;i<nodes.size();i++)
 	{
@@ -227,7 +227,7 @@ bool Model::raycast(const vec3& start, const vec3& end, vec3& hitPos, float &tmi
 	float t;
 	bool hit = false;
 	for(Mesh &m : meshes) {
-		if(m.raycast(start, end, t)) {
+		if(m.raycast(start, end, t,globalTransform)) {
 			tmin = std::min(tmin, t);
 			hit = true;
 		}

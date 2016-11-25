@@ -48,6 +48,7 @@ private:
 	vector<Mesh> meshes;
 	vector<Model> nodes;
 	glm::mat4 globalTransform;
+	glm::vec3 minBoundary, maxBoundary;
 	string containingDir;
 	vector<Texture> texturesLoaded;
 	void copyAiMat(const aiMatrix4x4 *from, glm::mat4 &to);

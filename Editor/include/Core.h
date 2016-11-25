@@ -7,7 +7,7 @@
 #include "Camera.h"
 #include "Timer.h"
 #include "HUD.h"
-
+#include "DrawableAgent.h"
 class Shader;
 class Model;
 
@@ -26,11 +26,13 @@ private:
 	bool shouldRotateView = false;
 	glm::vec2 cameraAngle = glm::vec2(0,0);
 	glm::vec2 origCameraAngle = glm::vec2(0,0);
+	bool placeAgents=true;
 	SDL_Window *mainwindow = nullptr;
 	SDL_GLContext maincontext = NULL;
 	bool exitFlag = false;
 	std::vector<Model *> models;
 	std::vector<Shader *> shader;
+	std::vector<DrawableAgent> drawableAgents;
 	Camera cam;
 	Timer timer;
 	HUD coreHUD;
