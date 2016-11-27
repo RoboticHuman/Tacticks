@@ -21,7 +21,7 @@ void init()
 		for(int j = 0; j < m; j++)
 			if(rand()%100 < 25) grid[i][j] = true;
 			else grid[i][j] = false;
-	catID = mouseID = -1;
+	catID = mouseID = -1;	//AddAgent
 }
 void printFrame()
 {
@@ -45,31 +45,17 @@ PassObject grid2PassObject(vector<vector<bool> >& Grid){
     return PassObject("grid",grid);
 }
 
-PassObject fun(vector<vector<bool> >& Grid){
-	PassArray grid(n);
-    for(int i=0; i<n; i++)
-    {
-		PassArray row(m);
-    	for(int j=0; j<m; j++)
-			row[j]=PassObject("cell", Grid[i][j] ? "1" : "0");
-		cout << "hmm" << endl;
-    	grid[i]=PassObject("row", row);
-		cout << "Well??" << endl;
-    }
-    return PassObject("grid",grid);
-}
 int main()
 {
 	init();
-	pipeline.addMilestonesModule("CatnMouse");
+	pipeline.addMilestonesModule("CatnMouse")->getBeh()->init({});
 	grid2PassObject(grid);
 	//fun(grid);
 	//pipeline.addNavigationLibrary("2DNavigator")->getNav()->init({grid2PassObject(grid)});
 
-
 	for(int i = 0; i < 20; i++){
 		printFrame();
 		usleep(100*1000);
+		//Simulate & Update
 	}
-	cout << "Hmmmm2" << endl;
 }
