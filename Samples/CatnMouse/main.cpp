@@ -2,6 +2,9 @@
 #include <Tacticks/PassObject.h>
 #include <Tacticks/BehaviourPipeline.h>
 #include <Tacticks/AbstractNavigation.h>
+#include <Tacticks/AbstractBehaviourModule.h>
+#include "Tacticks/PassObjectArray.h"
+#include "Tacticks/PassObjectBool.h"
 #include <vector>
 #include <unistd.h>
 using namespace std;
@@ -31,24 +34,26 @@ void printFrame()
 			if(grid[i][j]) printf("%c", char(219));
 			else printf("%c", char(32));
 }
-PassObject grid2PassObject(vector<vector<bool> >& Grid){
-    PassArray grid(n);
+PassObject* grid2PassObject(vector<vector<bool> >& Grid){
+    PassObjectArray* grid= new PassObjectArray(2);
     for(int i=0; i<n; i++)
     {
-		PassArray row(m);
+		PassObjectArray* row= new PassObjectArray(m);
     	for(int j=0; j<m; j++)
-			row[j]=PassObject("cell", Grid[i][j]);
+			(*row)[j]=new PassObjectBool(Grid[i][j]);
 		cout << "hmm" << endl;
-    	grid[i]=PassObject("row", row);
+    	(*grid)[i]=row;
 		cout << "Well??" << endl;
     }
-    return PassObject("grid",grid);
+    return grid;
 }
 
 int main()
 {
 	init();
+	cout<<"SH"<<endl;
 	pipeline.addMilestonesModule("CatnMouse")->getBeh()->init({});
+
 	grid2PassObject(grid);
 	//fun(grid);
 	//pipeline.addNavigationLibrary("2DNavigator")->getNav()->init({grid2PassObject(grid)});
