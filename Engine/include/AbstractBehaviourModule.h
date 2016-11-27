@@ -1,8 +1,8 @@
 #pragma once
 #include <glm/vec3.hpp>
 #include <vector>
-#include "PassObject.h"
 
+class PassObject;
 class Agent;
 class AgentGroup;
 
@@ -16,7 +16,7 @@ protected:
 
 public:
 	virtual ~AbstractBehaviourModule() = default;
-	virtual bool init(std::vector<PassObject> args) = 0;
+	virtual bool init(std::vector<PassObject*> args) = 0;
 	virtual glm::vec3 simulateAgent(const Agent& agent) = 0;
 	virtual std::vector<std::pair<int, glm::vec3> > simulateGroup(const AgentGroup& agentGroup) = 0;
 	virtual void eventPreSimulate();
