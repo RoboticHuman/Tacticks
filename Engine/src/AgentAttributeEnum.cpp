@@ -2,7 +2,7 @@
 using namespace std;
 
 
-AgentAttributeEnum::AgentAttributeEnum(const std::string& name, int defaultValue, const vector<std::string>& possibleValues):
+AgentAttributeEnum::AgentAttributeEnum(int defaultValue, const vector<std::string>& possibleValues, const std::string& name):
 	AgentAttribute(name),value(defaultValue),possibleValues(possibleValues){}
 
 int AgentAttributeEnum::getValue() const {return value;}

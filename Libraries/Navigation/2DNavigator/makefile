@@ -6,8 +6,13 @@ IPath = .
 LPath = .
 CompileFlags = -std=c++11 -fPIC
 LinkFlags = -shared
-Libs =
+Libs = -lTacticks
 Objects = 2DNavigator.o
+
+ifeq ($(shell uname), Darwin)
+	CompileFlags += -m32
+	LinkFlags += -m32
+endif
 
 first: build
 

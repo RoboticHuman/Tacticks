@@ -26,4 +26,5 @@ public:
 	const AgentAttribute* getAttribute(std::string attributeToGet) const;
 	int getGroupID() const;
 	int getAgentID() const;
+	~Agent();
 };

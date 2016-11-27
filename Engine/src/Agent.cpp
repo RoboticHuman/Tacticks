@@ -34,3 +34,9 @@ void Agent::setGroupID(int ID)
 {
 	groupID = ID;
 }
+Agent::~Agent()
+{
+	for (auto& attr : attributes) {
+		delete attr.second;
+	}
+}

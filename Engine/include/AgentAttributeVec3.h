@@ -8,7 +8,7 @@ class AgentAttributeVec3 : public AgentAttribute
 {
 	glm::vec3 value;
 public:
-	AgentAttributeVec3(const std::string& name, const glm::vec3& defaultValue);
+	AgentAttributeVec3(const glm::vec3& defaultValue, const std::string& name="");
 	glm::vec3 getValue() const;
 	void setValue(const glm::vec3& newValue);
 };
