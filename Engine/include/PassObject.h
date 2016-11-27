@@ -20,7 +20,8 @@ public:
 	PassArray operator+(const PassObject& val) const;
 	PassArray& operator+=(const PassArray& val);
 	PassArray operator+(const PassArray& val) const;
-	PassObject operator[](unsigned int ind) const;
+	const PassObject& operator[](unsigned int ind) const;
+	PassObject& operator[](unsigned int ind);
 	int size() const;
 };
 class PassObject
@@ -46,7 +47,7 @@ class PassObject
 
 		Data();
 		Data(const Data& cpy);
-		Data(Data&&) = default;
+		Data(Data&& cpy);
 		~Data();
 		Data& operator=(const Data& cpy);
 	} data;

@@ -14,7 +14,7 @@ first: build
 build: $(AppName)
 
 clean:
-	rm -rf $(AppName) $(CleanFiles) *.out *.so *.dll
+	rm -rf $(AppName) $(CleanFiles) *.out *.so *.dll *.o
 
 $(AppName): $(Objects)
 	$(CXX) $(Objects) -o $(AppName) $(Libs) $(LinkFlags) -L$(LPath)

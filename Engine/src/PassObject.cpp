@@ -1,4 +1,5 @@
 #include "PassObject.h"
+#include <iostream>
 using namespace std;
 
 PassArray::PassArray(int size) : lst(size)
@@ -12,6 +13,9 @@ PassArray::PassArray(const std::vector<PassObject>& list) : lst(list)
 
 PassArray& PassArray::operator=(const PassArray& cpy)
 {
+	cout << "*********hmmmm Wired" << this << ' ' << &lst << ' ' << lst.size() << ' ' << cpy.size() << endl;
+	lst.resize(0);
+	cout << "AfterResize" << endl;
 	lst = cpy.lst;
 	return *this;
 }
@@ -36,7 +40,11 @@ PassArray PassArray::operator+(const PassArray& val) const
 	PassArray ret(*this);
 	return ret += val;
 }
-PassObject PassArray::operator[](unsigned int ind) const
+const PassObject& PassArray::operator[](unsigned int ind) const
+{
+	return lst[ind];
+}
+PassObject& PassArray::operator[](unsigned int ind)
 {
 	return lst[ind];
 }
@@ -49,6 +57,7 @@ PassObject::PassObject(const string&)
 {
 	this->name = name;
 	this->data.type = Data::Null;
+	this->data.i = 0;
 }
 PassObject::PassObject(const string& name, int val)
 {
@@ -66,13 +75,18 @@ PassObject::PassObject(const string& name, const string& val)
 {
 	this->name = name;
 	this->data.type = Data::String;
+	new (&data.str) std::string();
 	this->data.str = val;
 }
 PassObject::PassObject(const string& name, const PassArray& val)
 {
+	new (&data.arr) PassArray();
+	cout << "Yaaay" << endl;
 	this->name = name;
 	this->data.type = Data::Array;
+	cout << "Before arr=" << endl;
 	this->data.arr = val;
+	cout << "Yaaaaaaaay2" << endl;
 }
 
 PassObject& PassObject::operator=(const PassObject& cpy)
@@ -108,6 +122,7 @@ void PassObject::setValue(const string& val)
 void PassObject::setValue(const PassArray& val)
 {
 	data.type = Data::Array;
+	new (&data.arr) PassArray();
 	data.arr = val;
 }
 
@@ -164,6 +179,14 @@ PassObject::Data::Data(const Data& cpy)
 	else if(type == Decimal) f = cpy.f;
 	else if(type == String) str = cpy.str;
 	else if(type == Array) arr = cpy.arr;
+}
+PassObject::Data::Data(Data&& cpy)
+{
+	type = cpy.type;
+	if(type == Integer) i = cpy.i;
+	else if(type == Decimal) f = cpy.f;
+	else if(type == String) str = move(cpy.str);
+	else if(type == Array) arr = move(cpy.arr);
 }
 PassObject::Data::~Data()
 {
