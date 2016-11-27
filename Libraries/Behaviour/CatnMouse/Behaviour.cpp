@@ -6,6 +6,9 @@
 #include <Tacticks/AgentAttributeVec3.h>
 #include <Tacticks/Agent.h>
 #include <Tacticks/AgentGroup.h>
+#include <Tacticks/PassObject.h>
+#include <Tacticks/PassObjectInt.h>
+#include <Tacticks/PassObjectArray.h>
 using namespace std;
 using namespace glm;
 
@@ -14,7 +17,7 @@ class CatnMouse : public AbstractBehaviourModule
 	AbstractNavigation* nav2d;
 public:
 	CatnMouse(BehaviourModuleData* behData) : AbstractBehaviourModule(behData){}
-	virtual bool init(vector<PassObject> args)
+	virtual bool init(vector<PassObject*> args)
 	{
 		nav2d = NavigationFactory::getNav("2DNavigator").getNav();
 		return nav2d != nullptr;
@@ -23,12 +26,17 @@ public:
 	{
 		const AgentAttributeVec3* pos = dynamic_cast<const AgentAttributeVec3*>(agent.getAttribute("Position"));
 		if(pos == nullptr) return vec3();
-		vector<PassObject> args;
-		args.push_back(PassObject("x", pos->getValue().x));
-		args.push_back(PassObject("y", pos->getValue().y));
-		vector<PassObject> ret = nav2d->getData("OneLove", args);
+		vector<PassObject*> args;
+		args.push_back(new PassObjectInt(pos->getValue().x, "x"));
+		args.push_back(new PassObjectInt(pos->getValue().y, "y"));
+		vector<PassObject*> ret = nav2d->getData("OneLove", args);
 		if(ret.size() == 0) return vec3();
-		return vec3(ret[0].asArray()[0].asInteger(), ret[0].asArray()[1].asInteger(), 0.0);
+
+		PassObjectArray* d = dynamic_cast<PassObjectArray*>(ret[rand()%ret.size()]);
+		if(d == nullptr && d->getSize() != 2) return vec3();
+		PassObjectInt* x = dynamic_cast<PassObjectInt*>((*d)[0]);
+		PassObjectInt* y = dynamic_cast<PassObjectInt*>((*d)[1]);
+		return vec3(x->getValue(), y->getValue(), 0.0);
 	}
 	virtual vector<pair<int, vec3>> simulateGroup(const AgentGroup& agentGroup)
 	{
@@ -49,5 +57,5 @@ AbstractBehaviourModule* newBeh(BehaviourModuleData* behData)
 extern "C"
 BehaviourInfo declareDependencies()
 {
-	return {BehaviourInfo::Type::Milestone, {"2DNavigator"}};
+	return {BehaviourInfo::Type::Force, {"2DNavigator"}};
 }
