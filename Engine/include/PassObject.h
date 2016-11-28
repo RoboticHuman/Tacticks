@@ -12,4 +12,3 @@ public:
 	std::string getName();
 	virtual ~PassObject() = default;
 };
-

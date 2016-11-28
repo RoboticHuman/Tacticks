@@ -12,15 +12,15 @@ Navigation::Navigation(const char* name, const char* soPath) : navName(name)
 }
 Navigation::~Navigation()
 {
-	if(soHandle != nullptr) unload();
 	if(nav != nullptr) delete nav;
+	if(soHandle != nullptr) unload();
 }
 
 bool Navigation::load(const char* soPath)
 {
 	if(soPath == nullptr || access(soPath, F_OK | R_OK) == -1) return false;
 
-	void* soHandle = dlopen(soPath, RTLD_NOW);
+	soHandle = dlopen(soPath, RTLD_NOW);
 	if(soHandle == nullptr) return false;
 
 	typedef NavigationInfo (*declDep_t)();

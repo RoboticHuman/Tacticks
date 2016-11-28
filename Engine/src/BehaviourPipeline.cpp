@@ -5,10 +5,11 @@
 #include "MilestonesBehaviourModule.h"
 #include "BehaviourModuleFactory.h"
 #include "NavigationFactory.h"
+#include "AgentAttributeVec3.h"
 using namespace std;
 using namespace glm;
 
-BehaviourPipeline::BehaviourPipeline():behData(),attrFactory(behData.agents),depManager(attrFactory)
+BehaviourPipeline::BehaviourPipeline() : behData() , attrFactory(behData.agents), depManager(attrFactory)
 {
 
 }
@@ -16,7 +17,9 @@ BehaviourPipeline::BehaviourPipeline():behData(),attrFactory(behData.agents),dep
 
 Navigation* BehaviourPipeline::addNavigationLibrary(std::string navName)
 {
-	return &NavigationFactory::getNav(navName);
+	Navigation* ret = &NavigationFactory::getNav(navName);
+	ret->newNav();
+	return ret;
 }
 Navigation* BehaviourPipeline::getNavigationLibrary(std::string navName)
 {
@@ -36,6 +39,7 @@ Behaviour* BehaviourPipeline::addForcesModule(string behName)
 		forcesPipeline.pop_back();
 		return nullptr;
 	}
+	forcesPipeline.back().newBeh(&behData);
     return &forcesPipeline.back();
 }
 
@@ -47,6 +51,7 @@ Behaviour* BehaviourPipeline::addMilestonesModule(string behName)
 		milestonesPipeline.pop_back();
 		return nullptr;
 	}
+	forcesPipeline.back().newBeh(&behData);
     return &milestonesPipeline.back();
 }
 
@@ -126,25 +131,25 @@ bool BehaviourPipeline::moveMilestonesModuleToIndex(unsigned int originalIndex, 
     }
 }
 
-int BehaviourPipeline::addAgent() 
+int BehaviourPipeline::addAgent()
 {
     int ret = behData.addAgent();
     attrFactory.initializeAgentAttributes(ret);
     return ret;
 }
 
-const Agent* BehaviourPipeline::getAgentByID(int id) 
+Agent* BehaviourPipeline::getAgentByID(int id)
 {
-    return behData.getAgentByID(id);
+    return &behData.agents[id].agent;
 }
 
-int BehaviourPipeline::addGroup() 
+int BehaviourPipeline::addGroup()
 {
     return behData.addGroup();
 }
-const AgentGroup* BehaviourPipeline::getGroupByID(int id) 
+AgentGroup* BehaviourPipeline::getGroupByID(int id)
 {
-    return behData.getGroupByID(id);
+    return &behData.groups[id];
 }
 
 
@@ -162,22 +167,29 @@ Behaviour* BehaviourPipeline::getMilestonesModuleAtIndex(unsigned int index)
 }
 
 bool BehaviourPipeline::compile(){return true;}
-void BehaviourPipeline::simulate()
+std::vector<std::pair<int, glm::vec3>> BehaviourPipeline::simulate()
 {
+	for(auto& a : behData.agents){
+		a.second.targetPosition = dynamic_cast<const AgentAttributeVec3*>(a.second.agent.getAttribute("Target"))->getValue();
+		a.second.targetVelocity = a.second.targetPosition - dynamic_cast<const AgentAttributeVec3*>(a.second.agent.getAttribute("Position"))->getValue();
+	}
+
     for(Behaviour& tBeh : milestonesPipeline){
         AbstractBehaviourModule* beh = tBeh.getBeh();
         beh->eventPreSimulate();
         for(GroupIterator gIt = behData.beginGroup(); gIt != behData.endGroup(); gIt++){
             vector<pair<int, vec3> > ret = beh->simulateGroup(*gIt);
             for(auto res : ret){
-                behData.agents[res.first].targetPosition = res.second;
-                //behData.agents[res.first].targetVelocity = res.second - *****curPosition*****;
+				BehaviourModuleData::PrivateAgent& agent = behData.agents[res.first];
+                agent.targetPosition = res.second;
+                agent.targetVelocity = res.second - dynamic_cast<const AgentAttributeVec3*>(agent.agent.getAttribute("Position"))->getValue();;
             }
         }
         for(int aID : behData.nullGroup.getAgentList()){
             vec3 res = beh->simulateAgent(behData.agents[aID].agent);
-            behData.agents[aID].targetPosition = res;
-            //behData.agents[aID].targetVelocity = res - *****curPosition*****;
+			BehaviourModuleData::PrivateAgent& agent = behData.agents[aID];
+            agent.targetPosition = res;
+            agent.targetVelocity = res - dynamic_cast<const AgentAttributeVec3*>(agent.agent.getAttribute("Position"))->getValue();;
         }
     }
 
@@ -189,9 +201,14 @@ void BehaviourPipeline::simulate()
             for(auto res : ret)
                 behData.agents[res.first].targetVelocity = res.second;
         }
-        for(int aID : behData.nullGroup.getAgentList())
+        for(int aID : behData.nullGroup.getAgentList()){
             behData.agents[aID].targetVelocity = beh->simulateAgent(behData.agents[aID].agent);
+		}
     }
+
+	vector<pair<int, vec3>> ret;
+
+	for(auto& a : behData.agents)
+		ret.push_back(make_pair(a.second.agent.getAgentID(), a.second.targetVelocity));
+	return ret;
 }
-
-

@@ -65,6 +65,9 @@ private:
 
     AgentIterator(const std::unordered_map<int, BehaviourModuleData::PrivateAgent>::iterator&);
 public:
+	AgentIterator(const AgentIterator&) = default;
+	AgentIterator(AgentIterator&&) = default;
+	~AgentIterator() = default;
     const Agent* operator->() const;
     const Agent& operator*() const;
 	AgentIterator& operator++();
@@ -84,6 +87,9 @@ private:
 
     GroupIterator(const std::unordered_map<int, AgentGroup>::iterator&);
 public:
+	GroupIterator(const GroupIterator&) = default;
+	GroupIterator(GroupIterator&&) = default;
+	~GroupIterator() = default;
     const AgentGroup* operator->() const;
     const AgentGroup& operator*() const;
 	GroupIterator& operator++();

@@ -1,6 +1,5 @@
 #include "PassObjectArray.h"
 
-
 PassObjectArray::PassObjectArray(int size, const std::string& name):value(size),PassObject(name){};
 int PassObjectArray::getSize() const {return value.size();}
 PassObject*& PassObjectArray::operator[](const unsigned int i) {return value[i];}
