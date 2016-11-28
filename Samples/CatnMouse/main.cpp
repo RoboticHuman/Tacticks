@@ -85,8 +85,9 @@ PassObject* grid2PassObject(vector<vector<bool> >& Grid)
 int main()
 {
 	init();
-	pipeline.addNavigationLibrary("2DNavigator")->getNav()->init({grid2PassObject(grid)});
-	pipeline.addForcesModule("CatnMouse")->getBeh()->init({});
+	pipeline.addNavigationLibrary("2DNavigator")->getNav()->setParameters({grid2PassObject(grid)});
+	pipeline.addForcesModule("CatnMouse")->getBeh()->setParameters({});
+	pipeline.compile();
 	int i = 0;
 	while(true){
 		cout << "Iteration" << i++ << endl;

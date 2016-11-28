@@ -5,35 +5,6 @@
 #include <Tacticks/PassObjectInt.h>
 #include <Tacticks/PassObjectBool.h>
 
-<<<<<<< HEAD
-bool Navigator2D::init()
-{
-    if (args.size()==0) fprintf(stdout, "%s\n","Args to 2DNavigator is empty :(");
-    else{
-      PassObjectArray* grid = dynamic_cast<PassObjectArray*>(args[0]);
-      if(grid)
-      {
-          for (int i=0;i<grid->getSize();i++)
-          {
-            std::vector<bool> row;
-            PassObjectArray* gridRow = dynamic_cast<PassObjectArray*>((*grid)[i]);
-            if(gridRow){
-            for(int j=0;j<gridRow->getSize();j++)
-            {
-              PassObjectInt* cellValue = dynamic_cast<PassObjectInt*>((*gridRow)[j]);
-              if(cellValue)
-              row.push_back((bool)(cellValue->getValue()));
-            }
-            navGrid.push_back(row);
-          }
-          }
-      }
-      }
-    clearDirty();
-}
-
-=======
-
 bool Navigator2D::init()
 {
 	if (args.size()==0) fprintf(stdout, "%s\n","Args to 2DNavigator is empty :(");

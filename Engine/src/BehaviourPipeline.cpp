@@ -166,7 +166,19 @@ Behaviour* BehaviourPipeline::getMilestonesModuleAtIndex(unsigned int index)
     return &milestonesPipeline[index];
 }
 
-bool BehaviourPipeline::compile(){return true;}
+bool BehaviourPipeline::compile()
+{
+	for(auto& force: forcesPipeline)
+	{
+		force.getBeh()->init();
+	}
+	for(auto& milestone: milestonesPipeline)
+	{
+		milestone.getBeh()->init();
+	}
+	NavigationFactory::compileAll();
+	return true;
+}
 std::vector<std::pair<int, glm::vec3>> BehaviourPipeline::simulate()
 {
 	for(auto& a : behData.agents){

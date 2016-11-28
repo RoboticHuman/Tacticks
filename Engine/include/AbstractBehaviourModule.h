@@ -10,7 +10,6 @@ class BehaviourModuleData;
 
 class AbstractBehaviourModule
 {
-	void setParameters(const std::vector<PassObject*>& args);
 protected:
 	BehaviourModuleData* behData;
 	AbstractBehaviourModule(BehaviourModuleData* data);
@@ -19,8 +18,9 @@ protected:
 
 public:
 	virtual ~AbstractBehaviourModule() = default;
+	void setParameters(const std::vector<PassObject*>& args);
 	virtual bool init() = 0;
-	virtual bool IsDirty();
+	virtual bool isDirty();
 	virtual void clearDirty();
 	virtual glm::vec3 simulateAgent(const Agent& agent) = 0;
 	virtual std::vector<std::pair<int, glm::vec3> > simulateGroup(const AgentGroup& agentGroup) = 0;
