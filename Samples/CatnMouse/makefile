@@ -9,10 +9,15 @@ LinkFlags =
 Libs = -lTacticks
 Objects = main.o
 
+ifeq ($(shell uname), Darwin)
+	CompileFlags += -m32
+	LinkFlags += -m32
+endif
+
 first: build
 
 build: $(AppName)
-	
+
 clean:
 	rm -rf $(AppName) $(CleanFiles) *.out *.so *.dll *.o
 

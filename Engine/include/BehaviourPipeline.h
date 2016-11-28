@@ -51,13 +51,10 @@ public:
     int addAgent();
     int addGroup();
     void removeAgentByID(int id);
-    const Agent* getAgentByID(int id);
-    const AgentGroup* getGroupByID(int id);
+    Agent* getAgentByID(int id);
+    AgentGroup* getGroupByID(int id);
 
     // TODO implement compile properly
     bool compile();
-    void simulate();
-
-
+    std::vector<std::pair<int, glm::vec3>> simulate();
 };
-

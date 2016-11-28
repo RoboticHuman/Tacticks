@@ -20,8 +20,8 @@ Behaviour::Behaviour(Behaviour&& cpy)
 }
 Behaviour::~Behaviour()
 {
-	if(soHandle != nullptr) unload();
 	if(beh != nullptr) delete beh;
+	if(soHandle != nullptr) unload();
 }
 
 Behaviour& Behaviour::operator=(Behaviour&& cpy)
@@ -38,7 +38,7 @@ bool Behaviour::load(const char* soPath)
 	//Checks if behaviour file exist and have read permission.
 	if(soPath == nullptr || access(soPath, F_OK | R_OK) == -1) return false;
 
-	void* soHandle = dlopen(soPath, RTLD_NOW);
+	soHandle = dlopen(soPath, RTLD_NOW);
 	if(soHandle == nullptr) return false;
 
 	typedef BehaviourInfo (*declDep_t)();

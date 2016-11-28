@@ -27,7 +27,6 @@ clean:
 	@(cd Libraries/ && make $(MakeFlags) clean)
 	@$(foreach sample, $(SampleList), (cd $(sample) && make $(MakeFlags) clean);)
 	rm -rf $(CleanFiles) *.out *.so *.dll
-#cleaning samples is missing
 
 run: all
 ifeq ($(RunApp), $(EditorAppName))

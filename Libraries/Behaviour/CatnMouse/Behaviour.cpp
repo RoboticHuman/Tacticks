@@ -9,6 +9,7 @@
 #include <Tacticks/PassObject.h>
 #include <Tacticks/PassObjectInt.h>
 #include <Tacticks/PassObjectArray.h>
+#include <iostream>
 using namespace std;
 using namespace glm;
 
@@ -29,13 +30,16 @@ public:
 		vector<PassObject*> args;
 		args.push_back(new PassObjectInt(pos->getValue().x, "x"));
 		args.push_back(new PassObjectInt(pos->getValue().y, "y"));
+
 		vector<PassObject*> ret = nav2d->getData("OneLove", args);
+
 		if(ret.size() == 0) return vec3();
 
 		PassObjectArray* d = dynamic_cast<PassObjectArray*>(ret[rand()%ret.size()]);
 		if(d == nullptr && d->getSize() != 2) return vec3();
 		PassObjectInt* x = dynamic_cast<PassObjectInt*>((*d)[0]);
 		PassObjectInt* y = dynamic_cast<PassObjectInt*>((*d)[1]);
+		
 		return vec3(x->getValue(), y->getValue(), 0.0);
 	}
 	virtual vector<pair<int, vec3>> simulateGroup(const AgentGroup& agentGroup)
