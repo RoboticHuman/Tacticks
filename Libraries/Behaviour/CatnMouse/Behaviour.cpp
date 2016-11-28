@@ -17,7 +17,7 @@ class CatnMouse : public AbstractBehaviourModule
 	AbstractNavigation* nav2d;
 public:
 	CatnMouse(BehaviourModuleData* behData) : AbstractBehaviourModule(behData){}
-	virtual bool init(vector<PassObject*> args)
+	virtual bool init()
 	{
 		nav2d = NavigationFactory::getNav("2DNavigator").getNav();
 		return nav2d != nullptr;

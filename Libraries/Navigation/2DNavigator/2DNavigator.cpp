@@ -3,36 +3,38 @@
 #include <algorithm>
 #include "Tacticks/PassObjectArray.h"
 #include "Tacticks/PassObjectInt.h"
-void Navigator2D::init(std::vector<PassObject*> args){
-  if (args.size()==0) fprintf(stdout, "%s\n","Args to 2DNavigator is empty :(");
-  else{
-    PassObjectArray* grid = dynamic_cast<PassObjectArray*>(args[0]);
-    if(grid)
-    {
-        for (int i=0;i<grid->getSize();i++)
-        {
-          std::vector<bool> row;
-          PassObjectArray* gridRow = dynamic_cast<PassObjectArray*>((*grid)[i]);
-          if(gridRow){
-          for(int j=0;j<gridRow->getSize();j++)
+
+bool Navigator2D::init()
+{
+    if (args.size()==0) fprintf(stdout, "%s\n","Args to 2DNavigator is empty :(");
+    else{
+      PassObjectArray* grid = dynamic_cast<PassObjectArray*>(args[0]);
+      if(grid)
+      {
+          for (int i=0;i<grid->getSize();i++)
           {
-            PassObjectInt* cellValue = dynamic_cast<PassObjectInt*>((*gridRow)[j]);
-            if(cellValue)
-            row.push_back((bool)(cellValue->getValue()));
+            std::vector<bool> row;
+            PassObjectArray* gridRow = dynamic_cast<PassObjectArray*>((*grid)[i]);
+            if(gridRow){
+            for(int j=0;j<gridRow->getSize();j++)
+            {
+              PassObjectInt* cellValue = dynamic_cast<PassObjectInt*>((*gridRow)[j]);
+              if(cellValue)
+              row.push_back((bool)(cellValue->getValue()));
+            }
+            navGrid.push_back(row);
           }
-          navGrid.push_back(row);
-        }
-        }
-        initialized = true;
-    }
-    }
+          }
+      }
+      }
+    clearDirty();
 }
 
 std::vector<PassObject*> Navigator2D::getPossibleNextLocations(int x, int y){
   int di[]={1,-1,0,1};
   int dj[]={0,0,1,-1};
   std::vector<PassObject*> tempVec;
-  if(initialized){
+  if(!IsDirty()){
     for(int i=0;i<4;i++)
     {
       PassObjectArray* tempCoordinate = new PassObjectArray(2);

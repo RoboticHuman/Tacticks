@@ -6,8 +6,7 @@ class Navigator2D : public AbstractNavigation{
 private:
   std::vector<std::vector<bool>> navGrid;
   std::vector<PassObject*> getPossibleNextLocations(int x, int y);
-  bool initialized=false;
 public:
-  virtual void init(std::vector<PassObject*> args) override;
+    virtual bool init();
   virtual std::vector<PassObject*> getData(std::string dataName, std::vector<PassObject*> args) override;
 };
