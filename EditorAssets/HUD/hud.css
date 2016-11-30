@@ -1,0 +1,119 @@
+body{
+  background-color: transparent;
+}
+
+div{
+  background: trasnparent;
+ }
+
+/* Editor Coloumns*/
+ #agentsandgroups {
+    color: white;
+    float:left;
+    width:22%;
+    background:grey;
+    Height:100%;
+    word-wrap:break-word;
+ }
+
+
+ #forcesandmilestones {
+    color: white;
+    float:right;
+    width:22%;
+    background:grey;
+    height:100%;
+    word-wrap:break-word;
+ }
+
+ /* Sections*/
+ #attributesList{
+    color: black;
+    float:left;
+    width:100%;
+    background:lightgrey;
+    Height:100%;
+ }
+
+ #Milestones { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+ #Milestones li { margin: 0 3px 3px 3px; padding: 0; padding-left: 1.5em; padding-top: -1.5em; font-size: 1.4em; height: 18px; }
+ #Milestones li span { position: absolute; margin-left: -1.3em; }
+
+ #Forces { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+ #Forces li { margin: 0 3px 3px 3px; padding: 0; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+ #Forces li span { position: absolute; margin-left: -1.3em; }
+
+ #AvailableBehMod { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+ #AvailableBehMod li { margin: 0 3px 3px 3px; padding: 0; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
+ #AvailableBehMod li span { position: absolute; margin-left: -1.3em; }
+
+ .navbar{
+     background-color: grey;
+     border: none;
+     color: white;
+     width: 100%;
+     padding: 5px 5px;
+     float: right:
+     text-align: center;
+     text-decoration: none;
+     display: inline-block;
+     font-size: 16px;
+ }
+
+/* Elements*/
+/*Unordered Lists*/
+ li {
+    color: grey;
+    list-style-type: none;
+    width: 100%;
+    color: inherit;
+    font-size: inherit;
+    word-wrap:break-word;
+ }
+ ul {
+      text-align: light;
+      width: 100%;
+      color: white;
+      word-wrap:break-word;
+      font-size: 60%;
+ }
+
+.toggle-button { background-color: white; margin: 5px 0; border-radius: 20px; border: 2px solid #D0D0D0; height: 24px; cursor: pointer; width: 50px; position: relative; display: inline-block; user-select: none; -webkit-user-select: none; -ms-user-select: none; -moz-user-select: none; }
+.toggle-button button { cursor: pointer; outline: 0; display:block; position: absolute; left: 0; top: 0; border-radius: 100%; width: 30px; height: 30px; background-color: white; float: left; margin: -3px 0 0 -3px; border: 2px solid #D0D0D0; transition: left 0.3s; }
+.toggle-button-selected { background-color: black; }
+.toggle-button-selected button { left: 26px; top: 0; margin: 0; border: none; width: 24px; height: 24px; box-shadow: 0 0 4px rgba(0,0,0,0.1); }
+
+
+/* Dropdown menu to work with Awesomium*/
+.dropbtn {
+ cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+   background-color: #3e8e41;
+}
+
+.dropdown {
+   position: relative;
+   display: inline-block;
+}
+
+.dropdown-content {
+   display: none;
+   position: absolute;
+   background-color: #f9f9f9;
+   min-width: 160px;
+   overflow: auto;
+   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+   color: black;
+   padding: 12px 16px;
+   text-decoration: none;
+   display: block;
+}
+
+.dropdown a:hover {background-color: #f1f1f1}
+
+.show {display:block;}
