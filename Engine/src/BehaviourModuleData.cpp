@@ -35,7 +35,6 @@ bool AgentIterator::operator!=(const AgentIterator& val) const
 {
 	return iterator != val.iterator;
 }
-
 //#################################################
 
 // GroupIterator Implementation
@@ -92,7 +91,7 @@ int BehaviourModuleData::addGroup()
 	groups.insert({AgentGroup::nextGroupID,AgentGroup()});
 	return AgentGroup::nextGroupID-1;
 }
-void BehaviourModuleData::removeAgentByID(int id) 
+void BehaviourModuleData::removeAgentByID(int id)
 {
 	agents.erase(id);
 }

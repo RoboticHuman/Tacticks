@@ -19,7 +19,12 @@ const AgentAttribute* Agent::getAttribute(std::string attributeToGet) const
 	// Add error handling for if string not found
 	return attributes.find(attributeToGet)->second;
 }
-
+AgentAttribute* Agent::getAttribute(std::string attributeToGet)
+{
+	// TODO:
+	// Add error handling for if string not found
+	return attributes.find(attributeToGet)->second;
+}
 
 
 int Agent::getGroupID() const
@@ -33,4 +38,10 @@ int Agent::getAgentID() const
 void Agent::setGroupID(int ID)
 {
 	groupID = ID;
+}
+Agent::~Agent()
+{
+	for (auto& attr : attributes) {
+		delete attr.second;
+	}
 }

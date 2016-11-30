@@ -15,4 +15,5 @@ public:
 	void addAttribute(const AgentAttribute* attribute);
 	void removeAttribute(std::string attributeName);
 	void initializeAgentAttributes(int agentID);
+	~AttributeFactory();
 };

@@ -1,3 +1,11 @@
+PassObject
+PassObjectInt
+PassObjectBool
+PassObjectFloat
+PassObjectArray
+PassObjectString
+
+
 AbstractBehaviourModule
 AbstractNavigation
 Agent
@@ -16,6 +24,5 @@ AgentAttributeBool
 AgentAttributeVec3
 Navigation
 NavigationFactory
-PassObject
 DependancyManager
 AttributeFactory

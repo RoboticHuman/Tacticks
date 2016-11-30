@@ -5,6 +5,15 @@ EngineLibName = Tacticks.so
 InstallFolder = Install
 CleanFiles = *.log $(InstallFolder)
 MakeFlags = --no-print-directory
+RunApp = $(EditorAppName)
+SampleDir = ./Samples
+SampleList = $(sort $(dir $(wildcard $(SampleDir)/*/)))
+
+ifeq ($(shell uname), Darwin)
+	CompileFlags += -m32
+	LinkFlags += -m32
+endif
+
 first: all
 
 all: engine editor libraries
@@ -15,14 +24,20 @@ editor: engine
 engine:
 	@(cd Engine/ && make $(MakeFlags) install InstallFolder=../$(InstallFolder))
 
-libraries:
-	@(cd Libraries/ && make $(MakeFlags) IPath=../$(InstallFolder)/include )
+libraries: engine
+	@(cd Libraries/ && make $(MakeFlags) IPath=../$(InstallFolder)/include LPath=../$(InstallFolder)/lib)
 
 clean:
 	@(cd Engine/ && make $(MakeFlags) clean)
 	@(cd Editor/ && make $(MakeFlags) clean)
 	@(cd Libraries/ && make $(MakeFlags) clean)
+	@$(foreach sample, $(SampleList), (cd $(sample) && make $(MakeFlags) clean);)
 	rm -rf $(CleanFiles) *.out *.so *.dll
 
 run: all
+ifeq ($(RunApp), $(EditorAppName))
 	@(export LD_LIBRARY_PATH=$(RootDir)Install/lib/:$$LD_LIBRARY_PATH && ./Editor/TacticksEditor.out)
+else
+	@(cd Samples/$(RunApp)/ && make $(MakeFlags) IPath=../../$(InstallFolder)/include LPath=../../$(InstallFolder)/lib)
+	@(export LD_LIBRARY_PATH=$(RootDir)Install/lib/:$$LD_LIBRARY_PATH && ./Samples/$(RunApp)/$(RunApp).out)
+endif
