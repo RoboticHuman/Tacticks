@@ -19,7 +19,7 @@ using namespace std;
 
 BehaviourPipeline pipeline;
 
-int n, m;
+const int n=20, m=20;
 vector<vector<bool>> grid;
 int catGroupID;
 vector<int> catID;
@@ -28,7 +28,6 @@ int mouseID;
 void init()
 {
 	srand(time(0));
-	n = m = 20;
 	grid.assign(n, vector<bool>(m, false));
 	for(int i = 0; i < n; i++)
 		for(int j = 0; j < m; j++)
