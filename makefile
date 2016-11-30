@@ -8,6 +8,12 @@ MakeFlags = --no-print-directory
 RunApp = $(EditorAppName)
 SampleDir = ./Samples
 SampleList = $(sort $(dir $(wildcard $(SampleDir)/*/)))
+
+ifeq ($(shell uname), Darwin)
+	CompileFlags += -m32
+	LinkFlags += -m32
+endif
+
 first: all
 
 all: engine editor libraries
