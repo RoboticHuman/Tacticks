@@ -1,242 +1,13 @@
 <!DOCTYPE html>
 <html>
  <head>
-   <style type="text/css">
-     body{
-       background-color: transparent;
-     }
-     .toggle-button { background-color: white; margin: 5px 0; border-radius: 20px; border: 2px solid #D0D0D0; height: 24px; cursor: pointer; width: 50px; position: relative; display: inline-block; user-select: none; -webkit-user-select: none; -ms-user-select: none; -moz-user-select: none; }
-     .toggle-button button { cursor: pointer; outline: 0; display:block; position: absolute; left: 0; top: 0; border-radius: 100%; width: 30px; height: 30px; background-color: white; float: left; margin: -3px 0 0 -3px; border: 2px solid #D0D0D0; transition: left 0.3s; }
-     .toggle-button-selected { background-color: black; }
-     .toggle-button-selected button { left: 26px; top: 0; margin: 0; border: none; width: 24px; height: 24px; box-shadow: 0 0 4px rgba(0,0,0,0.1); }
-
-
-    div{
-       background: trasnparent;
-      }
-
-
-
-    li {
-        color: grey;
-        list-style-type: none;
-        width: 100%;
-        color: inherit;
-        font-size: inherit;
-	      word-wrap:break-word;
-    }
-
-    ul {
-          text-align: light;
-          width: 100%;
-          color: white;
-	        word-wrap:break-word;
-          font-size: 60%;
-    }
-
-    #agentsandgroups {
-	      color: white;
-        float:left;
-        width:22%;
-        background:grey;
-        Height:100%;
-	      word-wrap:break-word;
-    }
-
-
-    #forcesandmilestones {
-        color: white;
-        float:right;
-        width:22%;
-        background:grey;
-        height:100%;
-	      word-wrap:break-word;
-    }
-
-    #attributesList{
-	      color: black;
-        float:left;
-        width:100%;
-        background:lightgrey;
-        Height:100%;
-    }
-
-    .navbar{
-         background-color: grey;
-         border: none;
-         color: white;
-         width: 100%;
-         padding: 5px 5px;
-	       float: right:
-         text-align: center;
-         text-decoration: none;
-         display: inline-block;
-         font-size: 16px;
-    }
-
-           /*
-      * Dropdown menu to work with Awesomium
-      */
-    .dropbtn {
-	    cursor: pointer;
-	   }
-
-  	.dropbtn:hover, .dropbtn:focus {
-  	    background-color: #3e8e41;
-  	}
-
-  	.dropdown {
-  	    position: relative;
-  	    display: inline-block;
-  	}
-
-  	.dropdown-content {
-  	    display: none;
-  	    position: absolute;
-  	    background-color: #f9f9f9;
-  	    min-width: 160px;
-  	    overflow: auto;
-  	    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  	}
-
-  	.dropdown-content a {
-  	    color: black;
-  	    padding: 12px 16px;
-  	    text-decoration: none;
-  	    display: block;
-  	}
-
-  	.dropdown a:hover {background-color: #f1f1f1}
-
-  	.show {display:block;}
-
-
-     #Milestones { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-     #Milestones li { margin: 0 3px 3px 3px; padding: 0; padding-left: 1.5em; padding-top: -1.5em; font-size: 1.4em; height: 18px; }
-     #Milestones li span { position: absolute; margin-left: -1.3em; }
-
-     #Forces { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-     #Forces li { margin: 0 3px 3px 3px; padding: 0; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
-     #Forces li span { position: absolute; margin-left: -1.3em; }
-
-     #AvailableBehMod { list-style-type: none; margin: 0; padding: 0; width: 60%; }
-     #AvailableBehMod li { margin: 0 3px 3px 3px; padding: 0; padding-left: 1.5em; font-size: 1.4em; height: 18px; }
-     #AvailableBehMod li span { position: absolute; margin-left: -1.3em; }
-   </style>
-
+   <link rel="stylesheet" href="hud.css">
    <script src="jquery-3.1.0.min.js"></script>
    <script src="jquery-ui.js"></script>
-   <script type="text/javascript">
-
-    /* Placing/Editing agents toggle button */
-     $(document).on('click', '.toggle-button', function() {
-         $(this).toggleClass('toggle-button-selected');
-         if ($(this).hasClass("toggle-button-selected")) {
-           //Function to set bool flag
-         }
-     });
-
-   	/* Calls on function to create Folder Structure*/
-       function createProjectHUD(){
-            document.getElementById("saveProject").disabled = false;
-  	        createProject(projectName);
-       }
-
-      //Json for all agetns
-       var AgentsJson;
-       function setAgentsJson(){
-           AgentsJson = setAgentsList();
-       }
-
-   	/* Loading mesh - primtive */
-       function setTextboxValue(val){
-  				document.getElementById("MyTextBox").value = val;
-  			}
-        /* When the user clicks on the button,
-    	toggle between hiding and showing the dropdown content */
-    	function myFunction() {
-    	    document.getElementById("myDropdown").classList.toggle("show");
-    	}
-
-        // Close the dropdown if the user clicks outside of it
-        window.onclick = function(event) {
-          if (!$(event.target).hasClass("dropbtn")) {
-
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-              var openDropdown = dropdowns[i];
-              if (openDropdown.classList.contains('show')) {
-          openDropdown.classList.remove('show');
-              }
-            }
-          }
-        }
-
-
-  	   //Hide/Show functions for nav bar
-       $(document).ready(function(){
-           $("#hide").click(function(){
-               $("#createProject").hide();
-               $("#hide").hide();
-               document.getElementById("saveProject").enable;
-           });
-           $("#show").click(function(){
-               $("#createProject").show();
-           });
-       })
-
-       //Collapsible Lists
-      	function toggle(elementID){
-      		var ele = document.getElementById(elementID);
-      		if (ele.style.display == "block"){
-      			ele.style.display = "none";
-      		}
-      		else {
-      			ele.style.display = "block";
-      		}
-      	}
-
-        //Sortable Lists
-        $( function() {
-          $( "#Milestones" ).sortable();
-          $( "#Milestones" ).disableSelection();
-        } );
-        $( function() {
-          $( "#Forces" ).sortable();
-          $( "#Forces" ).disableSelection();
-        } );
-
-        //Editing the Pipeline
-        var currentpipeline;
-        $('#Milestones input').on('click', function(e){
-           $(this).parent().remove();
-           //currentpipeline.updatePipeline($(this).parent());
-        });
-        $('#Forces input').on('click', function(e){
-           $(this).parent().remove();
-           //currentpipeline.updatePipeline($(this).parent());
-        });
-        $('#AvailableBehMod input').on('click', function(e){
-                $("#Forces ul").append($("<li>").text($(this).parent().innerText));
-              //  currentpipeline.updatePipeline($(this).parent());
-         });
-         //Iterate Over AgentsList
-         $('#placeselectagent').click(function(){
-           for (var i = 0; i < AgentsJson.length; i++) {
-             var text = AgentsJson.Index + '<button>x</button>';
-             if(text.length){
-                 $('<li />', {html: text}).appendTo('ul.AgentsList')
-             }
-         }
-       });
-
-   </script>
-
+   <script src="hud.js"></script>
  </head>
 
  <body onload="document.getElementById('MyTextBox').value = getDefaultPath()">
-
 
    <div class="navbar">
        <input type="text" name="Project Name" id="createProject">
@@ -245,50 +16,27 @@
        <input type="button" value="Load Mesh" onclick="loadMesh(document.getElementById('MyTextBox').value)">
        <input type="text" id="MyTextBox" >
    </div>
-
+<!------------------------------------------------------------------------------------------->
    <div id="agentsandgroups">
 
-     <div class="toggle-button">
-          <label for="toggle-button">tag
-         <button id="placeselectagent"></button>
 
+     <!--placeAgents Toggle Button-->
+     <div class="toggle-button">
+        <label for="toggle-button">
+        <button id="placeAgent"></button>
      </div>
      <br><br>
-          <ul class="AgentsList"></ul>
+      <!--Agents List-->
+      <ul class="AgentsList"></ul>
 
       <!--Groups and Agent link to engine in progress -->
 
        <!-- TODO: Delete this. Dummy setup, div setup by loadAttribute Function. -->
        <div id="attributesList">
-            <br><br>
-            Mental State:
-            <div class="dropdown">
-          		<button onclick="myFunction()" class="dropbtn">-</button>
-          		<div id="myDropdown" class="dropdown-content">
-          		    <a href="#home">Sad</a>
-          		    <a href="#about">Happy</a>
-          		    <a href="#contact">Angry</a>
-          		</div>
-        		</div>
-
-             <br>
-             Weight
-             <br>
-             <input type="number" min="0" max="400" step="1" onkeypress="return isInt(event)"/>
-             <br>
-             Height
-             <br>
-             <input type="number" min="0" max="2" step="0.01" onkeypress="return isFloat(event)"/>
-             <br>
-             Priority
-             <br>
-             <input type="range" min="0" max="50"/>
        </div>
 
-    </div>
-
-
-
+        </div>
+<!------------------------------------------------------------------------------------------->
   <div id="forcesandmilestones">
 
       <div>
@@ -333,6 +81,7 @@
       </ul>
 
   </div>
+
  </body>
 
 </html>

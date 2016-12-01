@@ -12,6 +12,7 @@ void JSHandler::init(JSObject mainObj)
 	trie.push_back(trieNode());
 
 	registerCallback("loadMesh", &JSHandler::loadMesh);
+	registerCallback("togglePlacingAgents", &JSHandler::togglePlacingAgents);
 	registerCallback("getDefaultPath", &JSHandler::getDefaultPath);
 }
 void JSHandler::shutdown()
@@ -81,6 +82,18 @@ JSValue JSHandler::callbackWithReturn(string methodName, JSArray args)
 void JSHandler::loadMesh(JSArray args)
 {
 	coreInstance->loadMesh(ToString(args.At(0).ToString()).c_str(), true);
+}
+void JSHandler::togglePlacingAgents(JSArray args)
+{
+	coreInstance->setplaceAgents(args.At(0).ToBoolean());
+}
+
+
+void JSHandler::addAgent(int agentID){
+	JSArray args;
+	std::string agent = std::to_string(agentID);
+	args.Push(WSLit(agent.c_str()));
+	mainObject.Invoke(WSLit("addAgent"), args);
 }
 
 JSValue JSHandler::getDefaultPath(JSArray args)

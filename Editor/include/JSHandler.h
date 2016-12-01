@@ -31,7 +31,11 @@ public:	//static class instances Exists only until we remove the hardcoding
 
 private:	//callbacks
 	void loadMesh(Awesomium::JSArray);
+	void togglePlacingAgents(Awesomium::JSArray);
 	Awesomium::JSValue getDefaultPath(Awesomium::JSArray);
+
 public:		//JS Method Calls
 	void JSCallExamples(std::string);
+	void addAgent(int);
+
 };

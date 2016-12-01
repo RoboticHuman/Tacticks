@@ -26,7 +26,7 @@ private:
 	bool shouldRotateView = false;
 	glm::vec2 cameraAngle = glm::vec2(0,0);
 	glm::vec2 origCameraAngle = glm::vec2(0,0);
-	bool placeAgents=true;
+	bool placeAgents=false;
 	SDL_Window *mainwindow = nullptr;
 	SDL_GLContext maincontext = NULL;
 	bool exitFlag = false;
@@ -70,4 +70,6 @@ public:
 	void shutdown();
 
 	void loadMesh(std::string, bool = false);
+
+	void setplaceAgents(bool = false);
 };

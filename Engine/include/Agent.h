@@ -24,7 +24,10 @@ public:
 
 	void setGroupID(int);
 	const AgentAttribute* getAttribute(std::string attributeToGet) const;
+	// TODO REMOVE THIS NON-CONST METHOD
+	AgentAttribute* getAttribute(std::string attributeToGet);
 	const std::map<std::string,AgentAttribute*>& getAllAttributes() const;
 	int getGroupID() const;
 	int getAgentID() const;
+	~Agent();
 };

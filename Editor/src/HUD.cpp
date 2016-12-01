@@ -352,3 +352,7 @@ bool HUD::shouldCoreMove() const
 {
 	return !event_handler->isTextInputFocused();
 }
+
+void HUD::addAgenthud(int agentID){
+	js_handler->addAgent(agentID);
+}

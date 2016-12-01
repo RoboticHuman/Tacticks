@@ -17,6 +17,7 @@ using namespace glm;
 mat4 tempTranslationMat; ///TO BE DELTED ONLY FOR TEST RAYCAST
 BehaviourPipeline pipeline;
 
+
 void Core::loadMesh(string fpath, bool resetCam){
 	if(!models.empty()) delete models[0];
 	if(models.empty()) models.push_back(nullptr);
@@ -81,7 +82,7 @@ bool Core::init()
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
 	// 4x MSAA.
@@ -177,9 +178,9 @@ void Core::start()
 							float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
 							if(placeAgents)
 							{
-
 								if(!models.empty()&&models[0]->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
 									int agentID = pipeline.addAgent();
+									coreHUD.addAgenthud(agentID);
 									drawableAgents.push_back(DrawableAgent("EditorAssets/models/AgentCylinder.obj",agentID));
 									drawableAgents.back().getAgentModel().setPosition(pos);
 								}
@@ -242,4 +243,7 @@ void Core::start()
 		SDL_GL_SwapWindow(mainwindow);
 	}
 	postLoop();
+}
+void Core::setplaceAgents(bool placeAgentsFlag){
+	placeAgents = placeAgentsFlag;
 }

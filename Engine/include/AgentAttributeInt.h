@@ -8,9 +8,9 @@ class AgentAttributeInt : public AgentAttribute
 	int minValue;
 	int maxValue;
 public:
-	AgentAttributeInt(const std::string& name, int defaultValue, int minValue, int maxValue);
+	AgentAttributeInt(const int defaultValue, const int minValue, const int maxValue, const std::string& name="");
 	int getValue() const;
 	int getMinValue() const;
 	int getMaxValue() const;
-	void setValue(int newValue);
+	void setValue(const int newValue);
 };

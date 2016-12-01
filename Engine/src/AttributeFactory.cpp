@@ -11,7 +11,9 @@ AttributeFactory::AttributeFactory(std::unordered_map<int, BehaviourModuleData::
 {
 	// Default Attributes
 	attributeMap.insert(pair<std::string,std::pair<int,AgentAttribute*> >(
-		"Position",pair<int,AgentAttribute*>(1,new AgentAttributeVec3("Position",glm::vec3(0,0,0)))));
+		"Position",pair<int,AgentAttribute*>(1, new AgentAttributeVec3(glm::vec3(0,0,0), "Position"))));
+	attributeMap.insert(pair<std::string,std::pair<int,AgentAttribute*> >(
+		"Target",pair<int,AgentAttribute*>(2, new AgentAttributeVec3(glm::vec3(0,0,0), "Target"))));
 }
 
 void AttributeFactory::addAttribute(const AgentAttribute* attribute)
@@ -25,49 +27,49 @@ void AttributeFactory::addAttribute(const AgentAttribute* attribute)
 
 		if (dynamic_cast<const AgentAttributeBool*>(attribute)) {
 			const AgentAttributeBool* temp = dynamic_cast<const AgentAttributeBool*>(attribute);
-			attributeToAdd = new AgentAttributeBool(temp->getName(),temp->getValue());
+			attributeToAdd = new AgentAttributeBool(temp->getValue(), temp->getName());
 			for (auto& agent : agents) {
 				agent.second.agent.attributes.insert(pair<string,AgentAttribute*>(temp->getName(),
-									new AgentAttributeBool(temp->getName(),temp->getValue())));
+									new AgentAttributeBool(temp->getValue(), temp->getName())));
 			}
 		}
 		else if (dynamic_cast<const AgentAttributeEnum*>(attribute)) {
 			const AgentAttributeEnum* temp = dynamic_cast<const AgentAttributeEnum*>(attribute);
-			attributeToAdd = new AgentAttributeEnum(temp->getName(),temp->getValue(),
-									temp->getPossibleValues());
+			attributeToAdd = new AgentAttributeEnum(temp->getValue(),
+									temp->getPossibleValues(), temp->getName());
 			for (auto& agent : agents) {
 				agent.second.agent.attributes.insert(pair<string,AgentAttribute*>(temp->getName(),
-									new AgentAttributeEnum(temp->getName(),temp->getValue(),
-										temp->getPossibleValues())));
+									new AgentAttributeEnum(temp->getValue(),
+										temp->getPossibleValues(), temp->getName())));
 			}
 		}
 		else if (dynamic_cast<const AgentAttributeFloat*>(attribute)) {
 			const AgentAttributeFloat* temp = dynamic_cast<const AgentAttributeFloat*>(attribute);
-			attributeToAdd = new AgentAttributeFloat(temp->getName(),temp->getValue(),
-									temp->getMinValue(),temp->getMaxValue());		
+			attributeToAdd = new AgentAttributeFloat(temp->getValue(),
+									temp->getMinValue(),temp->getMaxValue(), temp->getName());
 			for (auto& agent : agents) {
 				agent.second.agent.attributes.insert(pair<string,AgentAttribute*>(temp->getName(),
-									new AgentAttributeFloat(temp->getName(),temp->getValue(),
-										temp->getMinValue(),temp->getMaxValue())));
+									new AgentAttributeFloat(temp->getValue(),
+										temp->getMinValue(),temp->getMaxValue(), temp->getName())));
 			}
 		}
 		else if (dynamic_cast<const AgentAttributeInt*>(attribute)) {
 			const AgentAttributeInt* temp = dynamic_cast<const AgentAttributeInt*>(attribute);
-			attributeToAdd = new AgentAttributeInt(temp->getName(),temp->getValue(),
-									temp->getMinValue(),temp->getMaxValue());	
+			attributeToAdd = new AgentAttributeInt(temp->getValue(),
+									temp->getMinValue(),temp->getMaxValue(), temp->getName());
 			for (auto& agent : agents) {
 				agent.second.agent.attributes.insert(pair<string,AgentAttribute*>(temp->getName(),
-									new AgentAttributeInt(temp->getName(),temp->getValue(),
-										temp->getMinValue(),temp->getMaxValue())));
+									new AgentAttributeInt(temp->getValue(),
+										temp->getMinValue(),temp->getMaxValue(), temp->getName())));
 			}
 
 		}
 		else if (dynamic_cast<const AgentAttributeVec3*>(attribute)) {
 			const AgentAttributeVec3* temp = dynamic_cast<const AgentAttributeVec3*>(attribute);
-			attributeToAdd = new AgentAttributeVec3(temp->getName(),temp->getValue());
+			attributeToAdd = new AgentAttributeVec3(temp->getValue(), temp->getName());
 			for (auto& agent : agents) {
 				agent.second.agent.attributes.insert(pair<string,AgentAttribute*>(temp->getName(),
-									new AgentAttributeVec3(temp->getName(),temp->getValue())));
+									new AgentAttributeVec3(temp->getValue(), temp->getName())));
 			}
 		}
 		else {
@@ -108,44 +110,37 @@ void AttributeFactory::initializeAgentAttributes(int agentID)
 		if (dynamic_cast<const AgentAttributeBool*>(attribute)) {
 			const AgentAttributeBool* temp = dynamic_cast<const AgentAttributeBool*>(attribute);
 			agentToBeInitialized.attributes.insert(pair<string,AgentAttribute*>(temp->getName(),
-									new AgentAttributeBool(temp->getName(),temp->getValue())));
+									new AgentAttributeBool(temp->getValue(), temp->getName())));
 		}
 		else if (dynamic_cast<const AgentAttributeEnum*>(attribute)) {
 			const AgentAttributeEnum* temp = dynamic_cast<const AgentAttributeEnum*>(attribute);
 			agentToBeInitialized.attributes.insert(pair<string,AgentAttribute*>(temp->getName(),
-									new AgentAttributeEnum(temp->getName(),temp->getValue(),
-											temp->getPossibleValues())));
+									new AgentAttributeEnum(temp->getValue(),
+											temp->getPossibleValues(), temp->getName())));
 		}
 		else if (dynamic_cast<const AgentAttributeFloat*>(attribute)) {
 			const AgentAttributeFloat* temp = dynamic_cast<const AgentAttributeFloat*>(attribute);
 			agentToBeInitialized.attributes.insert(pair<string,AgentAttribute*>(temp->getName(),
-									new AgentAttributeFloat(temp->getName(),temp->getValue(),
-											temp->getMinValue(),temp->getMaxValue())));
+									new AgentAttributeFloat(temp->getValue(),
+											temp->getMinValue(),temp->getMaxValue(), temp->getName())));
 		}
 		else if (dynamic_cast<const AgentAttributeInt*>(attribute)) {
 			const AgentAttributeInt* temp = dynamic_cast<const AgentAttributeInt*>(attribute);
 			agentToBeInitialized.attributes.insert(pair<string,AgentAttribute*>(temp->getName(),
-									new AgentAttributeInt(temp->getName(),temp->getValue(),
-											temp->getMinValue(),temp->getMaxValue())));
-		}	
+									new AgentAttributeInt(temp->getValue(),
+											temp->getMinValue(),temp->getMaxValue(), temp->getName())));
+		}
 		else if (dynamic_cast<const AgentAttributeVec3*>(attribute)) {
 			const AgentAttributeVec3* temp = dynamic_cast<const AgentAttributeVec3*>(attribute);
 			agentToBeInitialized.attributes.insert(pair<string,AgentAttribute*>(temp->getName(),
-									new AgentAttributeVec3(temp->getName(),temp->getValue())));
+									new AgentAttributeVec3(temp->getValue(), temp->getName())));
 		}
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+AttributeFactory::~AttributeFactory()
+{
+	for (auto& attr : attributeMap) {
+		delete attr.second.second;
+	}
+}

@@ -1,4 +1,5 @@
 #include "NavigationFactory.h"
+#include "AbstractNavigation.h"
 using namespace std;
 
 
@@ -17,5 +18,12 @@ void NavigationFactory::rmNav(std::string navName)
 	if(nav.count(navName) != 0){
 		delete nav[navName];
 		nav.erase(navName);
+	}
+}
+
+bool NavigationFactory::compileAll()
+{
+	for(auto navLib : nav){
+		navLib.second->getNav()->init();
 	}
 }
