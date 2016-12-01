@@ -26,13 +26,16 @@ public:
 
 	void move(const glm::vec3 &offset);
 	void setPosition(const glm::vec3 &newPosition);
+	const std::vector<Mesh>& getMeshes() const;
+	const glm::mat4& getTransform() const;
+	std::vector<Model>& getModels();
+	bool raycast(const glm::vec3& start, const glm::vec3& end, glm::vec3& hitPos, float &tmin);
 private:
 	std::vector<Mesh> meshes;
 	std::vector<Model> nodes;
 	glm::mat4 globalTransform;
 	glm::vec3 minBoundary, maxBoundary;
 	std::string containingDir;
-	bool raycast(const glm::vec3& start, const glm::vec3& end, glm::vec3& hitPos, float &tmin);
 	void copyAiMat(const aiMatrix4x4 *from, glm::mat4 &to);
 	/**
 	 * @brief      This function starts the loading process and is called by the constructor

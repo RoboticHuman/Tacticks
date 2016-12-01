@@ -64,13 +64,16 @@ public:
 	}
 };
 
-Mesh::Mesh(vector<Vertex> &vertices, vector<uint32_t> &indices, vector<string> &textures)
+Mesh::Mesh(vector<Vertex> &vertices, vector<uint32_t> &indices, vector<pair<string,string>> &textures)
 {
 	this->vertices = vertices;
     this->indices = indices;
     this->texturePaths = textures;
 }
 
+const std::vector<uint32_t>& Mesh::getIndices() const{return indices;}
+const std::vector<Vertex>& Mesh::getVertices() const{return vertices;}
+const vector<pair<string, string>>& Mesh::getTexturePaths() const{return texturePaths;}
 bool Mesh::raycast(const vec3& start, const vec3& end, float& tmin, glm::mat4& globalTransform){
 	tmin = 1.0;
 	float t;

@@ -30,7 +30,8 @@ private:
 	SDL_Window *mainwindow = nullptr;
 	SDL_GLContext maincontext = NULL;
 	bool exitFlag = false;
-	std::vector<Model *> models;
+	Model *model;
+	DrawableModel *drawableModel;
 	std::vector<Shader *> shader;
 	std::vector<DrawableAgent> drawableAgents;
 	Camera cam;
