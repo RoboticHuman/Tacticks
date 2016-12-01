@@ -9,7 +9,12 @@
 #include "Model.h"
 #include "ResourceManager.h"
 #include "Tacticks/BehaviourPipeline.h"
-
+#include "Tacticks/AttributeFactory.h"
+#include "Tacticks/AgentAttributeBool.h"
+#include "Tacticks/AgentAttributeEnum.h"
+#include "Tacticks/AgentAttributeFloat.h"
+#include "Tacticks/AgentAttributeInt.h"
+#include "Tacticks/AgentAttributeVec3.h"
 
 using namespace std;
 using namespace glm;
@@ -246,4 +251,42 @@ void Core::start()
 }
 void Core::setplaceAgents(bool placeAgentsFlag){
 	placeAgents = placeAgentsFlag;
+}
+void Core::getagentAttrbyID(int agentID)
+{
+	Agent* currentagent = pipeline.getAgentByID(agentID);
+	std::map<std::string,AgentAttribute*> agentAttributes;
+	agentAttributes = currentagent->getAllAttributes();
+	string elementText;
+	typedef std::map<std::string,AgentAttribute*>::iterator iter;
+	for(iter iterator = agentAttributes.begin(); iterator != agentAttributes.end(); iterator++) {
+			string name = iterator->first;
+			AgentAttribute* agentattr = iterator->second;
+			if (dynamic_cast<const AgentAttributeBool*>(agentattr)) {
+					const AgentAttributeBool* temp = dynamic_cast<const AgentAttributeBool*>(agentattr);
+					//elementText = '<input type=' + 'checkbox' + 'name=' + temp->getName() + ' value=' + temp->getValue() +' checked> ' + temp->getName() + '<br>';
+					coreHUD.addBoolhud(elementText);
+			}
+			else if (dynamic_cast<const AgentAttributeEnum*>(agentattr)) {
+					const AgentAttributeEnum* temp = dynamic_cast<const AgentAttributeEnum*>(agentattr);
+				//	attributeToDraw = new AgentAttributeEnum(temp->getValue(),
+				//						temp->getPossibleValues(), temp->getName());
+					coreHUD.addDropdownhud(elementText);
+			}
+			else if (dynamic_cast<const AgentAttributeFloat*>(agentattr)) {\
+					const AgentAttributeFloat* temp = dynamic_cast<const AgentAttributeFloat*>(agentattr);
+				//	attributeToDraw = new AgentAttributeFloat(temp->getValue(),
+				//						temp->getMinValue(),temp->getMaxValue(), temp->getName())
+					coreHUD.addFloathud(elementText);
+			}
+			else if (dynamic_cast<const AgentAttributeInt*>(agentattr)) {
+					const AgentAttributeInt* temp = dynamic_cast<const AgentAttributeInt*>(agentattr);
+				//	attributeToDraw = new AgentAttributeInt(temp->getValue(),
+				//						temp->getMinValue(),temp->getMaxValue(), temp->getName());
+					coreHUD.addInthud(elementText);
+			}
+	    // iterator->first = key
+	    // iterator->second = value
+	    // Repeat if you also want to iterate through the second map.
+	}
 }

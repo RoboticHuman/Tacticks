@@ -14,6 +14,8 @@ void JSHandler::init(JSObject mainObj)
 	registerCallback("loadMesh", &JSHandler::loadMesh);
 	registerCallback("togglePlacingAgents", &JSHandler::togglePlacingAgents);
 	registerCallback("getDefaultPath", &JSHandler::getDefaultPath);
+	registerCallback("getAttrforAgent", &JSHandler::getAttrforAgent);
+
 }
 void JSHandler::shutdown()
 {
@@ -88,6 +90,10 @@ void JSHandler::togglePlacingAgents(JSArray args)
 	coreInstance->setplaceAgents(args.At(0).ToBoolean());
 }
 
+void JSHandler::getAttrforAgent(JSArray args)
+{
+	coreInstance->getagentAttrbyID(args.At(0).ToInteger());
+}
 
 void JSHandler::addAgent(int agentID){
 	JSArray args;
@@ -95,6 +101,30 @@ void JSHandler::addAgent(int agentID){
 	args.Push(WSLit(agent.c_str()));
 	mainObject.Invoke(WSLit("addAgent"), args);
 }
+
+void JSHandler::addCheckbox(string elementText){
+	JSArray args;
+	args.Push(WSLit(elementText.c_str()));
+	mainObject.Invoke(WSLit("addcheckbox"), args);
+}
+void JSHandler::addInt(string elementText){
+	JSArray args;
+	args.Push(WSLit(elementText.c_str()));
+	mainObject.Invoke(WSLit("addint"), args);
+}
+
+void JSHandler::addFloat(string elementText){
+	JSArray args;
+	args.Push(WSLit(elementText.c_str()));
+	mainObject.Invoke(WSLit("addfloat"), args);
+}
+
+void JSHandler::addDropbox(string elementText){
+	JSArray args;
+	args.Push(WSLit(elementText.c_str()));
+	mainObject.Invoke(WSLit("adddropbox"), args);
+}
+
 
 JSValue JSHandler::getDefaultPath(JSArray args)
 {

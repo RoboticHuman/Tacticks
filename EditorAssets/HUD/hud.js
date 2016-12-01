@@ -39,11 +39,36 @@ $("body").onload=function(){
 
 /* add agents to the list */
  function addAgent(AgentID){
-    var agent = AgentID + '<button>x</button>';
+    var agent = '<button type="button" onClick="getAttr(this.id)" id="'+AgentID+'">'+ AgentID+' </p>';
     if(agent.length){
         $('<li />', {html: agent}).appendTo('ul.AgentsList')
     }
   };
+
+  function addcheckbox(inputtext){
+     var attr = inputtext
+     if(attr.length){
+         $('<li />', {html: agent}).appendTo('ul.AgentAttributes')
+     }
+   };
+   function addint(inputtext){
+      var attr = inputtext
+      if(attr.length){
+          $('<li />', {html: agent}).appendTo('ul.AgentAttributes')
+      }
+    };
+    function addfloat(inputtext){
+       var attr = inputtext
+       if(attr.length){
+           $('<li />', {html: agent}).appendTo('ul.AgentAttributes')
+       }
+     };
+     function adddropbox(inputtext){
+        var attr = inputtext
+        if(attr.length){
+            $('<li />', {html: agent}).appendTo('ul.AgentAttributes')
+        }
+      };
 
 /* Placing/Editing agents toggle button */
  $(document).on('click', '.toggle-button', function() {
@@ -56,9 +81,12 @@ $("body").onload=function(){
  });
 
 /* Clicking on an agent*/
-$("AgentsList input").on('click', function(){
-  getAgentAttribute($("AgentsList input").value);
-});
+function getAttr(currentagent){
+  $( "#attributesList" ).empty();
+  getAttrforAgent(currentagent);
+
+};
+
 /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
