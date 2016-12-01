@@ -8,6 +8,7 @@
 #include "Timer.h"
 #include "HUD.h"
 #include "DrawableAgent.h"
+#include <Tacticks/BehaviourPipeline.h>
 class Shader;
 class Model;
 
@@ -31,6 +32,7 @@ private:
 	SDL_GLContext maincontext = NULL;
 	bool exitFlag = false;
 	Model *model;
+	BehaviourPipeline pipeline;
 	DrawableModel *drawableModel;
 	std::vector<Shader *> shader;
 	std::vector<DrawableAgent> drawableAgents;

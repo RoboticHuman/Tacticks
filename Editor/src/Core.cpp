@@ -7,21 +7,16 @@
 #include "Shader.h"
 #include "DrawableModel.h"
 #include "ResourceManager.h"
-#include "Tacticks/BehaviourPipeline.h"
 
 
 using namespace std;
 using namespace glm;
 
-mat4 tempTranslationMat; ///TO BE DELTED ONLY FOR TEST RAYCAST
-BehaviourPipeline pipeline;
-
-
 void Core::loadMesh(string fpath, bool resetCam){
-	if(model) delete model;
+	pipeline.constructWorld(fpath);
+	if(drawableModel) delete drawableModel;
 	else {
-		model = new Model(fpath.c_str());
-		drawableModel = new DrawableModel(model);
+		drawableModel = new DrawableModel(&pipeline.getWorldInstance().getWorldModel());
 	}
 
 	if(resetCam) cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
@@ -56,7 +51,6 @@ void Core::render()
 }
 void Core::postLoop()
 {
- 	delete model;
 	delete drawableModel;
 }
 
@@ -132,7 +126,7 @@ bool Core::init()
 	ResourceManager::loadShader("EditorAssets/shaders/VS.vs", "EditorAssets/shaders/FS.fs","meshShader");
 	ResourceManager::loadShader("EditorAssets/shaders/VSHUD.vs", "EditorAssets/shaders/FSHUD.fs","hudShader");
 	coreHUD.init(screenWidth,screenHeight);
-	
+
 	return true;
 }
 
@@ -179,7 +173,7 @@ void Core::start()
 							float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
 							if(placeAgents)
 							{
-								if(model&&model->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
+								if(drawableModel&&drawableModel->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
 									int agentID = pipeline.addAgent();
 									coreHUD.addAgenthud(agentID);
 									drawableAgents.push_back(DrawableAgent("EditorAssets/models/AgentCylinder.obj",agentID));

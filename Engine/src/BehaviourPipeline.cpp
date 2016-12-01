@@ -224,3 +224,12 @@ std::vector<std::pair<int, glm::vec3>> BehaviourPipeline::simulate()
 		ret.push_back(make_pair(a.second.agent.getAgentID(), a.second.targetVelocity));
 	return ret;
 }
+
+void BehaviourPipeline::constructWorld(std::string worldPath)
+{
+	World::getInstance().getWorldModel().loadModel(worldPath);
+}
+World& BehaviourPipeline::getWorldInstance()
+{
+	return World::getInstance();
+}
