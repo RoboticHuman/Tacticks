@@ -18,7 +18,7 @@ BehaviourPipeline::BehaviourPipeline() : behData() , attrFactory(behData.agents)
 Navigation* BehaviourPipeline::addNavigationLibrary(std::string navName)
 {
 	Navigation* ret = &NavigationFactory::getNav(navName);
-	ret->newNav();
+	ret->newNav(&World::getInstance());
 	return ret;
 }
 Navigation* BehaviourPipeline::getNavigationLibrary(std::string navName)

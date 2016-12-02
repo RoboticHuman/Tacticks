@@ -41,16 +41,16 @@ bool Navigation::isValid() const
 	return navName.size() != 0;
 }
 
-AbstractNavigation* Navigation::newNav()
+AbstractNavigation* Navigation::newNav(const World* world)
 {
 	if(soHandle == nullptr) return nullptr;
 	if(nav != nullptr) return nav;
 
-	typedef AbstractNavigation* (*newNav_t)();
+	typedef AbstractNavigation* (*newNav_t)(const World*);
 	newNav_t newNav_ptr = (newNav_t)dlsym(soHandle, "newNav");
 	if(newNav_ptr == nullptr) return nullptr;
 
-	return nav = newNav_ptr();
+	return nav = newNav_ptr(world);
 }
 AbstractNavigation* Navigation::getNav()
 {
