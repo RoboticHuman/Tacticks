@@ -14,8 +14,8 @@ using namespace glm;
 
 void Core::loadMesh(string fpath, bool resetCam){
 	pipeline.constructWorld(fpath);
-	if(drawableModel) delete drawableModel;
-	else {
+	if(drawableModel) {delete drawableModel; drawableModel=nullptr;}
+	if(!drawableModel){
 		drawableModel = new DrawableModel(&pipeline.getWorldInstance().getWorldModel());
 	}
 
@@ -163,7 +163,6 @@ void Core::start()
 						case SDL_BUTTON_RIGHT:
 							shouldRotateView = true;
 							origCameraAngle=cameraAngle;
-							placeAgents=!placeAgents;
 						break;
 						case SDL_BUTTON_LEFT:
 							vec3 ray[2];

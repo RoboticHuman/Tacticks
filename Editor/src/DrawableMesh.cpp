@@ -17,6 +17,17 @@ DrawableMesh::DrawableMesh(vector<Texture> &textures, const Mesh* mesh)
 	this->setupBuffers(mesh);
 }
 
+void DrawableMesh::cleanup()
+{
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(2);
+  glDeleteVertexArrays(1,&VAO);
+  glDeleteBuffers(1,&VBO);
+  glDeleteBuffers(1,&EBO);
+  for(auto& texture: textures) glDeleteTextures(1,&texture.id);
+}
+
 void DrawableMesh::setupBuffers(const Mesh* mesh)
 {
 	auto& vertices = mesh->getVertices();
