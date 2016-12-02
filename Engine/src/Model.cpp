@@ -63,9 +63,6 @@ std::vector<Model>& Model::getModels(){
 
 void Model::loadModel(string path)
 {
-	if(lastLoadedModelPath==path) return;
-	else{
-		lastLoadedModelPath=path;
 		cleanup();
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FlipUVs);
@@ -78,7 +75,6 @@ void Model::loadModel(string path)
 
 		containingDir = path.substr(0, path.find_last_of('/'));
 		processNode(scene->mRootNode, scene, *this);
-	}
 }
 
 Model::Model()
