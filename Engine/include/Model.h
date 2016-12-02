@@ -37,6 +37,7 @@ public:
 	 */
 	void loadModel(std::string path);
 private:
+	void cleanup();
 	std::vector<Mesh> meshes;
 	std::vector<Model> nodes;
 	glm::mat4 globalTransform;

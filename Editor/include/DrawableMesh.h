@@ -39,6 +39,7 @@ public:
 	 * @param[in]  parentTransform  The transform of the parent
 	 */
 	void draw(Shader *shader, const glm::mat4& globalTransform);
+	void cleanup();
 private:
 	//OpenGL buffers
 	//Vertex array, Vertext buffer and Element Buffer

@@ -33,7 +33,7 @@ private:
 	bool exitFlag = false;
 	Model *model;
 	BehaviourPipeline pipeline;
-	DrawableModel *drawableModel;
+	DrawableModel *drawableModel=nullptr;
 	std::vector<Shader *> shader;
 	std::vector<DrawableAgent> drawableAgents;
 	Camera cam;

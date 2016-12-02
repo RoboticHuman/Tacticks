@@ -26,6 +26,9 @@ public:
 	DrawableModel(Model* model);
 
 	DrawableModel();
+	~DrawableModel(){cleanup();}
+	DrawableModel(DrawableModel&& oldmodel) ;
+	void cleanup();
 	/**
 	 * @brief      The drawing function, it draws all the internal meshes of the model
 	 *

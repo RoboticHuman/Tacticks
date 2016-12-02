@@ -14,6 +14,16 @@ DrawableModel::DrawableModel(Model* model)
 	loadModel(model);
 }
 
+DrawableModel::DrawableModel(DrawableModel&& oldModel): model(std::move(oldModel.model)),meshes(std::move(oldModel.meshes)),nodes(std::move(oldModel.nodes)), texturesLoaded(std::move(oldModel.texturesLoaded)){}
+
+void DrawableModel::cleanup()
+{
+	for(DrawableMesh& mesh : meshes)
+		mesh.cleanup();
+	for(DrawableModel& childModel : nodes)
+		for(DrawableMesh& meshOfChildModel: childModel.meshes) meshOfChildModel.cleanup();
+}
+
 void DrawableModel::draw(Shader *shader)
 {
 	for(DrawableMesh& mesh : meshes)
