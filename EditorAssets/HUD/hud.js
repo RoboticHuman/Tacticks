@@ -1,6 +1,7 @@
 
 $("body").onload=function(){
   document.getElementById('MyTextBox').value = getDefaultPath();
+  loadBehaviorModules();
 }
 
 /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -44,7 +45,8 @@ $("body").onload=function(){
         $('<li />', {html: agent}).appendTo('ul.AgentsList')
     }
   };
-
+  function addNewBehaviorModule(behaviorText)
+    var 
   function addcheckbox(inputtext){
      var attr = inputtext
      if(attr.length){
@@ -151,3 +153,28 @@ function toggle(elementID){
     ele.style.display = "block";
   }
 }
+
+* Checking for ints
+*/
+///  @param[in] evt   Keypress event
+function isInt(evt) {
+     evt = (evt) ? evt : window.event;
+     var charCode = (evt.which) ? evt.which : evt.keyCode;
+     if (charCode !=8 &&)(charCode < 48 || charCode > 57)) {
+         return false;
+     }
+     return true;
+ }
+
+ /*
+ * Checking for floats
+ */
+ ///  @param[in] evt   Keypress event
+ function isFloat(evt) {
+      evt = (evt) ? evt : window.event;
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if ((charCode != 46 && charCode != 8) && (charCode < 48 || charCode > 57)) {
+          return false;
+      }
+      return true;
+  }

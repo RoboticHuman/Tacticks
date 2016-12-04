@@ -15,7 +15,7 @@ void JSHandler::init(JSObject mainObj)
 	registerCallback("togglePlacingAgents", &JSHandler::togglePlacingAgents);
 	registerCallback("getDefaultPath", &JSHandler::getDefaultPath);
 	registerCallback("getAttrforAgent", &JSHandler::getAttrforAgent);
-
+  registerCallback("loadBehaviorModules", NULL);
 }
 void JSHandler::shutdown()
 {
@@ -95,6 +95,15 @@ void JSHandler::getAttrforAgent(JSArray args)
 	coreInstance->getagentAttrbyID(args.At(0).ToInteger());
 }
 
+void JSHandler::loadBehaviorModules(){
+		coreInstance->loadBehaviorModules();
+}
+
+void JSHandler::addNewBehaviorModule(string elementText){
+	JSArray args;
+	args.Push(WSLit(elementText.c_str()));
+	mainObject.Invoke(WSLit("addNewBehaviorModule"), args);
+}
 void JSHandler::addAgent(int agentID){
 	JSArray args;
 	std::string agent = std::to_string(agentID);
@@ -124,6 +133,7 @@ void JSHandler::addDropbox(string elementText){
 	args.Push(WSLit(elementText.c_str()));
 	mainObject.Invoke(WSLit("adddropbox"), args);
 }
+
 
 
 JSValue JSHandler::getDefaultPath(JSArray args)

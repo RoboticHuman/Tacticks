@@ -31,7 +31,7 @@ public:
     Behaviour* addForcesModule(std::string behName);
     Behaviour* addMilestonesModule(std::string behName);
 
-    bool  deleteForcesModule(unsigned int index);
+    bool deleteForcesModule(unsigned int index);
     bool deleteMilestonesModule(unsigned int index);
 
     bool incrementForcesModuleIndex(unsigned int originalIndex);
