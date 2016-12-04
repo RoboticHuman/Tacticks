@@ -90,6 +90,13 @@ void JSHandler::togglePlacingAgents(JSArray args)
 	coreInstance->setplaceAgents(args.At(0).ToBoolean());
 }
 
+void JSHandler::addForcetoPipeline(JSHandler args){
+	coreInstance->addForcetoPipeline(args.At(0).ToString());
+}
+void JSHandler::addMilestonetoPipeline(JSHandler args){
+	coreInstance->addMilestonetoPipeline(args.At(0).ToString());
+}
+
 void JSHandler::getAttrforAgent(JSArray args)
 {
 	coreInstance->getagentAttrbyID(args.At(0).ToInteger());
@@ -99,9 +106,10 @@ void JSHandler::loadBehaviorModules(){
 		coreInstance->loadBehaviorModules();
 }
 
-void JSHandler::addNewBehaviorModule(string elementText){
+void JSHandler::addNewBehaviorModule(string elementText, string type){
 	JSArray args;
 	args.Push(WSLit(elementText.c_str()));
+	args.Push(WSLit(type.c_str()));
 	mainObject.Invoke(WSLit("addNewBehaviorModule"), args);
 }
 void JSHandler::addAgent(int agentID){
@@ -133,8 +141,6 @@ void JSHandler::addDropbox(string elementText){
 	args.Push(WSLit(elementText.c_str()));
 	mainObject.Invoke(WSLit("adddropbox"), args);
 }
-
-
 
 JSValue JSHandler::getDefaultPath(JSArray args)
 {

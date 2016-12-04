@@ -45,8 +45,7 @@ $("body").onload=function(){
         $('<li />', {html: agent}).appendTo('ul.AgentsList')
     }
   };
-  function addNewBehaviorModule(behaviorText)
-    var 
+
   function addcheckbox(inputtext){
      var attr = inputtext
      if(attr.length){
@@ -94,6 +93,29 @@ function getAttr(currentagent){
 /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 /*Pipeline*/
+function addNewBehaviorModule(behaviordata){
+  var behModule = behaviordata[0] + '<button type="button" onClick="addBehtoPipeline(this.id, this.class)" id="'+behaviordata[0]+ '" class=\"'+ behaviordata[1]'"> + </p>';
+  if(behModule.length){
+    $('<li />', {html: behModule}).appendTo('ul.AvailableBehMod')
+  }
+}
+function addBehtoPipeline(behName, behType){
+  behName = behName + '<button type="button"><p> - </p>';
+  if (behType== "Forces"){
+    addForcetoPipeline(behName);
+    if(behName.length){
+      $('<li />', {html: behName}).appendTo('ul.Forces');
+    }
+  }else {
+    addMilestonetoPipeline(behName);
+    if(behName.length){
+      $('<li />', {html: behName}).appendTo('ul.Milestones');
+    }
+  }
+
+
+}
+
 //Sortable Lists
 $( function() {
   $( "#Milestones" ).sortable();

@@ -72,4 +72,5 @@ public:
 	void loadMesh(std::string, bool = false);
 	void getagentAttrbyID(int);
 	void setplaceAgents(bool = false);
+	void loadBehaviorModules();
 };

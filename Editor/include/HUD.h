@@ -67,4 +67,5 @@ public:
 	void addInthud(std::string);
 	void addFloathud(std::string);
 	void addDropdownhud(std::string);
+	void addNewBehaviorMod(std::string, std::string);
 };

@@ -369,3 +369,6 @@ void HUD::addFloathud(std::string elementText){
 void HUD::addDropdownhud(std::string elementText){
 	js_handler->addDropbox(elementText);
 }
+void HUD::addNewBehaviorMod(std::string BehaviorModuleName, std::string BehaviorType){
+	js_handler->addNewBehaviorModule(BehaviorModuleName, BehaviorType);
+}
