@@ -5,6 +5,11 @@
 #include "AbstractNavigation.h"
 using namespace std;
 
+Navigation::Navigation()
+{
+	navName = "";
+	soHandle = nav = nullptr;
+}
 Navigation::Navigation(const char* name, const char* soPath) : navName(name)
 {
 	soHandle = nav = nullptr;

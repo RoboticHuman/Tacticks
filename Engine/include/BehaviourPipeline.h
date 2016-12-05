@@ -23,7 +23,8 @@ public:
 	Navigation* addNavigationLibrary(std::string navName);
 	Navigation* getNavigationLibrary(std::string navName);
 	void removeNavigationLibrary(std::string navName);
-
+	void removeNavigationLibrary_force(std::string navName);
+	
     BehaviourPipeline();
 
     // Pipeline Manipulation

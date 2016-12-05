@@ -12,7 +12,6 @@ struct NavigationInfo
 
 class Navigation
 {
-	Navigation() = delete;
 	Navigation(const Navigation&) = delete;
 	Navigation(Navigation&&) = delete;
 private:
@@ -22,6 +21,7 @@ public:
 	std::string navName;
 	NavigationInfo navInfo;
 public:
+	Navigation();
 	Navigation(const char* name, const char* soPath = nullptr);
 	~Navigation();
 

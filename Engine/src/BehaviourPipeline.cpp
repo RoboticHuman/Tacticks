@@ -17,7 +17,8 @@ BehaviourPipeline::BehaviourPipeline() : behData() , attrFactory(behData.agents)
 
 Navigation* BehaviourPipeline::addNavigationLibrary(std::string navName)
 {
-	Navigation* ret = &NavigationFactory::getNav(navName);
+	Navigation* ret = &NavigationFactory::newNav(navName);
+	if(!ret->isValid()) return nullptr;
 	ret->newNav();
 	return ret;
 }
@@ -29,11 +30,15 @@ void BehaviourPipeline::removeNavigationLibrary(std::string navName)
 {
 	NavigationFactory::rmNav(navName);
 }
+void BehaviourPipeline::removeNavigationLibrary_force(std::string navName)
+{
+	NavigationFactory::rmNav_force(navName);
+}
 
 
 Behaviour* BehaviourPipeline::addForcesModule(string behName)
 {
-    forcesPipeline.push_back(BehaviourModuleFactory::getBeh(behName));
+    forcesPipeline.push_back(BehaviourModuleFactory::getBeh(behName, true));
 	if(forcesPipeline.back().behInfo.behType != BehaviourInfo::Type::Force)
 	{
 		forcesPipeline.pop_back();
@@ -45,7 +50,7 @@ Behaviour* BehaviourPipeline::addForcesModule(string behName)
 
 Behaviour* BehaviourPipeline::addMilestonesModule(string behName)
 {
-	milestonesPipeline.push_back(BehaviourModuleFactory::getBeh(behName));
+	milestonesPipeline.push_back(BehaviourModuleFactory::getBeh(behName, false));
 	if(milestonesPipeline.back().behInfo.behType != BehaviourInfo::Type::Milestone)
 	{
 		milestonesPipeline.pop_back();
