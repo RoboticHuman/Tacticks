@@ -39,6 +39,11 @@ void Agent::setGroupID(int ID)
 {
 	groupID = ID;
 }
+
+const std::map<std::string,AgentAttribute*>& Agent::getAllAttributes() const
+{
+	return attributes;
+}
 Agent::~Agent()
 {
 	for (auto& attr : attributes) {

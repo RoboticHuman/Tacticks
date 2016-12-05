@@ -32,7 +32,7 @@ public:
 	~HUD() = default;
 	/**
 	 * @brief      An initialization function that loads the necessary structures and makes connections with Awesomium.
-	 * 
+	 *
 	 * The HTML file needed by the HUD is loaded. A web session is created and a web view is linked to it and event handlers are linked.
 	 * @param[in]  screenWidth   The screen width
 	 * @param[in]  screenHeight  The screen height
@@ -62,4 +62,10 @@ public:
 	 * @return     Whether motion in the editor should be allowed or not.
 	 */
 	bool shouldCoreMove() const;
+	void addAgenthud(int);
+	void addBoolhud(std::string);
+	void addInthud(std::string);
+	void addFloathud(std::string);
+	void addDropdownhud(std::string);
+	void addNewBehaviorMod(std::string, std::string);
 };

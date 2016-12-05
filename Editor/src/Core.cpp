@@ -9,13 +9,19 @@
 #include "Model.h"
 #include "ResourceManager.h"
 #include "Tacticks/BehaviourPipeline.h"
-
+#include "Tacticks/AttributeFactory.h"
+#include "Tacticks/AgentAttributeBool.h"
+#include "Tacticks/AgentAttributeEnum.h"
+#include "Tacticks/AgentAttributeFloat.h"
+#include "Tacticks/AgentAttributeInt.h"
+#include "Tacticks/AgentAttributeVec3.h"
 
 using namespace std;
 using namespace glm;
 
 mat4 tempTranslationMat; ///TO BE DELTED ONLY FOR TEST RAYCAST
 BehaviourPipeline pipeline;
+
 
 void Core::loadMesh(string fpath, bool resetCam){
 	if(!models.empty()) delete models[0];
@@ -177,9 +183,9 @@ void Core::start()
 							float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
 							if(placeAgents)
 							{
-
 								if(!models.empty()&&models[0]->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
 									int agentID = pipeline.addAgent();
+									coreHUD.addAgenthud(agentID);
 									drawableAgents.push_back(DrawableAgent("EditorAssets/models/AgentCylinder.obj",agentID));
 									drawableAgents.back().getAgentModel().setPosition(pos);
 								}
@@ -242,4 +248,86 @@ void Core::start()
 		SDL_GL_SwapWindow(mainwindow);
 	}
 	postLoop();
+}
+void Core::setplaceAgents(bool placeAgentsFlag){
+	placeAgents = placeAgentsFlag;
+}
+void Core::getagentAttrbyID(int agentID)
+{
+	Agent* currentagent = pipeline.getAgentByID(agentID);
+	std::map<std::string,AgentAttribute*> agentAttributes;
+	agentAttributes = currentagent->getAllAttributes();
+	string elementText;
+	typedef std::map<std::string,AgentAttribute*>::iterator iter;
+	for(iter iterator = agentAttributes.begin(); iterator != agentAttributes.end(); iterator++) {
+			string name = iterator->first;
+			AgentAttribute* agentattr = iterator->second;
+			if (dynamic_cast<const AgentAttributeBool*>(agentattr)) {
+					const AgentAttributeBool* temp = dynamic_cast<const AgentAttributeBool*>(agentattr);
+					elementText = "<input type =\"checkbox name=\"";
+					elementText.append(temp->getName());
+					elementText.append("value=");
+					if (temp->getValue()){
+							elementText.append("true  checked> ");}
+					else{
+							elementText.append("false>");}
+					elementText.append(temp->getName());
+					elementText.append("<br>");
+					coreHUD.addBoolhud(elementText);
+			}
+			else if (dynamic_cast<const AgentAttributeEnum*>(agentattr)) {
+					const AgentAttributeEnum* temp = dynamic_cast<const AgentAttributeEnum*>(agentattr);
+					elementText = "<div class=\"dropdown\"> <button onclick=\"onDropDownClick()\" class=\"dropbtn\">Options</button> <div id=\"optionsDropDown\" class=\"dropdown-content\">";
+					vector<string> possibleValues = temp->getPossibleValues();
+					for (int i = 0; i < possibleValues.size(); i++){
+						elementText.append("<a>");
+						elementText.append(possibleValues.at(i));
+						elementText.append("</a>");
+					}
+					coreHUD.addDropdownhud(elementText);
+			}
+			else if (dynamic_cast<const AgentAttributeFloat*>(agentattr)) {\
+					const AgentAttributeFloat* temp = dynamic_cast<const AgentAttributeFloat*>(agentattr);\
+					elementText = temp->getName();
+					elementText.append("<input type=\"number\" step=\"0.1\" onkeypress=\"return isFloat(event)\" value=");
+					elementText.append(to_string(temp->getValue()));
+					elementText.append("\" min=\"");
+					elementText.append(to_string(temp->getMinValue()));
+					elementText.append("\" max=\"");
+					elementText.append(to_string(temp->getMaxValue()));
+					elementText.append("\" />");
+					coreHUD.addFloathud(elementText);
+			}
+			else if (dynamic_cast<const AgentAttributeInt*>(agentattr)) {
+					const AgentAttributeInt* temp = dynamic_cast<const AgentAttributeInt*>(agentattr);
+					elementText = temp->getName();
+					elementText.append("<input type=\"number\" step=\"1\" onkeypress=\"return isInt(event)\" value=");
+					elementText.append(to_string(temp->getValue()));
+					elementText.append("\" min=\"");
+					elementText.append(to_string(temp->getMinValue()));
+					elementText.append("\" max=\"");
+					elementText.append(to_string(temp->getMaxValue()));
+					elementText.append("\" />");
+				//	attributeToDraw = new AgentAttributeInt(temp->getValue(),
+				//						temp->getMinValue(),temp->getMaxValue(), temp->getName());
+					coreHUD.addInthud(elementText);
+			}
+	    // iterator->first = key
+	    // iterator->second = value
+	    // Repeat if you also want to iterate through the second map.
+	}
+}
+
+void Core::loadBehaviorModules(){
+	vector<vector<string>> AvailableBehaviorModules= pipeline.getallBehaviorModules;
+	for (int i= 0; i < AvailableBehaviorModules.size(); i++){
+		coreHUD.addNewBehaviorMod(AvailableBehaviorModules.at(i).at(0),AvailableBehaviorModules.at(i).at(1));
+	}
+}
+
+void Core::addForcetoPipeline(std::string Force){
+	pipeline.addForcesModule(Force);
+}
+void Core::addMilestonetoPipeline(std::string Milestone){
+	pipeline.addMilestonnesModule(Mileston);
 }
