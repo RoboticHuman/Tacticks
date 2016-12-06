@@ -14,14 +14,12 @@ using namespace glm;
 NLrcHeightfield::NLrcHeightfield(const World* world) : AbstractNavigation(world){}
 NLrcHeightfield::~NLrcHeightfield(){rcFreeHeightField(data);}
 
-#include <iostream>
 bool NLrcHeightfield::init()
 {
 	//Parsing args
 	const vector<float> verts = world->getVertices();
 	const vector<int> tris = world->getIndices();
 	int nv = verts.size() / 3;
-	cout<<"NUMBER OF VERTICES: "<<nv<<endl;
 	int nt = tris.size() / 3;
 
 	walkableHeight = dynamic_cast<PassObjectInt*>(args[0])->getValue();
@@ -30,7 +28,7 @@ bool NLrcHeightfield::init()
 	float cs = dynamic_cast<PassObjectFloat*>(args[3])->getValue();
 	float ch = dynamic_cast<PassObjectFloat*>(args[4])->getValue();
 	int flagMergeThr = dynamic_cast<PassObjectInt*>(args[5])->getValue();
-	cout << walkableHeight << ' ' << walkableClimb << ' ' << walkableSlopeAngle << ' ' << cs << ' ' << ch << ' ' << flagMergeThr << endl;
+
 	float bmin[3];
 	float bmax[3];
 	if(args.size() == 8){
@@ -39,8 +37,7 @@ bool NLrcHeightfield::init()
 	}
 	else
 		rcCalcBounds(&verts[0], nv , bmin, bmax);
-	cout << bmin[0] << ' ' << bmin[1] << ' ' << bmin[2] << endl;
-	cout << bmax[0] << ' ' << bmax[1] << ' ' << bmax[2] << endl;
+
 	rcContext ctx;
 	unsigned char* areas = new unsigned char[nt*10];
 
@@ -55,6 +52,7 @@ bool NLrcHeightfield::init()
     rcFilterWalkableLowHeightSpans(&ctx, walkableHeight, *data);
 	delete areas;
     constructDebugMesh();
+	return true;
 }
 vector<PassObject*> NLrcHeightfield::getData(string dataName, vector<PassObject*> args)
 {
@@ -75,7 +73,6 @@ void NLrcHeightfield::constructDebugMesh()
 
     const int gridWidth = data->width;
     const int gridHeight = data->height;
-
     for(int z=0;z<gridHeight;z++)
     {
         for(int x=0;x<gridWidth;x++)

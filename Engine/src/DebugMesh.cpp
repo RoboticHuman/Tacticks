@@ -36,7 +36,7 @@ int DebugMesh::getVertex(float x, float y, float z, float r, float g, float b, f
 
     return vertices.size()-1;
 }
-
+#include <iostream>
 void DebugMesh::drawCuboid(float minX, float minY, float minZ, float maxX, float maxY, float maxZ,
                 float r, float g, float b, float a)
 {

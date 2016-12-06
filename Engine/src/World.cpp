@@ -18,7 +18,6 @@ const Model& World::getWorldModel() const
 {
     return worldModel;
 }
-
 vector<float> World::getVertices() const
 {
     queue<const Model*> Q;

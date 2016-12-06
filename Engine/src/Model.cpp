@@ -84,8 +84,7 @@ Model::Model()
 {
 
 }
-
-void Model::processNode(aiNode *node, const aiScene *scene,Model &rootModel)
+void Model::processNode(aiNode *node, const aiScene *scene, Model &rootModel)
 {
 	copyAiMat(&(node->mTransformation),rootModel.globalTransform);
 	for(uint32_t i=0;i<node->mNumMeshes;i++)
