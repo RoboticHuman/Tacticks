@@ -17,9 +17,9 @@ BehaviourPipeline::BehaviourPipeline() : behData() , attrFactory(behData.agents)
 
 Navigation* BehaviourPipeline::addNavigationLibrary(std::string navName)
 {
-	Navigation* ret = &NavigationFactory::newNav(navName);
+	Navigation* ret = &NavigationFactory::getNav(navName);
 	if(!ret->isValid()) return nullptr;
-	ret->newNav();
+	ret->newNav(&World::getInstance());
 	return ret;
 }
 Navigation* BehaviourPipeline::getNavigationLibrary(std::string navName)
@@ -228,4 +228,13 @@ std::vector<std::pair<int, glm::vec3>> BehaviourPipeline::simulate()
 	for(auto& a : behData.agents)
 		ret.push_back(make_pair(a.second.agent.getAgentID(), a.second.targetVelocity));
 	return ret;
+}
+
+void BehaviourPipeline::constructWorld(std::string worldPath)
+{
+	World::getInstance().getWorldModel().loadModel(worldPath);
+}
+World& BehaviourPipeline::getWorldInstance()
+{
+	return World::getInstance();
 }

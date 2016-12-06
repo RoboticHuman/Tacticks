@@ -26,20 +26,24 @@ public:
 
 	void move(const glm::vec3 &offset);
 	void setPosition(const glm::vec3 &newPosition);
-private:
-	std::vector<Mesh> meshes;
-	std::vector<Model> nodes;
-	glm::mat4 globalTransform;
-	glm::vec3 minBoundary, maxBoundary;
-	std::string containingDir;
+	const std::vector<Mesh>& getMeshes() const;
+	const glm::mat4& getTransform() const;
+	std::vector<Model>& getModels();
 	bool raycast(const glm::vec3& start, const glm::vec3& end, glm::vec3& hitPos, float &tmin);
-	void copyAiMat(const aiMatrix4x4 *from, glm::mat4 &to);
 	/**
 	 * @brief      This function starts the loading process and is called by the constructor
 	 *
 	 * @param[in]  path  The path to the model passed from the constructor
 	 */
 	void loadModel(std::string path);
+private:
+	void cleanup();
+	std::vector<Mesh> meshes;
+	std::vector<Model> nodes;
+	glm::mat4 globalTransform;
+	glm::vec3 minBoundary, maxBoundary;
+	std::string containingDir;
+	void copyAiMat(const aiMatrix4x4 *from, glm::mat4 &to);
 	/**
 	 * @brief      This function is responsible for traversing ASSIMP's tree to preserve parent-child relations
 	 *

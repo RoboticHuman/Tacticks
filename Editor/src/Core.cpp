@@ -4,9 +4,8 @@
 #include <glm/gtx/string_cast.hpp>
 #include <glm/vec3.hpp>
 #include "Core.h"
-#include "Model.h"
 #include "Shader.h"
-#include "Model.h"
+#include "DrawableModel.h"
 #include "ResourceManager.h"
 #include "Tacticks/BehaviourPipeline.h"
 #include "Tacticks/AttributeFactory.h"
@@ -19,17 +18,12 @@
 using namespace std;
 using namespace glm;
 
-mat4 tempTranslationMat; ///TO BE DELTED ONLY FOR TEST RAYCAST
-BehaviourPipeline pipeline;
-
-
 void Core::loadMesh(string fpath, bool resetCam){
-	if(!models.empty()) delete models[0];
-	if(models.empty()) models.push_back(nullptr);
-	models[0] = new Model(fpath.c_str());
-
-	if(models.size() < 2) models.push_back(nullptr);
-	models[1] = new Model("EditorAssets/models/Crate1.obj");
+	pipeline.constructWorld(fpath);
+	if(drawableModel) {delete drawableModel; drawableModel=nullptr;}
+	if(!drawableModel){
+		drawableModel = new DrawableModel(&pipeline.getWorldInstance().getWorldModel());
+	}
 
 	if(resetCam) cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
 }
@@ -48,20 +42,22 @@ void Core::preLoop()
 }
 void Core::render()
 {
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST);
 	ResourceManager::getShader("meshShader")->use();
-	for(Model *m : models) m->draw(ResourceManager::getShader("meshShader"));
+	if(drawableModel)drawableModel->draw(ResourceManager::getShader("meshShader"));
+
 	ResourceManager::getShader("meshShader")->use();
-	for(auto& drawableAgent : drawableAgents) {drawableAgent.getAgentModel().draw(ResourceManager::getShader("meshShader"));}
+	for(auto& drawableAgent : drawableAgents) {drawableAgent.getAgentDrawableModel().draw(ResourceManager::getShader("meshShader"));}
 
 	glDisable(GL_DEPTH_TEST);
 	coreHUD.render();
 }
 void Core::postLoop()
 {
-	for(Model *m : models) delete m;
+	delete drawableModel;
 }
 
 void Core::shutdown()
@@ -173,7 +169,6 @@ void Core::start()
 						case SDL_BUTTON_RIGHT:
 							shouldRotateView = true;
 							origCameraAngle=cameraAngle;
-							placeAgents=!placeAgents;
 						break;
 						case SDL_BUTTON_LEFT:
 							vec3 ray[2];
@@ -183,7 +178,7 @@ void Core::start()
 							float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
 							if(placeAgents)
 							{
-								if(!models.empty()&&models[0]->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
+								if(drawableModel&&drawableModel->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
 									int agentID = pipeline.addAgent();
 									coreHUD.addAgenthud(agentID);
 									drawableAgents.push_back(DrawableAgent("EditorAssets/models/AgentCylinder.obj",agentID));

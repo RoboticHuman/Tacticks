@@ -25,6 +25,15 @@ Model::Model(string path)
 	loadModel(path);
 }
 
+void Model::cleanup()
+{
+	meshes.clear();
+	nodes.clear();
+}
+
+const glm::mat4& Model::getTransform() const{
+	return globalTransform;
+}
 
 void Model::move(const glm::vec3 &offset)
 {
@@ -44,19 +53,28 @@ void Model::setPosition(const glm::vec3 &newPosition)
 	move(offset);
 }
 
+const std::vector<Mesh>& Model::getMeshes() const
+{
+	return meshes;
+}
+std::vector<Model>& Model::getModels(){
+	return nodes;
+}
+
 void Model::loadModel(string path)
 {
-	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FlipUVs);
+		cleanup();
+		Assimp::Importer importer;
+		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FlipUVs);
 
-	if(!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-	{
-		printf("ERROR::ASSIMP:: %s\n", importer.GetErrorString());
-		return;
-	}
+		if(!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+		{
+			printf("ERROR::ASSIMP:: %s\n", importer.GetErrorString());
+			return;
+		}
 
-	containingDir = path.substr(0, path.find_last_of('/'));
-	processNode(scene->mRootNode, scene, *this);
+		containingDir = path.substr(0, path.find_last_of('/'));
+		processNode(scene->mRootNode, scene, *this);
 }
 
 Model::Model()
@@ -86,7 +104,7 @@ Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
 {
 	vector<Vertex> vertices;
 	vector<uint32_t> indices;
-	vector<string> texturePaths;
+	vector<pair<string, string>> texturePaths;
 
 	for(uint32_t i =0; i<mesh->mNumVertices; i++)
 	{
@@ -126,9 +144,9 @@ Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
 	aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 	aiString texturePath;
 	if(material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) == AI_SUCCESS)
-		texturePaths.push_back(containingDir + "/" + texturePath.C_Str());
+		texturePaths.push_back(make_pair(containingDir + "/" + texturePath.C_Str(), "texture_diffuse"));
 	else
-		texturePaths.push_back(containingDir + "/white.png");
+		texturePaths.push_back(make_pair(containingDir + "/white.png", "texture_diffuse"));
 
 	return Mesh(vertices, indices, texturePaths);
 }

@@ -16,7 +16,6 @@ struct Vertex{
 	glm::vec2 texCoords;
 };
 
-
 class Mesh
 {
 	Mesh() = delete;
@@ -29,10 +28,13 @@ public:
 	 * @param[in]  indices   The indices
 	 * @param[in]  textures  The textures
 	 */
-	 Mesh(std::vector<Vertex> &vertices, std::vector<uint32_t> &indices,std::vector<std::string>& texturePaths);
+	 Mesh(std::vector<Vertex> &vertices, std::vector<uint32_t> &indices, std::vector<std::pair<std::string, std::string>>& texturePaths);
 	 bool raycast(const glm::vec3& start, const glm::vec3& end, float& tmin	, glm::mat4& globalTransform);
+	 const std::vector<uint32_t>& getIndices() const;
+	 const std::vector<Vertex>& getVertices() const;
+	 const std::vector<std::pair<std::string, std::string>>& getTexturePaths() const;
 protected:
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
-	std::vector<std::string> texturePaths;
+	std::vector<std::pair<std::string, std::string>> texturePaths;
 };

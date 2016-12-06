@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 class AbstractNavigation;
+class World;
 
 struct NavigationInfo
 {
@@ -28,7 +29,7 @@ public:
 	bool load(const char* soPath);
 	void unload();
 	bool isValid() const;
-	AbstractNavigation* newNav();
+	AbstractNavigation* newNav(const World* world);
 	AbstractNavigation* getNav();
 };
 

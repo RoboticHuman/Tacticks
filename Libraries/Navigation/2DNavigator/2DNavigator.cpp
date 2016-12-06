@@ -5,6 +5,8 @@
 #include <Tacticks/PassObjectInt.h>
 #include <Tacticks/PassObjectBool.h>
 
+Navigator2D::Navigator2D(const World* world) : AbstractNavigation(world){}
+
 bool Navigator2D::init()
 {
 	if (args.size()==0) fprintf(stdout, "%s\n","Args to 2DNavigator is empty :(");
@@ -33,7 +35,8 @@ bool Navigator2D::init()
 	}
 }
 
-std::vector<PassObject*> Navigator2D::getPossibleNextLocations(int x, int y){
+std::vector<PassObject*> Navigator2D::getPossibleNextLocations(int x, int y)
+{
 	int di[]={1,-1,0,0};
 	int dj[]={0,0,1,-1};
 
@@ -52,7 +55,8 @@ std::vector<PassObject*> Navigator2D::getPossibleNextLocations(int x, int y){
     return tempVec;
 }
 
-std::vector<PassObject*> Navigator2D::getData(std::string dataName, std::vector<PassObject*> args){
+std::vector<PassObject*> Navigator2D::getData(std::string dataName, std::vector<PassObject*> args)
+{
     if(isDirty()){
         navGrid.clear();
         init();
@@ -67,11 +71,13 @@ std::vector<PassObject*> Navigator2D::getData(std::string dataName, std::vector<
 }
 
 extern "C"
-AbstractNavigation* newNav(){
-  return new Navigator2D;
+AbstractNavigation* newNav(const World* world)
+{
+  return new Navigator2D(world);
 }
 
 extern "C"
-NavigationInfo declareDependencies(){
+NavigationInfo declareDependencies()
+{
   return {{}};
 }

@@ -5,12 +5,16 @@
 #include <string>
 
 class PassObject;
+class World;
+
 class AbstractNavigation
 {
-
+private:
+	bool dirty=true;
 protected:
 	std::vector<PassObject*> args;
-	bool dirty=true;
+	const World* world;
+	AbstractNavigation(const World* world);
 public:
 	void setParameters(const std::vector<PassObject*>& args);
 	virtual ~AbstractNavigation() = default;
