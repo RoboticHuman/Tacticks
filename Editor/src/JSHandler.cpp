@@ -15,7 +15,7 @@ void JSHandler::init(JSObject mainObj)
 	registerCallback("togglePlacingAgents", &JSHandler::togglePlacingAgents);
 	registerCallback("getDefaultPath", &JSHandler::getDefaultPath);
 	registerCallback("getAttrforAgent", &JSHandler::getAttrforAgent);
-  registerCallback("loadBehaviorModules", NULL);
+  //registerCallback("loadBehaviorModules", NULL);
 }
 void JSHandler::shutdown()
 {
@@ -90,12 +90,12 @@ void JSHandler::togglePlacingAgents(JSArray args)
 	coreInstance->setplaceAgents(args.At(0).ToBoolean());
 }
 
-void JSHandler::addForcetoPipeline(JSHandler args){
-	coreInstance->addForcetoPipeline(args.At(0).ToString());
-}
-void JSHandler::addMilestonetoPipeline(JSHandler args){
-	coreInstance->addMilestonetoPipeline(args.At(0).ToString());
-}
+//void JSHandler::addForcetoPipeline(JSHandler args){
+//	coreInstance->addFtoPipeline(args.At(0).ToString());
+//}
+//void JSHandler::addMilestonetoPipeline(JSHandler args){
+//	coreInstance->addMtoPipeline(args.At(0).ToString());
+//}
 
 void JSHandler::getAttrforAgent(JSArray args)
 {

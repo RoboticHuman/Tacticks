@@ -319,15 +319,15 @@ void Core::getagentAttrbyID(int agentID)
 }
 
 void Core::loadBehaviorModules(){
-	vector<vector<string>> AvailableBehaviorModules= pipeline.getallBehaviorModules;
-	for (int i= 0; i < AvailableBehaviorModules.size(); i++){
-		coreHUD.addNewBehaviorMod(AvailableBehaviorModules.at(i).at(0),AvailableBehaviorModules.at(i).at(1));
-	}
+	//vector<vector<string>> AvailableBehaviorModules= pipeline.getallBehaviorModules;
+	//for (int i= 0; i < AvailableBehaviorModules.size(); i++){
+	//	coreHUD.addNewBehaviorMod(AvailableBehaviorModules.at(i).at(0),AvailableBehaviorModules.at(i).at(1));
+	//}
 }
 
-void Core::addForcetoPipeline(std::string Force){
+void Core::addFtoPipeline(std::string Force){
 	pipeline.addForcesModule(Force);
 }
-void Core::addMilestonetoPipeline(std::string Milestone){
-	pipeline.addMilestonnesModule(Mileston);
+void Core::addMtoPipeline(std::string Milestone){
+	pipeline.addMilestonesModule(Milestone);
 }
