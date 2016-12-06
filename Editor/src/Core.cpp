@@ -11,6 +11,7 @@
 #include <Tacticks/AttributeFactory.h>
 #include <Tacticks/PassObjectInt.h>
 #include <Tacticks/PassObjectFloat.h>
+#include <Tacticks/PassObjectBool.h>
 #include <Tacticks/AbstractNavigation.h>
 #include <Tacticks/AgentAttributeBool.h>
 #include <Tacticks/AgentAttributeEnum.h>
@@ -43,10 +44,18 @@ void Core::loadMesh(string fpath, bool resetCam){
 	hfParams.push_back(new PassObjectInt(1));
 
 	pipeline.addNavigationLibrary("NLrcHeightfield")->getNav()->setParameters(hfParams);
-//	pipeline.addNavigationLibrary("NLrcCompactHeightfield");
+
+	vector<PassObject*> chfParams;
+	chfParams.push_back(new PassObjectInt(agentRadius));
+	chfParams.push_back(new PassObjectInt(agentRadius+3));
+	chfParams.push_back(new PassObjectInt(2));
+	chfParams.push_back(new PassObjectInt(4));
+	chfParams.push_back(new PassObjectBool(false));
+	pipeline.addNavigationLibrary("NLrcCompactHeightfield")->getNav()->setParameters(chfParams);
+
 	pipeline.compile();
 	dRenderer.update();
-	dRenderer.bDrawDebugMeshes.back() = true;
+	dRenderer.bDrawDebugMeshes[0] = true;
 }
 
 void Core::preLoop()

@@ -12,5 +12,5 @@ public:
 	Navigator2D(const World* world);
     virtual bool init();
 	virtual std::vector<PassObject*> getData(std::string dataName, std::vector<PassObject*> args) override;
-	virtual std::vector<void*> getRawData(){}
+	virtual std::vector<void*> getRawData();
 };

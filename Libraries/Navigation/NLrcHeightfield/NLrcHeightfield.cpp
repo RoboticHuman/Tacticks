@@ -11,8 +11,8 @@
 using namespace std;
 using namespace glm;
 
-NLrcHeightfield::NLrcHeightfield(const World* world) : AbstractNavigation(world){}
-NLrcHeightfield::~NLrcHeightfield(){rcFreeHeightField(data);}
+NLrcHeightfield::NLrcHeightfield(const World* world) : AbstractNavigation(world){data=nullptr;}
+NLrcHeightfield::~NLrcHeightfield(){if(data)rcFreeHeightField(data);}
 
 bool NLrcHeightfield::init()
 {
@@ -56,12 +56,22 @@ bool NLrcHeightfield::init()
 }
 vector<PassObject*> NLrcHeightfield::getData(string dataName, vector<PassObject*> args)
 {
+	if(isDirty()){
+		if(data) rcFreeHeightField(data);
+		data = nullptr;
+		init();
+	}
 	if(dataName == "walkableHeight" && args.size() == 0) return {new PassObjectInt(walkableHeight, "walkableHeight")};
 	if(dataName == "walkableClimb" && args.size() == 0) return {new PassObjectInt(walkableClimb, "walkableClimb")};
 	return {};
 }
 vector<void*> NLrcHeightfield::getRawData()
 {
+	if(isDirty()){
+		if(data) rcFreeHeightField(data);
+		data = nullptr;
+		init();
+	}
 	return {data};
 }
 void NLrcHeightfield::constructDebugMesh()
