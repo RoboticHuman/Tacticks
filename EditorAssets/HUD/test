@@ -31,8 +31,8 @@
 
       <!--Groups and Agent link to engine in progress -->
 
-       <!-- TODO: Delete this. Dummy setup, div setup by loadAttribute Function. -->
        <div id="attributesList">
+         <ul class="AgentAttributes"></ul>
        </div>
 
         </div>
@@ -41,44 +41,19 @@
 
       <div>
           <h3 onclick="javascript:toggle('Milestones')">Milestones</h3>
-          <ul id="Milestones" style="display:block" href="javascript:toggle();">
-        	  <li>Behavioral Module X<input type="button" value="-"/></li>
-        	  <li>Behavioral Module A<input type="button" value="-"/></li>
-        	  <li>Behavioral Module Z<input type="button" value="-"/></li>
-        	  <li>Behavioral Module B<input type="button" value="-"/></li>
-        	  <li>Behavioral Module L<input type="button" value="-"/></li>
-              <li>Behavioral Module M<input type="button" value="-"/></li>
-          </ul>
+          <ul class="Milestones" style="display:block" href="javascript:toggle();"  </ul>
      </div>
 
       <hr>
 
 
       <h3 onclick="javascript:toggle('Forces')">Forces</h3>
-      <ul id="Forces">
-         <li>Behavioral Module X<input type="button" value="-"/></li>
-         <li>Behavioral Module A<input type="button" value="-"/></li>
-         <li>Behavioral Module Z<input type="button" value="-"/></li>
-         <li>Behavioral Module B<input type="button" value="-"/></li>
-         <li>Behavioral Module L<input type="button" value="-"/></li>
-         <li>Behavioral Module M<input type="button" value="-"/></li>
-         <li>Behavioral Module Don<input type="button" value="-"/></li>
-         <li>Behavioral Module Dan<input type="button" value="-"/></li>
-      </ul>
+      <ul class="Forces"></ul>
 
       <hr>
 
       <h3 onclick="javascript:toggle('AvailableBehaviorModules')">BehaviorModules</h3>
-      <ul id="AvailableBehMod">
-         <li>Behavioral Module 1<input type="button" value="+"/></li>
-         <li>Behavioral Module 2<input type="button" value="+"/></li>
-         <li>Behavioral Module 3<input type="button" value="+"/></li>
-         <li>Behavioral Module 4<input type="button" value="+"/></li>
-         <li>Behavioral Module 5<input type="button" value="+"/></li>
-         <li>Behavioral Module 6<input type="button" value="+"/></li>
-         <li>Behavioral Module 7<input type="button" value="+"/></li>
-         <li>Behavioral Module 8<input type="button" value="+"/></li><br>
-      </ul>
+      <ul class="AvailableBehMod"></ul>
 
   </div>
 

@@ -62,5 +62,10 @@ public:
 	 * @return     Whether motion in the editor should be allowed or not.
 	 */
 	bool shouldCoreMove() const;
-	void addAgenthud(int agentID);
+	void addAgenthud(int);
+	void addBoolhud(std::string);
+	void addInthud(std::string);
+	void addFloathud(std::string);
+	void addDropdownhud(std::string);
+	void addNewBehaviorMod(std::string, std::string);
 };

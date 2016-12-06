@@ -14,6 +14,8 @@ void JSHandler::init(JSObject mainObj)
 	registerCallback("loadMesh", &JSHandler::loadMesh);
 	registerCallback("togglePlacingAgents", &JSHandler::togglePlacingAgents);
 	registerCallback("getDefaultPath", &JSHandler::getDefaultPath);
+	registerCallback("getAttrforAgent", &JSHandler::getAttrforAgent);
+  //registerCallback("loadBehaviorModules", NULL);
 }
 void JSHandler::shutdown()
 {
@@ -88,12 +90,56 @@ void JSHandler::togglePlacingAgents(JSArray args)
 	coreInstance->setplaceAgents(args.At(0).ToBoolean());
 }
 
+//void JSHandler::addForcetoPipeline(JSHandler args){
+//	coreInstance->addFtoPipeline(args.At(0).ToString());
+//}
+//void JSHandler::addMilestonetoPipeline(JSHandler args){
+//	coreInstance->addMtoPipeline(args.At(0).ToString());
+//}
 
+void JSHandler::getAttrforAgent(JSArray args)
+{
+	coreInstance->getagentAttrbyID(args.At(0).ToInteger());
+}
+
+void JSHandler::loadBehaviorModules(){
+		coreInstance->loadBehaviorModules();
+}
+
+void JSHandler::addNewBehaviorModule(string elementText, string type){
+	JSArray args;
+	args.Push(WSLit(elementText.c_str()));
+	args.Push(WSLit(type.c_str()));
+	mainObject.Invoke(WSLit("addNewBehaviorModule"), args);
+}
 void JSHandler::addAgent(int agentID){
 	JSArray args;
 	std::string agent = std::to_string(agentID);
 	args.Push(WSLit(agent.c_str()));
 	mainObject.Invoke(WSLit("addAgent"), args);
+}
+
+void JSHandler::addCheckbox(string elementText){
+	JSArray args;
+	args.Push(WSLit(elementText.c_str()));
+	mainObject.Invoke(WSLit("addcheckbox"), args);
+}
+void JSHandler::addInt(string elementText){
+	JSArray args;
+	args.Push(WSLit(elementText.c_str()));
+	mainObject.Invoke(WSLit("addint"), args);
+}
+
+void JSHandler::addFloat(string elementText){
+	JSArray args;
+	args.Push(WSLit(elementText.c_str()));
+	mainObject.Invoke(WSLit("addfloat"), args);
+}
+
+void JSHandler::addDropbox(string elementText){
+	JSArray args;
+	args.Push(WSLit(elementText.c_str()));
+	mainObject.Invoke(WSLit("adddropbox"), args);
 }
 
 JSValue JSHandler::getDefaultPath(JSArray args)

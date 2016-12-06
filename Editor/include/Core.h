@@ -73,6 +73,9 @@ public:
 	void shutdown();
 
 	void loadMesh(std::string, bool = false);
-
+	void getagentAttrbyID(int);
 	void setplaceAgents(bool = false);
+	void loadBehaviorModules();
+	void addFtoPipeline(std::string);
+	void addMtoPipeline(std::string);
 };

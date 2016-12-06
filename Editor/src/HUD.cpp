@@ -315,6 +315,7 @@ void HUD::update()
 {
 	web_core->Update();
 	BitmapSurface* surface = (BitmapSurface*)web_view->surface();
+
 	int w = surface->width();
 	int h = surface->height();
 	if(surface->is_dirty()){
@@ -357,4 +358,20 @@ bool HUD::shouldCoreMove() const
 
 void HUD::addAgenthud(int agentID){
 	js_handler->addAgent(agentID);
+}
+
+void HUD::addBoolhud(std::string elementText){
+	js_handler->addCheckbox(elementText);
+}
+void HUD::addInthud(std::string elementText){
+	js_handler->addInt(elementText);
+}
+void HUD::addFloathud(std::string elementText){
+	js_handler->addFloat(elementText);
+}
+void HUD::addDropdownhud(std::string elementText){
+	js_handler->addDropbox(elementText);
+}
+void HUD::addNewBehaviorMod(std::string BehaviorModuleName, std::string BehaviorType){
+	js_handler->addNewBehaviorModule(BehaviorModuleName, BehaviorType);
 }

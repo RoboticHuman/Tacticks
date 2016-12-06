@@ -1,6 +1,7 @@
 
 $("body").onload=function(){
   document.getElementById('MyTextBox').value = getDefaultPath();
+  loadBehaviorModules();
 }
 
 /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -39,11 +40,36 @@ $("body").onload=function(){
 
 /* add agents to the list */
  function addAgent(AgentID){
-    var agent = AgentID + '<button>x</button>';
+    var agent = '<button type="button" onClick="getAttr(this.id)" id="'+AgentID+'">'+ AgentID+' </p>';
     if(agent.length){
         $('<li />', {html: agent}).appendTo('ul.AgentsList')
     }
   };
+
+  function addcheckbox(inputtext){
+     var attr = inputtext
+     if(attr.length){
+         $('<li />', {html: agent}).appendTo('ul.AgentAttributes')
+     }
+   };
+   function addint(inputtext){
+      var attr = inputtext
+      if(attr.length){
+          $('<li />', {html: agent}).appendTo('ul.AgentAttributes')
+      }
+    };
+    function addfloat(inputtext){
+       var attr = inputtext
+       if(attr.length){
+           $('<li />', {html: agent}).appendTo('ul.AgentAttributes')
+       }
+     };
+     function adddropbox(inputtext){
+        var attr = inputtext
+        if(attr.length){
+            $('<li />', {html: agent}).appendTo('ul.AgentAttributes')
+        }
+      };
 
 /* Placing/Editing agents toggle button */
  $(document).on('click', '.toggle-button', function() {
@@ -56,14 +82,40 @@ $("body").onload=function(){
  });
 
 /* Clicking on an agent*/
-$("AgentsList input").on('click', function(){
-  getAgentAttribute($("AgentsList input").value);
-});
+function getAttr(currentagent){
+  $( "#attributesList" ).empty();
+  getAttrforAgent(currentagent);
+
+};
+
 /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 /*Pipeline*/
+function addNewBehaviorModule(behaviordata){
+  var behModule = behaviordata[0] + '<button type="button" onClick="addBehtoPipeline(this.id, this.class)" id="'+behaviordata[0]+ '" class=\"'+ behaviordata[1]'"> + </p>';
+  if(behModule.length){
+    $('<li />', {html: behModule}).appendTo('ul.AvailableBehMod')
+  }
+}
+function addBehtoPipeline(behName, behType){
+  behName = behName + '<button type="button"><p> - </p>';
+  if (behType== "Forces"){
+    addForcetoPipeline(behName);
+    if(behName.length){
+      $('<li />', {html: behName}).appendTo('ul.Forces');
+    }
+  }else {
+    addMilestonetoPipeline(behName);
+    if(behName.length){
+      $('<li />', {html: behName}).appendTo('ul.Milestones');
+    }
+  }
+
+
+}
+
 //Sortable Lists
 $( function() {
   $( "#Milestones" ).sortable();
@@ -123,3 +175,28 @@ function toggle(elementID){
     ele.style.display = "block";
   }
 }
+
+* Checking for ints
+*/
+///  @param[in] evt   Keypress event
+function isInt(evt) {
+     evt = (evt) ? evt : window.event;
+     var charCode = (evt.which) ? evt.which : evt.keyCode;
+     if (charCode !=8 &&)(charCode < 48 || charCode > 57)) {
+         return false;
+     }
+     return true;
+ }
+
+ /*
+ * Checking for floats
+ */
+ ///  @param[in] evt   Keypress event
+ function isFloat(evt) {
+      evt = (evt) ? evt : window.event;
+      var charCode = (evt.which) ? evt.which : evt.keyCode;
+      if ((charCode != 46 && charCode != 8) && (charCode < 48 || charCode > 57)) {
+          return false;
+      }
+      return true;
+  }

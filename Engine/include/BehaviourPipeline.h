@@ -24,7 +24,8 @@ public:
 	Navigation* addNavigationLibrary(std::string navName);
 	Navigation* getNavigationLibrary(std::string navName);
 	void removeNavigationLibrary(std::string navName);
-
+	void removeNavigationLibrary_force(std::string navName);
+	
     BehaviourPipeline();
 
     // Pipeline Manipulation
@@ -32,7 +33,7 @@ public:
     Behaviour* addForcesModule(std::string behName);
     Behaviour* addMilestonesModule(std::string behName);
 
-    bool  deleteForcesModule(unsigned int index);
+    bool deleteForcesModule(unsigned int index);
     bool deleteMilestonesModule(unsigned int index);
 
     bool incrementForcesModuleIndex(unsigned int originalIndex);

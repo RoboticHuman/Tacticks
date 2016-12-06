@@ -86,6 +86,7 @@ int main()
 	init();
 	pipeline.addNavigationLibrary("2DNavigator")->getNav()->setParameters({grid2PassObject(grid)});
 	pipeline.addForcesModule("CatnMouse")->getBeh()->setParameters({});
+
 	pipeline.compile();
 	int i = 0;
 	while(true){
