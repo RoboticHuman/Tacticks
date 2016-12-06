@@ -17,20 +17,26 @@ NLrcHeightfield::~NLrcHeightfield(){rcFreeHeightField(data);}
 bool NLrcHeightfield::init()
 {
 	//Parsing args
-	const float* bmin = value_ptr(dynamic_cast<PassObjectVec3*>(args[0])->getValue());
-	const float* bmax = value_ptr(dynamic_cast<PassObjectVec3*>(args[1])->getValue());
-	walkableHeight = dynamic_cast<PassObjectInt*>(args[2])->getValue();
-	walkableClimb = dynamic_cast<PassObjectInt*>(args[3])->getValue();
-	float walkableSlopeAngle = dynamic_cast<PassObjectFloat*>(args[4])->getValue();
-	float cs = dynamic_cast<PassObjectFloat*>(args[5])->getValue();
-	float ch = dynamic_cast<PassObjectFloat*>(args[6])->getValue();
-	int flagMergeThr = dynamic_cast<PassObjectInt*>(args[7])->getValue();
-
-
 	const vector<float>& verts = world->getVertices();
 	const vector<int>& tris = world->getIndices();
 	int nv = verts.size() / 3;
 	int nt = tris.size() / 3;
+
+	walkableHeight = dynamic_cast<PassObjectInt*>(args[0])->getValue();
+	walkableClimb = dynamic_cast<PassObjectInt*>(args[1])->getValue();
+	float walkableSlopeAngle = dynamic_cast<PassObjectFloat*>(args[2])->getValue();
+	float cs = dynamic_cast<PassObjectFloat*>(args[3])->getValue();
+	float ch = dynamic_cast<PassObjectFloat*>(args[4])->getValue();
+	int flagMergeThr = dynamic_cast<PassObjectInt*>(args[5])->getValue();
+
+	float bmin[3];
+	float bmax[3];
+	if(args.size() == 8){
+		memcpy(bmin, value_ptr(dynamic_cast<PassObjectVec3*>(args[0])->getValue()), sizeof(bmin));
+		memcpy(bmax, value_ptr(dynamic_cast<PassObjectVec3*>(args[1])->getValue()), sizeof(bmax));
+	}
+	else
+		rcCalcBounds(&verts[0], nv, bmin, bmax);
 
 	rcContext ctx;
 	unsigned char* areas = new unsigned char[nt*10];
