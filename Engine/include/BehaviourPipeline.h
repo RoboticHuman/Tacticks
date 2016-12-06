@@ -6,6 +6,7 @@
 #include "Behaviour.h"
 #include "DependancyManager.h"
 #include "AttributeFactory.h"
+#include "World.h"
 
 #pragma once
 
@@ -47,6 +48,9 @@ public:
     Behaviour* getForcesModuleAtIndex(unsigned int index);
     Behaviour* getMilestonesModuleAtIndex(unsigned int index);
     ///////////////////////////////////////////////////////////////////////
+
+    void constructWorld(std::string worldPath);
+    World& getWorldInstance();
 
 
     int addAgent();

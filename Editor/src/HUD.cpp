@@ -315,9 +315,10 @@ void HUD::update()
 {
 	web_core->Update();
 	BitmapSurface* surface = (BitmapSurface*)web_view->surface();
+
+	int w = surface->width();
+	int h = surface->height();
 	if(surface->is_dirty()){
-		int w = surface->width();
-		int h = surface->height();
 		unsigned char *buffer = new unsigned char[w * h * 4];
 		if (surface != 0)
 		{

@@ -9,7 +9,7 @@ HDir = ./include
 BDir = ./Build
 CompileFlags = -std=c++11 -fPIC
 LinkFlags = -shared
-Libs = -ldl
+Libs = -ldl -lassimp
 
 ifeq ($(shell uname), Darwin)
 	CompileFlags += -m32

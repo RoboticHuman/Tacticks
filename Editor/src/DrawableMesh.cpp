@@ -1,5 +1,6 @@
-#include "Mesh.h"
+#include "DrawableMesh.h"
 #include "Shader.h"
+#include <Tacticks/Mesh.h>
 #include <algorithm>
 #include <iostream>
 #include <glm/gtc/type_ptr.hpp>
@@ -9,89 +10,29 @@
 using namespace glm;
 using namespace std;
 
-/**
- * @brief      Class for triangle data structure.
- */
-class Triangle{
-private:
-	vec3 a, b, c;
-	vec3 ab, ac;
-	vec3 norm;
-public:
-	Triangle(Vertex va, Vertex vb, Vertex vc){
-		a = va.position;
-		b = vb.position;
-		c = vc.position;
 
-		ab = b - a;
-		ac = c - a;
-
-		norm = cross(ab, ac);
-	}
-	/**
-	 * @brief      Gets the intersect location along the ray
-	 *
-	 * @param[in]  start  The start
-	 * @param[in]  end    The end
-	 * @param      t      the scaling factor based on the distance of the hit point along the ray direction from the start of the ray.
-	 *
-	 * @return     Whether an intersection/hit was captured or not.
-	 */
-	bool getIntersect(vec3 start, vec3 end, float& t){
-		vec3 ray = start - end;
-		float d = dot(ray, norm);
-		if(d <= 0) return false;
-
-		vec3 as = start - a;
-		t = dot(as, norm);
-		if(t < 0) return false;
-		if(t > d) return false;
-
-		vec3 e = cross(ray, as);
-		float v = dot(ac, e);
-		if(v < 0 || v > d) return false;
-		float w = -dot(ab, e);
-		if(w < 0 || v + w > d) return false;
-
-		t /= d;
-		return true;
-/*
-		vec3 ray = end - start;
-		float d = dot(ray, norm);
-		if(d >= 0) return false;
-
-		vec3 as = start - a;
-		t = dot(as, norm);
-		if(t < 0 || t > d) return false;
-
-		vec3 e = cross(as, ray);
-		float v = dot(ac, e);
-		if(v < 0 || v > d) return false;
-		float w = -dot(ab, e);
-		if(w < 0 || v + w > d) return false;
-
-		t /= d;
-		return true;
-*/
-	}
-	void updateVertices(glm::mat4& transform)
-	{
-		a = vec3(transform* vec4(a,1.0) );
-		b = vec3(transform* vec4(b,1.0) );
-		c = vec3(transform*vec4(c,1.0) );
-	}
-};
-
-Mesh::Mesh(vector<Vertex> &vertices, vector<GLuint> &indices, vector<Texture> &textures, glm::mat4& parentTransform)
+DrawableMesh::DrawableMesh(vector<Texture> &textures, const Mesh* mesh)
 {
-	this->vertices = vertices;
-    this->indices = indices;
     this->textures = textures;
-	this->setupBuffers();
+	this->setupBuffers(mesh);
 }
 
-void Mesh::setupBuffers()
+void DrawableMesh::cleanup()
 {
+  glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(2);
+  glDeleteVertexArrays(1,&VAO);
+  glDeleteBuffers(1,&VBO);
+  glDeleteBuffers(1,&EBO);
+  for(auto& texture: textures) glDeleteTextures(1,&texture.id);
+}
+
+void DrawableMesh::setupBuffers(const Mesh* mesh)
+{
+	auto& vertices = mesh->getVertices();
+	auto& indices = mesh->getIndices();
+	nIndices = indices.size();
 	//generate vertex array
 	glGenVertexArrays(1, &VAO);
 	//generate vertex buffer object to store vertex data
@@ -125,7 +66,7 @@ void Mesh::setupBuffers()
     glBindVertexArray(0);
 }
 
-void Mesh::draw(Shader *shader,glm::mat4& globalTransform)
+void DrawableMesh::draw(Shader *shader,const glm::mat4& globalTransform)
 {
 
 		GLuint diffuseSamplerIndex = 1;
@@ -140,27 +81,11 @@ void Mesh::draw(Shader *shader,glm::mat4& globalTransform)
 			glBindTexture(GL_TEXTURE_2D, textures[i].id);
 		}
 		glActiveTexture(GL_TEXTURE0);
-		textureSetupDone= true;
+
 
 	GLuint transformLocation = ResourceManager::getShader("meshShader")->getUniformLocation("meshTransform");
 	glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(globalTransform));
 	glBindVertexArray(VAO);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT,0);
+	glDrawElements(GL_TRIANGLES, nIndices, GL_UNSIGNED_INT,0);
 	glBindVertexArray(0);
-}
-
-bool Mesh::raycast(const vec3& start, const vec3& end, float& tmin, glm::mat4& globalTransform){
-	tmin = 1.0;
-	float t;
-	bool hit = false;
-	for(int i = 2; i < indices.size(); i+=3){
-		Triangle tri(vertices[indices[i-2]], vertices[indices[i-1]], vertices[indices[i]]);
-		tri.updateVertices(globalTransform);
-		if(tri.getIntersect(start, end, t)){
-			cout<<t<<endl;
-			tmin = std::min(tmin, t);
-			hit = true;
-		}
-	}
-	return hit;
 }
