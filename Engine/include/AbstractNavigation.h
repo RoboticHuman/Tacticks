@@ -17,11 +17,14 @@ protected:
 	AbstractNavigation(const World* world);
 public:
 	void setParameters(const std::vector<PassObject*>& args);
+	void clearDirty();
+	bool isDirty();
+
 	virtual ~AbstractNavigation() = default;
 	virtual bool init() = 0;
-	virtual void clearDirty();
-	virtual bool isDirty();
 	virtual std::vector<PassObject*> getData(std::string dataName, std::vector<PassObject*> args) = 0;
+	virtual std::vector<void*> getRawData() = 0;
+	virtual void constructDebugMesh();
 };
 
 #endif
