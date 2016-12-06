@@ -1,7 +1,7 @@
 
 $("body").onload=function(){
   document.getElementById('MyTextBox').value = getDefaultPath();
-  loadBehaviorModules();
+  loadBehaviorModules(true);
 }
 
 /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -93,20 +93,36 @@ function getAttr(currentagent){
 /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
 /*Pipeline*/
-function addNewBehaviorModule(behaviordata){
-  var behModule = behaviordata[0] + '<button type="button" onClick="addBehtoPipeline(this.id, this.class)" id="'+behaviordata[0]+ '" class=\"'+ behaviordata[1]'"> + </p>';
-  if(behModule.length){
-    $('<li />', {html: behModule}).appendTo('ul.AvailableBehMod')
+function addNewForce(forceName){
+  var forceModule = forceName + '<button type="button" onClick="addForcetoPipeline(this.id)" id="'+forceName+ '" class=\"forcemod\" </button>';
+  if(forceModule.length){
+    $('<li />', {html: forceModule}).appendTo('ul.AvailableBehMod')
   }
 }
-function addBehtoPipeline(behName, behType){
-  behName = behName + '<button type="button"><p> - </p>';
-  if (behType== "Forces"){
-    addForcetoPipeline(behName);
-    if(behName.length){
-      $('<li />', {html: behName}).appendTo('ul.Forces');
-    }
-  }else {
+
+function addNewMilestone(milestoneName){
+  var milestoneModule = milestoneName + '<button type="button" onClick="addMilestonetoPipeline(this.id)" id="'+milestoneName+ '" class=\"milestonemod\" </button>';
+  if(milestoneModule.length){
+    $('<li />', {html: milestoneModule}).appendTo('ul.AvailableBehMod')
+  }
+}
+
+function addForcetoPipeline(behName){
+  elementText = behName + '<button type="button" value=\"-\">';
+  addForcetoPipeline(behName);
+  if(behName.length){
+    $('<li />', {html: behName}).appendTo('ul.Forces');
+  }
+}
+
+function addMilestonetoPipeline(behName){
+  elementText = behName + '<button type="button" value=\"-\">';
+  addForcetoPipeline(behName);
+  if(behName.length){
+    $('<li />', {html: behName}).appendTo('ul.Milestones');
+  }
+}
+  else {
     addMilestonetoPipeline(behName);
     if(behName.length){
       $('<li />', {html: behName}).appendTo('ul.Milestones');

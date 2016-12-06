@@ -34,7 +34,7 @@ private:	//callbacks
 	void togglePlacingAgents(Awesomium::JSArray);
 	void getAttrforAgent(Awesomium::JSArray);
 	Awesomium::JSValue getDefaultPath(Awesomium::JSArray);
-	void loadBehaviorModules();
+	void loadBehaviorModules(JSArray args);
 public:		//JS Method Calls
 	void JSCallExamples(std::string);
 	void addAgent(int);
@@ -42,6 +42,7 @@ public:		//JS Method Calls
 	void addInt(std::string);
 	void addFloat(std::string);
 	void addDropbox(std::string);
-	void addNewBehaviorModule(std::string, std::string);
-
+	void addNewMilestone(std::string);
+	void addNewForce(std::string);
+	
 };

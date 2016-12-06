@@ -15,7 +15,7 @@ void JSHandler::init(JSObject mainObj)
 	registerCallback("togglePlacingAgents", &JSHandler::togglePlacingAgents);
 	registerCallback("getDefaultPath", &JSHandler::getDefaultPath);
 	registerCallback("getAttrforAgent", &JSHandler::getAttrforAgent);
-  //registerCallback("loadBehaviorModules", NULL);
+  registerCallback("loadBehaviorModules", &JSHandler::loadBehaviorModules);
 }
 void JSHandler::shutdown()
 {
@@ -89,28 +89,31 @@ void JSHandler::togglePlacingAgents(JSArray args)
 {
 	coreInstance->setplaceAgents(args.At(0).ToBoolean());
 }
-
-//void JSHandler::addForcetoPipeline(JSHandler args){
-//	coreInstance->addFtoPipeline(args.At(0).ToString());
-//}
-//void JSHandler::addMilestonetoPipeline(JSHandler args){
-//	coreInstance->addMtoPipeline(args.At(0).ToString());
-//}
+void JSHandler::addForcetoPipeline(JSHandler args){
+	coreInstance->addFtoPipeline(args.At(0).ToString());
+}
+void JSHandler::addMilestonetoPipeline(JSHandler args){
+	coreInstance->addMtoPipeline(args.At(0).ToString());
+}
 
 void JSHandler::getAttrforAgent(JSArray args)
 {
 	coreInstance->getagentAttrbyID(args.At(0).ToInteger());
 }
 
-void JSHandler::loadBehaviorModules(){
+void JSHandler::loadBehaviorModules(JSArray args){
 		coreInstance->loadBehaviorModules();
 }
 
-void JSHandler::addNewBehaviorModule(string elementText, string type){
+void JSHandler::addNewForce(string forceName){
 	JSArray args;
-	args.Push(WSLit(elementText.c_str()));
-	args.Push(WSLit(type.c_str()));
-	mainObject.Invoke(WSLit("addNewBehaviorModule"), args);
+	args.Push(WSLit(forceName.c_str()));
+	mainObject.Invoke(WSLit("addNewForce"), args);
+}
+void JSHandler::addNewMilestone(string milestoneName){
+	JSArray args;
+	args.Push(WSLit(milestoneName.c_str()));
+	mainObject.Invoke(WSLit("addNewMilestone"), args);
 }
 void JSHandler::addAgent(int agentID){
 	JSArray args;

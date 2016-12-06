@@ -9,6 +9,7 @@
 #include "Model.h"
 #include "ResourceManager.h"
 #include "Tacticks/BehaviourPipeline.h"
+#include "Tacticks/BehaviourModuleFactory.h"
 #include "Tacticks/AttributeFactory.h"
 #include "Tacticks/AgentAttributeBool.h"
 #include "Tacticks/AgentAttributeEnum.h"
@@ -319,10 +320,13 @@ void Core::getagentAttrbyID(int agentID)
 }
 
 void Core::loadBehaviorModules(){
-	//vector<vector<string>> AvailableBehaviorModules= pipeline.getallBehaviorModules;
-	//for (int i= 0; i < AvailableBehaviorModules.size(); i++){
-	//	coreHUD.addNewBehaviorMod(AvailableBehaviorModules.at(i).at(0),AvailableBehaviorModules.at(i).at(1));
-	//}
+	auto behlist = BehaviorModuleFactory::getBehList();
+	for(std::string force: behlist.first){
+		coreHUD.addNewForce(force);
+	}
+	for(std::string milestone:behlist.second){
+		coreHUD.addNewMilestone(milestone);
+	}
 }
 
 void Core::addFtoPipeline(std::string Force){
