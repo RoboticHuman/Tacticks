@@ -60,6 +60,9 @@ const std::vector<Mesh>& Model::getMeshes() const
 std::vector<Model>& Model::getModels(){
 	return nodes;
 }
+const std::vector<Model>& Model::getModels() const{
+	return nodes;
+}
 
 void Model::loadModel(string path)
 {

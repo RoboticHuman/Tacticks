@@ -26,7 +26,7 @@ public:
         glm::vec3 position;
         glm::vec4 color;
     };
-	std::vector<int32_t> indices;
+	std::vector<uint32_t> indices;
     std::vector<Vertex> vertices;
     std::string name;
 

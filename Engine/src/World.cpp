@@ -1,4 +1,5 @@
 #include "World.h"
+#include <queue>
 using namespace std;
 
 World World::world;
@@ -20,20 +21,39 @@ const Model& World::getWorldModel() const
 
 vector<float> World::getVertices() const
 {
-	auto& vert = worldModel.getMeshes()[0].getVertices(); //Hardcoding first mesh only for now.
-	vector<float> ret(vert.size() * 3);
-	for(int i = 0; i < vert.size(); i++){
-		ret[3*i + 0] = vert[i].position.x;
-		ret[3*i + 1] = vert[i].position.y;
-		ret[3*i + 2] = vert[i].position.z;
-	}
+    queue<const Model*> Q;
+    Q.push(&worldModel);
+    vector<float> ret;
+    while(Q.size()){
+        const Model* cur = Q.front(); Q.pop();
+        if(cur == nullptr) continue;
+        for(const Mesh& mesh : cur->getMeshes())
+            for(const Vertex& v : mesh.getVertices()){
+                ret.push_back(v.position.x);
+                ret.push_back(v.position.y);
+                ret.push_back(v.position.z);
+            }
+
+        for(const Model& model : cur->getModels())
+            Q.push(&model);
+    }
 	return ret;
 }
 vector<int> World::getIndices() const
 {
-	auto& ind = worldModel.getMeshes()[0].getIndices(); //Hardcoding first mesh only for now.
-	vector<int> ret(ind.size());
-	for(int i = 0; i < ret.size(); i++)
-		ret[i] = ind[i];
+    queue<const Model*> Q;
+    Q.push(&worldModel);
+    vector<int> ret;
+    int total=0;
+    while(Q.size()){
+        const Model* cur = Q.front(); Q.pop();
+        if(cur == nullptr) continue;
+        for(const Mesh& mesh : cur->getMeshes()){
+            for(uint32_t ind : mesh.getIndices())
+                ret.push_back(ind);
+            }
+        for(const Model& model : cur->getModels())
+            Q.push(&model);
+    }
 	return ret;
 }

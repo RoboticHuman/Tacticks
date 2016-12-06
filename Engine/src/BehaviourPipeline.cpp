@@ -14,10 +14,9 @@ BehaviourPipeline::BehaviourPipeline() : behData() , attrFactory(behData.agents)
 
 }
 
-
 Navigation* BehaviourPipeline::addNavigationLibrary(std::string navName)
 {
-	Navigation* ret = &NavigationFactory::getNav(navName);
+	Navigation* ret = &NavigationFactory::newNav(navName);
 	if(!ret->isValid()) return nullptr;
 	ret->newNav(&World::getInstance());
 	return ret;

@@ -7,13 +7,16 @@
 #include "Shader.h"
 #include "DrawableModel.h"
 #include "ResourceManager.h"
-#include "Tacticks/BehaviourPipeline.h"
-#include "Tacticks/AttributeFactory.h"
-#include "Tacticks/AgentAttributeBool.h"
-#include "Tacticks/AgentAttributeEnum.h"
-#include "Tacticks/AgentAttributeFloat.h"
-#include "Tacticks/AgentAttributeInt.h"
-#include "Tacticks/AgentAttributeVec3.h"
+#include <Tacticks/BehaviourPipeline.h>
+#include <Tacticks/AttributeFactory.h>
+#include <Tacticks/PassObjectInt.h>
+#include <Tacticks/PassObjectFloat.h>
+#include <Tacticks/AbstractNavigation.h>
+#include <Tacticks/AgentAttributeBool.h>
+#include <Tacticks/AgentAttributeEnum.h>
+#include <Tacticks/AgentAttributeFloat.h>
+#include <Tacticks/AgentAttributeInt.h>
+#include <Tacticks/AgentAttributeVec3.h>
 
 using namespace std;
 using namespace glm;
@@ -24,8 +27,26 @@ void Core::loadMesh(string fpath, bool resetCam){
 	if(!drawableModel){
 		drawableModel = new DrawableModel(&pipeline.getWorldInstance().getWorldModel());
 	}
-
 	if(resetCam) cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
+
+	float agentHeight = 2;
+	float agentRadius = 0.6;
+	float maxClimb = 0.9;
+	float cs = 0.3;
+	float ch = 0.2;
+	vector<PassObject*> hfParams;
+	hfParams.push_back(new PassObjectInt(agentHeight/ch));
+	hfParams.push_back(new PassObjectInt(maxClimb/ch));
+	hfParams.push_back(new PassObjectFloat(45));
+	hfParams.push_back(new PassObjectFloat(cs));
+	hfParams.push_back(new PassObjectFloat(ch));
+	hfParams.push_back(new PassObjectInt(1));
+
+	pipeline.addNavigationLibrary("NLrcHeightfield")->getNav()->setParameters(hfParams);
+//	pipeline.addNavigationLibrary("NLrcCompactHeightfield");
+	pipeline.compile();
+	dRenderer.update();
+	dRenderer.bDrawDebugMeshes.back() = true;
 }
 
 void Core::preLoop()
@@ -48,7 +69,8 @@ void Core::render()
 	glEnable(GL_DEPTH_TEST);
 	ResourceManager::getShader("meshShader")->use();
 	if(drawableModel)drawableModel->draw(ResourceManager::getShader("meshShader"));
-
+	ResourceManager::getShader("debugMeshShader")->use();
+	dRenderer.draw();
 	ResourceManager::getShader("meshShader")->use();
 	for(auto& drawableAgent : drawableAgents) {drawableAgent.getAgentDrawableModel().draw(ResourceManager::getShader("meshShader"));}
 
@@ -131,6 +153,7 @@ bool Core::init()
 
 	ResourceManager::loadShader("EditorAssets/shaders/VS.vs", "EditorAssets/shaders/FS.fs","meshShader");
 	ResourceManager::loadShader("EditorAssets/shaders/VSHUD.vs", "EditorAssets/shaders/FSHUD.fs","hudShader");
+	ResourceManager::loadShader("EditorAssets/shaders/DebugMesh.vs", "EditorAssets/shaders/DebugMesh.fs","debugMeshShader");
 	coreHUD.init(screenWidth,screenHeight);
 
 	return true;
@@ -237,7 +260,8 @@ void Core::start()
 		//need to use the shader before the operation after it, TODO: need to fix this crap...
 		ResourceManager::getShader("meshShader")->use();
 		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
-
+		ResourceManager::getShader("debugMeshShader")->use();
+		glUniformMatrix4fv(ResourceManager::getShader("debugMeshShader")->getUniformLocation("transform"), 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
 		render();
 
 		SDL_GL_SwapWindow(mainwindow);

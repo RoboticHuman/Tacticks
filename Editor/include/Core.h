@@ -9,6 +9,7 @@
 #include "HUD.h"
 #include "DrawableAgent.h"
 #include <Tacticks/BehaviourPipeline.h>
+#include "DebugMeshRenderer.h"
 class Shader;
 class Model;
 
@@ -39,7 +40,7 @@ private:
 	Camera cam;
 	Timer timer;
 	HUD coreHUD;
-
+	DebugMeshRenderer dRenderer;
 	GLuint transformLocation;
 
 	/**

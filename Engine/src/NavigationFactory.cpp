@@ -46,7 +46,7 @@ void NavigationFactory::rmNav_force(std::string navName)
 
 bool NavigationFactory::compileAll()
 {
-	for(auto navLib : nav){
+	for(auto& navLib : nav){
 		navLib.second->getNav()->init();
 	}
 }
