@@ -1,6 +1,7 @@
 PassObject
 PassObjectInt
 PassObjectBool
+PassObjectVec3
 PassObjectFloat
 PassObjectArray
 PassObjectString

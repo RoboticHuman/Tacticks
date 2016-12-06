@@ -7,8 +7,6 @@
 #include <glm/vec3.hpp>
 using namespace std;
 
-class rcHeightfield;
-
 NLrcCompactHeightfield::NLrcCompactHeightfield(const World* world) : AbstractNavigation(world){}
 NLrcCompactHeightfield::~NLrcCompactHeightfield(){rcFreeCompactHeightfield(data);}
 
@@ -41,6 +39,7 @@ bool NLrcCompactHeightfield::init()
 	}
 
 	constructDebugMesh();
+	return true;
 }
 vector<PassObject*> NLrcCompactHeightfield::getData(string, vector<PassObject*>){}
 vector<void*> NLrcCompactHeightfield::getRawData()
