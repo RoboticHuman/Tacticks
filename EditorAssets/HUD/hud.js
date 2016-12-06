@@ -151,10 +151,7 @@ $('#Forces input').on('click', function(e){
    $(this).parent().remove();
    //currentpipeline.updatePipeline($(this).parent());
 });
-$('#AvailableBehMod input').on('click', function(e){
-        $("#Forces ul").append($("<li>").text($(this).parent().innerText));
-      //  currentpipeline.updatePipeline($(this).parent());
- });
+
 
  /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
  /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/

@@ -16,6 +16,9 @@ void JSHandler::init(JSObject mainObj)
 	registerCallback("getDefaultPath", &JSHandler::getDefaultPath);
 	registerCallback("getAttrforAgent", &JSHandler::getAttrforAgent);
   registerCallback("loadBehaviorModules", &JSHandler::loadBehaviorModules);
+	registerCallback("addForcetoPipeline", &JSHandler::addForcetoPipeline);
+	registerCallback("addMilestonetoPipeline", &JSHandler::addMilestonetoPipeline);
+
 }
 void JSHandler::shutdown()
 {
@@ -95,16 +98,13 @@ void JSHandler::addForcetoPipeline(JSHandler args){
 void JSHandler::addMilestonetoPipeline(JSHandler args){
 	coreInstance->addMtoPipeline(args.At(0).ToString());
 }
-
 void JSHandler::getAttrforAgent(JSArray args)
 {
 	coreInstance->getagentAttrbyID(args.At(0).ToInteger());
 }
-
 void JSHandler::loadBehaviorModules(JSArray args){
 		coreInstance->loadBehaviorModules();
 }
-
 void JSHandler::addNewForce(string forceName){
 	JSArray args;
 	args.Push(WSLit(forceName.c_str()));
@@ -121,7 +121,6 @@ void JSHandler::addAgent(int agentID){
 	args.Push(WSLit(agent.c_str()));
 	mainObject.Invoke(WSLit("addAgent"), args);
 }
-
 void JSHandler::addCheckbox(string elementText){
 	JSArray args;
 	args.Push(WSLit(elementText.c_str()));
@@ -132,24 +131,20 @@ void JSHandler::addInt(string elementText){
 	args.Push(WSLit(elementText.c_str()));
 	mainObject.Invoke(WSLit("addint"), args);
 }
-
 void JSHandler::addFloat(string elementText){
 	JSArray args;
 	args.Push(WSLit(elementText.c_str()));
 	mainObject.Invoke(WSLit("addfloat"), args);
 }
-
 void JSHandler::addDropbox(string elementText){
 	JSArray args;
 	args.Push(WSLit(elementText.c_str()));
 	mainObject.Invoke(WSLit("adddropbox"), args);
 }
-
 JSValue JSHandler::getDefaultPath(JSArray args)
 {
 	return JSValue(WSLit("EditorAssets/models/Small Tropical Island/Small Tropical Island.obj"));
 }
-
 void JSHandler::JSCallExamples(string str){	//P.S. This calls a function "setTextboxValue" with 1 string argument P.S. Not intended to be called just there for reference
 	JSArray args;
 	args.Push(WSLit(str.c_str()));
