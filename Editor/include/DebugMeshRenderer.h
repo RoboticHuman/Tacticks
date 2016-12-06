@@ -71,7 +71,7 @@ class DebugMeshRenderer {
 
             //enable vertex attribute "normals" in vertex shader at layout location 1.
             glEnableVertexAttribArray(1);
-            glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(DebugMesh::Vertex), (GLvoid*)offsetof(DebugMesh::Vertex, DebugMesh::Vertex::color));
+            glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(DebugMesh::Vertex), (GLvoid*)offsetof(DebugMesh::Vertex, color));
 
             glBindVertexArray(0);
         }
