@@ -315,7 +315,7 @@ void Core::getagentAttrbyID(int agentID)
 }
 
 void Core::loadBehaviorModules(){
-	auto behlist = BehaviorModuleFactory::getBehList();
+	auto behlist = BehaviourModuleFactory::getBehList();
 	for(std::string force: behlist.first){
 		coreHUD.addNewForce(force);
 	}

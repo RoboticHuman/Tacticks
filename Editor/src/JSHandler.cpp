@@ -92,11 +92,11 @@ void JSHandler::togglePlacingAgents(JSArray args)
 {
 	coreInstance->setplaceAgents(args.At(0).ToBoolean());
 }
-void JSHandler::addForcetoPipeline(JSHandler args){
-	coreInstance->addFtoPipeline(args.At(0).ToString());
+void JSHandler::addForcetoPipeline(JSArray args){
+	coreInstance->addFtoPipeline(Awesomium::ToString(args.At(0).ToString()));
 }
-void JSHandler::addMilestonetoPipeline(JSHandler args){
-	coreInstance->addMtoPipeline(args.At(0).ToString());
+void JSHandler::addMilestonetoPipeline(JSArray args){
+	coreInstance->addMtoPipeline(Awesomium::ToString(args.At(0).ToString()));
 }
 void JSHandler::getAttrforAgent(JSArray args)
 {
