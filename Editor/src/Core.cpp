@@ -35,9 +35,11 @@ void Core::loadMesh(string fpath, bool resetCam){
 	float maxClimb = 0.9;
 	float cs = 0.3;
 	float ch = 0.2;
+	float minRegionSize = 8;
+	float mergedRegionSize = 20;
 	vector<PassObject*> hfParams;
-	hfParams.push_back(new PassObjectInt(agentHeight/ch));
-	hfParams.push_back(new PassObjectInt(maxClimb/ch));
+	hfParams.push_back(new PassObjectInt(ceilf(agentHeight/ch)));
+	hfParams.push_back(new PassObjectInt(floorf(maxClimb/ch)));
 	hfParams.push_back(new PassObjectFloat(45));
 	hfParams.push_back(new PassObjectFloat(cs));
 	hfParams.push_back(new PassObjectFloat(ch));
@@ -46,10 +48,10 @@ void Core::loadMesh(string fpath, bool resetCam){
 	pipeline.addNavigationLibrary("NLrcHeightfield")->getNav()->setParameters(hfParams);
 
 	vector<PassObject*> chfParams;
-	chfParams.push_back(new PassObjectInt(agentRadius));
-	chfParams.push_back(new PassObjectInt(agentRadius+3));
-	chfParams.push_back(new PassObjectInt(2));
-	chfParams.push_back(new PassObjectInt(4));
+	chfParams.push_back(new PassObjectInt(ceilf(agentRadius / cs)));
+	chfParams.push_back(new PassObjectInt(0));
+	chfParams.push_back(new PassObjectInt(minRegionSize*minRegionSize));
+	chfParams.push_back(new PassObjectInt(mergedRegionSize*mergedRegionSize));
 	chfParams.push_back(new PassObjectBool(false));
 	pipeline.addNavigationLibrary("NLrcCompactHeightfield")->getNav()->setParameters(chfParams);
 
