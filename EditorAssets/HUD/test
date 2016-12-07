@@ -10,9 +10,6 @@
  <body onload="document.getElementById('MyTextBox').value = getDefaultPath()">
 
    <div class="navbar">
-       <input type="text" name="Project Name" id="createProject">
-       <input id="hide" type="button" value="Create Project" onclick="createProjectHUD()">
-       <input id= "saveProject" type="button" value="Save Project" onclick="saveProject()" disabled>
        <input type="button" value="Load Mesh" onclick="loadMesh(document.getElementById('MyTextBox').value)">
        <input type="text" id="MyTextBox" >
    </div>
