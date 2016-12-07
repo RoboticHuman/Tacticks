@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
  <head>
-   <link rel="stylesheet" href="hud.css">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+   <link rel="stylesheet" href="hud.css" />
    <script src="jquery-3.1.0.min.js"></script>
    <script src="jquery-ui.js"></script>
    <script src="hud.js"></script>
@@ -16,14 +17,15 @@
 <!------------------------------------------------------------------------------------------->
    <div id="agentsandgroups">
 
-
+     <h3 style="padding-left:10px;color:#eee">Place Agents</h3>
      <!--placeAgents Toggle Button-->
      <div class="toggle-button">
-        <label for="toggle-button">
         <button id="placeAgent"></button>
      </div>
+     </label>
      <br><br>
       <!--Agents List-->
+      <h3 style="padding-left:10px;color:#eee">Agents</h3>
       <ul class="AgentsList"></ul>
 
       <!--Groups and Agent link to engine in progress -->
@@ -34,24 +36,34 @@
 
         </div>
 <!------------------------------------------------------------------------------------------->
-  <div id="forcesandmilestones">
+  <div id="forcesandmilestones" class="list-group">
+    <div class="list-group-item">
+      <h3>Pipeline</h3>
+      <ul class="AvailableBehMod" style="display:block"></ul>
+    </div>
 
-      <div>
+      <div class="list-group-item">
           <h3 onclick="javascript:toggle('Milestones')">Milestones</h3>
-          <ul class="Milestones" style="display:block" href="javascript:toggle();"  </ul>
-     </div>
+          <ul class="Milestones" style="display:block">  </ul>
+      </div>
+      <div class="list-group-item">
 
-      <hr>
+        <h3 onclick="javascript:toggle('Forces')">Forces</h3>
+        <ul class="Forces" style="display:block"></ul>
+      </div>
+      <div class="list-group-item">
+        <h3 onclick="javascript:toggle('AvailableBehaviorModules')">Behavior Modules</h3>
+        <ul class="AvailableBehMod" style="display:block"></ul>
+      </div>
+      <div class="list-group-item">
+          <h3 onclick="javascript:toggle('Milestones')">Milestones</h3>
+          <ul class="Milestones" style="display:block">  </ul>
+      </div>
+      <div class="list-group-item">
 
-
-      <h3 onclick="javascript:toggle('Forces')">Forces</h3>
-      <ul class="Forces"></ul>
-
-      <hr>
-
-      <h3 onclick="javascript:toggle('AvailableBehaviorModules')">BehaviorModules</h3>
-      <ul class="AvailableBehMod"></ul>
-
+        <h3 onclick="javascript:toggle('Forces')">Forces</h3>
+        <ul class="Forces" style="display:block"></ul>
+      </div>
   </div>
 
  </body>

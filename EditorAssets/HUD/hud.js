@@ -40,7 +40,7 @@ $("body").onload=function(){
 
 /* add agents to the list */
  function addAgent(AgentID){
-    var agent = '<button type="button" onClick="getAttr(this.id)" id="'+AgentID+'">'+ AgentID+' </p>';
+    var agent = '<button type="button" class="badge" onClick="getAttr(this.id)" id="'+AgentID+'">Agent #'+ AgentID+' </p>';
     if(agent.length){
         $('<li />', {html: agent}).appendTo('ul.AgentsList')
     }
@@ -94,21 +94,21 @@ function getAttr(currentagent){
 
 /*Pipeline*/
 function addNewForce(forceName){
-  var forceModule = forceName + '<button type="button" onClick="addForcetoPipeline(this.id)" id="'+forceName+ '" class=\"forcemod\" </button>';
+  var forceModule = forceName + '<button type="button" onClick="addForcetoPipeline(this.id)" id="'+forceName+ '" class="forcemod">'+'+'+'</button>';
   if(forceModule.length){
     $('<li />', {html: forceModule}).appendTo('ul.AvailableBehMod')
   }
 }
 
 function addNewMilestone(milestoneName){
-  var milestoneModule = milestoneName + '<button type="button" onClick="addMilestonetoPipeline(this.id)" id="'+milestoneName+ '" class=\"milestonemod\" </button>';
+  var milestoneModule = milestoneName + '<button type="button" onClick="addMilestonetoPipeline(this.id)" id="'+milestoneName+ '" class="milestonemod">'+'+'+'</button>';
   if(milestoneModule.length){
     $('<li />', {html: milestoneModule}).appendTo('ul.AvailableBehMod')
   }
 }
 
 function addForcetoPipeline(behName){
-  elementText = behName + '<button type="button" value=\"-\">';
+  elementText = behName + '<button type="button" value="-">';
   addForcetoPipeline(behName);
   if(behName.length){
     $('<li />', {html: behName}).appendTo('ul.Forces');
@@ -116,7 +116,7 @@ function addForcetoPipeline(behName){
 }
 
 function addMilestonetoPipeline(behName){
-  elementText = behName + '<button type="button" value=\"-\">';
+  elementText = behName + '<button type="button" value="-">';
   addForcetoPipeline(behName);
   if(behName.length){
     $('<li />', {html: behName}).appendTo('ul.Milestones');
