@@ -120,16 +120,12 @@ function addMilestonetoPipeline(behName){
   addForcetoPipeline(behName);
   if(behName.length){
     $('<li />', {html: behName}).appendTo('ul.Milestones');
-  }
-}
-  else {
+  } else {
     addMilestonetoPipeline(behName);
     if(behName.length){
       $('<li />', {html: behName}).appendTo('ul.Milestones');
     }
   }
-
-
 }
 
 //Sortable Lists
@@ -189,13 +185,13 @@ function toggle(elementID){
   }
 }
 
-* Checking for ints
+/* Checking for ints
 */
 ///  @param[in] evt   Keypress event
 function isInt(evt) {
      evt = (evt) ? evt : window.event;
      var charCode = (evt.which) ? evt.which : evt.keyCode;
-     if (charCode !=8 &&)(charCode < 48 || charCode > 57)) {
+     if ((charCode !=8) && (charCode < 48 || charCode > 57)) {
          return false;
      }
      return true;
