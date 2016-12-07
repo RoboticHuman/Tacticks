@@ -304,13 +304,24 @@ void Core::getagentAttrbyID(int agentID)
 					elementText.append("\" max=\"");
 					elementText.append(to_string(temp->getMaxValue()));
 					elementText.append("\" />");
-				//	attributeToDraw = new AgentAttributeInt(temp->getValue(),
-				//						temp->getMinValue(),temp->getMaxValue(), temp->getName());
 					coreHUD.addInthud(elementText);
 			}
+				else if (dynamic_cast<const AgentAttributeVec3*>(agentattr)) {
+				const AgentAttributeVec3* temp = dynamic_cast<const AgentAttributeVec3*>(agentattr);
+				elementText = temp->getName();
+				elementText.append("<input type=\"number\" value=");
+				elementText.append(std::to_string((temp->getValue())[0]));
+				elementText.append(" ><input type=\"number\" value=");
+				elementText.append(std::to_string((temp->getValue())[1]));
+				elementText.append(" ><input type=\"number\" value=");
+				elementText.append(std::to_string((temp->getValue())[2]));
+				elementText.append(" > <br>");
+				coreHUD.addFloathud(elementText);
+				cout<<elementText<<endl;
 	    // iterator->first = key
 	    // iterator->second = value
 	    // Repeat if you also want to iterate through the second map.
+				}
 	}
 }
 

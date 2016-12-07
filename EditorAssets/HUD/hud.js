@@ -49,25 +49,25 @@ $("body").onload=function(){
   function addcheckbox(inputtext){
      var attr = inputtext
      if(attr.length){
-         $('<li />', {html: agent}).appendTo('ul.AgentAttributes')
+         $('<li />', {html: attr}).appendTo('ul.AgentAttributes')
      }
    };
    function addint(inputtext){
       var attr = inputtext
       if(attr.length){
-          $('<li />', {html: agent}).appendTo('ul.AgentAttributes')
+          $('<li />', {html: attr}).appendTo('ul.AgentAttributes')
       }
     };
     function addfloat(inputtext){
-       var attr = inputtext
-       if(attr.length){
-           $('<li />', {html: agent}).appendTo('ul.AgentAttributes')
+       var attr = inputtext;
+       if(inputtext.length){
+           $('<li />', {html: inputtext}).appendTo('ul.AgentAttributes')
        }
      };
      function adddropbox(inputtext){
         var attr = inputtext
         if(attr.length){
-            $('<li />', {html: agent}).appendTo('ul.AgentAttributes')
+            $('<li />', {html: attr}).appendTo('ul.AgentAttributes')
         }
       };
 
@@ -83,7 +83,8 @@ $("body").onload=function(){
 
 /* Clicking on an agent*/
 function getAttr(currentagent){
-  $( "#attributesList" ).empty();
++  $( ".AgentAttributes" ).empty();
+
   getAttrforAgent(currentagent);
 
 };

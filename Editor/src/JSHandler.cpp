@@ -132,6 +132,7 @@ void JSHandler::addInt(string elementText){
 	mainObject.Invoke(WSLit("addint"), args);
 }
 void JSHandler::addFloat(string elementText){
+
 	JSArray args;
 	args.Push(WSLit(elementText.c_str()));
 	mainObject.Invoke(WSLit("addfloat"), args);
