@@ -6,32 +6,70 @@ div{
   background: trasnparent;
  }
 
+input[type='button'] {
+  color: #333;
+  background-color: #fff;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+
+input[type='button']:focus {
+  outline: none
+}
+input[type='button']:hover {
+  background-color: #eee;
+}
+
+input[type="text"] {
+  border: none;
+  border-radius: 5px;
+  border-bottom: solid 2px #c9c9c9;
+  transition: border 0.3s;
+}
+input[type="text"]:focus {
+  border-bottom: solid 2px #969696;
+}
+
 /* Editor Coloumns*/
- #agentsandgroups {
+#agentsandgroups {
     color: white;
     float:left;
     width:22%;
-    background:grey;
-    Height:100%;
+    background-color: rgba(0,0,0,0.5);
+    height:100%;
     word-wrap:break-word;
+    margin-top: 4%;
+    margin-left: 50px;
+    border-radius: 10px;
  }
-
-
- #forcesandmilestones {
+#agentsandgroups .toggle-button {
+  margin-left: 40%;
+}
+#forcesandmilestones {
     color: white;
     float:right;
     width:22%;
-    background:grey;
+    background-color: rgba(0,0,0,0.5);
     height:100%;
     word-wrap:break-word;
+    margin-top: 4%;
+    margin-right: 50px;
+    border-radius: 10px;
  }
 
+#forcesandmilestones h3 {
+  font-family: sans-serif;
+  font-weight: 100;
+  font-size: 1em;
+  padding-left: 10px;
+}
  /* Sections*/
  #attributesList{
     color: black;
     float:left;
     width:100%;
-    background:lightgrey;
+    background-color: rgba(0,0,0,0.5);
     Height:100%;
  }
 
@@ -48,16 +86,18 @@ div{
  #AvailableBehMod li span { position: absolute; margin-left: -1.3em; }
 
  .navbar{
-     background-color: grey;
+     background-color: rgba(0,0,0,0.5);
      border: none;
      color: white;
-     width: 100%;
-     padding: 5px 5px;
-     float: right:
-     text-align: center;
+     width: 95%;
+     margin-left: 2.5%;
+     padding: 10px 10px;
+     border-radius: 5px;
      text-decoration: none;
-     display: inline-block;
      font-size: 16px;
+     display: inline-block;
+     text-align: center;
+     margin-top: 0.5%;
  }
 
 /* Elements*/
