@@ -32,10 +32,6 @@
 
        <div id="attributesList">
          <ul class="AgentAttributes">
-           <li><input type="number" value=0.000000 ><input type="number" value=0.000000 ><input type="number" value=0.000000 > <br>
-</li>
-           <li><input type="number" value=0.000000 ><input type="number" value=0.000000 ><input type="number" value=0.000000 > <br>
-</li>
          </ul>
        </div>
 

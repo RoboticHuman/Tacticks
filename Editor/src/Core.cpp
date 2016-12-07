@@ -317,10 +317,6 @@ void Core::getagentAttrbyID(int agentID)
 				elementText.append(std::to_string((temp->getValue())[2]));
 				elementText.append(" > <br>");
 				coreHUD.addFloathud(elementText);
-				cout<<elementText<<endl;
-	    // iterator->first = key
-	    // iterator->second = value
-	    // Repeat if you also want to iterate through the second map.
 				}
 	}
 }
