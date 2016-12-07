@@ -55,9 +55,17 @@ void Core::loadMesh(string fpath, bool resetCam){
 	chfParams.push_back(new PassObjectBool(false));
 	pipeline.addNavigationLibrary("NLrcCompactHeightfield")->getNav()->setParameters(chfParams);
 
+	vector<PassObject*> contourParams;
+	contourParams.push_back(new PassObjectFloat(1)); //maxError
+	contourParams.push_back(new PassObjectInt(12/cs)); //maxEdgeLenth/cs
+	pipeline.addNavigationLibrary("NLrcContourSet")->getNav()->setParameters(contourParams);
+
+	vector<PassObject*> polyMeshParams;
+	polyMeshParams.push_back(new PassObjectInt(6));
+	pipeline.addNavigationLibrary("NLrcPolyMesh")->getNav()->setParameters(polyMeshParams);
 	pipeline.compile();
 	dRenderer.update();
-	dRenderer.bDrawDebugMeshes[0] = true;
+	dRenderer.bDrawDebugMeshes[2] = true;
 }
 
 void Core::preLoop()

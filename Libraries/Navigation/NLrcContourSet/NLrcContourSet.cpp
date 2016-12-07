@@ -10,17 +10,18 @@ using namespace std;
 
 NLrcContourSet::NLrcContourSet(const World* world) : AbstractNavigation(world){data = nullptr;}
 NLrcContourSet::~NLrcContourSet(){if(data) rcFreeContourSet(data);}
-
+#include <iostream>
 bool NLrcContourSet::init()
 {
 	const float maxError= dynamic_cast<PassObjectFloat*>(args[0])->getValue();
     const int maxEdgeLen= dynamic_cast<PassObjectInt*>(args[1])->getValue();
-    const int buildFlags= dynamic_cast<PassObjectInt*>(args[2])->getValue();
+    //const int buildFlags= dynamic_cast<PassObjectInt*>(args[2])->getValue();
     AbstractNavigation* compactHeightfieldNav = NavigationFactory::getNav("NLrcCompactHeightfield").getNav();
     rcCompactHeightfield* rcCompactHeightfieldData =  static_cast<rcCompactHeightfield*>(compactHeightfieldNav->getRawData()[0]);
     rcContext ctx;
     data = rcAllocContourSet();
-    if (!rcBuildContours	(&ctx, *rcCompactHeightfieldData, maxError, maxEdgeLen, *data, buildFlags)) return false;
+
+    if (!rcBuildContours(&ctx, *rcCompactHeightfieldData, maxError, maxEdgeLen, *data/*, buildFlags*/)) return false;
 	return true;
 }
 
