@@ -19,10 +19,10 @@ bool NLrcCompactHeightfield::init()
     int mergeRegionArea = dynamic_cast<PassObjectInt*>(args[3])->getValue();
 	bool useMonotone = dynamic_cast<PassObjectBool*>(args[4])->getValue();
 
-	AbstractNavigation* hieghtFieldNav = NavigationFactory::getNav("NLrcHeightfield").getNav();
-	rcHeightfield* heightField = static_cast<rcHeightfield*>(hieghtFieldNav->getRawData()[0]);
-	int walkableHeight = dynamic_cast<PassObjectInt*>(hieghtFieldNav->getData("walkableHeight", {})[0])->getValue();
-	int walkableClimb = dynamic_cast<PassObjectInt*>(hieghtFieldNav->getData("walkableClimb", {})[0])->getValue();
+	AbstractNavigation* heightFieldNav = NavigationFactory::getNav("NLrcHeightfield").getNav();
+	rcHeightfield* heightField = static_cast<rcHeightfield*>(heightFieldNav->getRawData()[0]);
+	int walkableHeight = dynamic_cast<PassObjectInt*>(heightFieldNav->getData("walkableHeight", {})[0])->getValue();
+	int walkableClimb = dynamic_cast<PassObjectInt*>(heightFieldNav->getData("walkableClimb", {})[0])->getValue();
 
 	cout << endl << endl << endl;
 	cout << heightField->width << endl;
