@@ -21,9 +21,10 @@ bool NLrcPolyMeshDetail::init()
 
     rcContext ctx;
     data = rcAllocPolyMeshDetail();
-    if (!rcBuildPolyMeshDetail	(&ctx, *polyMeshData, *compactHeightfieldData,sampleDist,sampleMaxError,*data)) 
+    if (!rcBuildPolyMeshDetail	(&ctx, *polyMeshData, *compactHeightfieldData,sampleDist,sampleMaxError,*data))
     	return false;
 	constructDebugMesh();
+    clearDirty();
 	return true;
 }
 
