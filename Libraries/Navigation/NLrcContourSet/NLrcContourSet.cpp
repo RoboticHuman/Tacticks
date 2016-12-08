@@ -22,6 +22,7 @@ bool NLrcContourSet::init()
     data = rcAllocContourSet();
 
     if (!rcBuildContours(&ctx, *rcCompactHeightfieldData, maxError, maxEdgeLen, *data/*, buildFlags*/)) return false;
+	clearDirty();
 	return true;
 }
 

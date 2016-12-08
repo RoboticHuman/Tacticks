@@ -17,9 +17,10 @@ bool NLrcPolyMesh::init()
     rcContourSet* rcContourData =  static_cast<rcContourSet*>(contoursetNav->getRawData()[0]);
     rcContext ctx;
     data = rcAllocPolyMesh();
-    if (!rcBuildPolyMesh (&ctx,*rcContourData, nvp, *data)) 
+    if (!rcBuildPolyMesh (&ctx,*rcContourData, nvp, *data))
     	return false;
 	constructDebugMesh();
+	clearDirty();
 	return true;
 }
 
