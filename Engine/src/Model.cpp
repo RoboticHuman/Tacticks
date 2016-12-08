@@ -5,7 +5,6 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <algorithm>
-#include <iostream>
 using namespace std;
 using namespace glm;
 
