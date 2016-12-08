@@ -1,6 +1,6 @@
 #include "AbstractBehaviourModule.h"
 #include "PassObject.h"
-AbstractBehaviourModule::AbstractBehaviourModule(BehaviourModuleData* data) : behData(data){};
+AbstractBehaviourModule::AbstractBehaviourModule(BehaviourModuleData* data) : behData(data), dirty(true){};
 void AbstractBehaviourModule::eventPreSimulate(){};
 bool AbstractBehaviourModule::isDirty(){return dirty;}
 void AbstractBehaviourModule::clearDirty(){dirty = false;}

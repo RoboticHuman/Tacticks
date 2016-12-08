@@ -13,7 +13,7 @@ AttributeFactory::AttributeFactory(std::unordered_map<int, BehaviourModuleData::
 	attributeMap.insert(pair<std::string,std::pair<int,AgentAttribute*> >(
 		"Position",pair<int,AgentAttribute*>(1, new AgentAttributeVec3(glm::vec3(0,0,0), "Position"))));
 	attributeMap.insert(pair<std::string,std::pair<int,AgentAttribute*> >(
-		"Target",pair<int,AgentAttribute*>(2, new AgentAttributeVec3(glm::vec3(0,0,0), "Target"))));
+		"Target",pair<int,AgentAttribute*>(1, new AgentAttributeVec3(glm::vec3(0,0,0), "Target"))));
 }
 
 void AttributeFactory::addAttribute(const AgentAttribute* attribute)

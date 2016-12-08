@@ -76,6 +76,8 @@ void Core::loadMesh(string fpath, bool resetCam){
 	pipeline.compile();
 	dRenderer.update();
 	dRenderer.bDrawDebugMeshes.back() = true;
+
+	pipeline.addForcesModule("SimpleMoveForward");
 }
 
 void Core::preLoop()
@@ -193,17 +195,31 @@ void Core::start()
 	SDL_Event event;
 	preLoop();
 	int textBoxValue = 0;
+
 	while(!exitFlag){
+
+
 		const double MIN_FRAME_TIME = 1.0f / 40.0f;
 		cameraAngle = vec2(0,0);
-		double dt = timer.GetDelta();
+		float dt = timer.GetDelta();
 		if(dt < MIN_FRAME_TIME){
 			int ms = (int)((MIN_FRAME_TIME - dt) * 1000.0f);
 			if (ms > 10) ms = 10;
 			if (ms >= 0) SDL_Delay(ms);
 		}
 
-		while(SDL_PollEvent(&event)){	//Handeling events
+		placeAgents = true;
+		vector<pair<int, vec3> > newPos = pipeline.simulate();
+		for(auto& p : newPos){
+			AgentAttributeVec3* pos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(p.first)->getAttribute("Position"));
+			pos->setValue(pos->getValue() + p.second * dt * 0.01f);
+			for (int i=0; i<drawableAgents.size(); i++) {
+				if (drawableAgents[i].getAgentID() == p.first)
+					drawableAgents[i].getAgentModel().setPosition(pos->getValue());
+			}
+		} 
+
+		while(SDL_PollEvent(&event)){	//Handling events
 			coreHUD.injectEvent(event);
 			switch(event.type){
 				case SDL_KEYDOWN:
@@ -232,6 +248,10 @@ void Core::start()
 							{
 								if(drawableModel&&drawableModel->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
 									int agentID = pipeline.addAgent();
+									AgentAttributeVec3* agentPos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agentID)->getAttribute("Position"));
+									AgentAttributeVec3* agentTarget = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agentID)->getAttribute("Target"));
+									agentPos->setValue(pos);
+									agentTarget->setValue(pos + vec3(0,100,0));
 									coreHUD.addAgenthud(agentID);
 									drawableAgents.push_back(DrawableAgent("EditorAssets/models/AgentCylinder.obj",agentID));
 									drawableAgents.back().getAgentModel().setPosition(pos);
