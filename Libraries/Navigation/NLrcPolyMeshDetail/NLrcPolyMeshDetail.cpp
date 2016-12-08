@@ -43,9 +43,9 @@ vector<void*> NLrcPolyMeshDetail::getRawData()
 void NLrcPolyMeshDetail::constructDebugMesh()
 {
 	debugMesh = DebugFactory::createDebugMesh("polymeshdetail");
-
 	for (int i = 0; i < data->nmeshes; i++)
 	{
+
 		const unsigned int* m = &data->meshes[i*4];
 		const unsigned int bverts = m[0];
 		const unsigned int btris = m[2];
@@ -53,13 +53,15 @@ void NLrcPolyMeshDetail::constructDebugMesh()
 		const float* verts = &data->verts[bverts*3];
 		const unsigned char* tris = &data->tris[btris*4];
 
+		glm::vec3 color = glm::vec3((rand()%1000)/1000.0,(rand()%1000)/1000.0,(rand()%1000)/1000.0);
+
 		for (int j = 0; j < ntris; j++)
 		{
 			vector<glm::vec3> triangle(3);
             triangle[0] = glm::vec3(verts[tris[j*4+0]*3],verts[tris[j*4+0]*3+1],verts[tris[j*4+0]*3+2]);
             triangle[1] = glm::vec3(verts[tris[j*4+1]*3],verts[tris[j*4+1]*3+1],verts[tris[j*4+1]*3+2]);
             triangle[2] = glm::vec3(verts[tris[j*4+2]*3],verts[tris[j*4+2]*3+1],verts[tris[j*4+2]*3+2]);
-        	debugMesh->drawConvexPolygon(triangle,(rand()%1000)/1000.0,(rand()%1000)/1000.0,(rand()%1000)/1000.0,1.0);
+        	debugMesh->drawConvexPolygon(triangle,color[0], color[1], color[2],1.0);
 		}
 	}
 }

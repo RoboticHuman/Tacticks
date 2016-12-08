@@ -73,6 +73,7 @@ void Core::loadMesh(string fpath, bool resetCam){
 	polyMeshDetailParams.push_back(new PassObjectFloat(1*ch)); //Max Sample Error
 	pipeline.addNavigationLibrary("NLrcPolyMeshDetail")->getNav()->setParameters(polyMeshDetailParams);
 
+
 	vector<PassObject*> dtNavMeshParams;
 	dtNavMeshParams.push_back(new PassObjectFloat(agentHeight));
 	dtNavMeshParams.push_back(new PassObjectFloat(agentRadius));

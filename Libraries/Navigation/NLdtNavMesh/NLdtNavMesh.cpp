@@ -10,15 +10,14 @@ using namespace std;
 
 NLdtNavMesh::NLdtNavMesh(const World* world) : AbstractNavigation(world){data = nullptr;}
 NLdtNavMesh::~NLdtNavMesh(){if(data) dtFreeNavMesh(data);}
-#include <iostream>
 bool NLdtNavMesh::init()
 {
     AbstractNavigation* polyMeshNav = NavigationFactory::getNav("NLrcPolyMesh").getNav();
     AbstractNavigation* polyMeshDetailNav = NavigationFactory::getNav("NLrcPolyMeshDetail").getNav();
     AbstractNavigation* heightFieldNav = NavigationFactory::getNav("NLrcHeightfield").getNav();
     rcPolyMesh* m_pmesh = static_cast<rcPolyMesh*>(polyMeshNav->getRawData()[0]);
-    rcPolyMeshDetail* m_dmesh = static_cast<rcPolyMeshDetail*>(polyMeshNav->getRawData()[0]);
-    rcHeightfield* rcHeightfieldData = static_cast<rcHeightfield*>(polyMeshNav->getRawData()[0]);
+    rcPolyMeshDetail* m_dmesh = static_cast<rcPolyMeshDetail*>(polyMeshDetailNav->getRawData()[0]);
+    rcHeightfield* rcHeightfieldData = static_cast<rcHeightfield*>(heightFieldNav->getRawData()[0]);
     const float m_agentHeight = dynamic_cast<PassObjectFloat*>(args[0])->getValue();
     const float m_agentRadius = dynamic_cast<PassObjectFloat*>(args[1])->getValue();
     const float walkableClimb = dynamic_cast<PassObjectFloat*>(args[2])->getValue();
@@ -54,8 +53,7 @@ bool NLdtNavMesh::init()
     //      params.offMeshConCount = m_geom->getOffMeshConnectionCount();
     params.walkableHeight = m_agentHeight;
     params.walkableRadius = m_agentRadius;
-    params.walkableClimb = dynamic_cast<PassObjectInt*>(heightFieldNav->getData("walkableClimb", {})[0])->getValue();
-    printf("%dWalkable climb is: \n", params.walkableClimb);
+    params.walkableClimb = walkableClimb;
     params.offMeshConVerts = 0;
     params.offMeshConRad = 0;
     params.offMeshConDir = 0;
@@ -69,16 +67,16 @@ bool NLdtNavMesh::init()
     params.cs = rcHeightfieldData->cs;
     params.buildBvTree = true;
     ////////////////////////////////////////////////////
+    
     //Building navmesh
     ////////////////////////////////////////////////////
     if (!dtCreateNavMeshData(&params, &navData, &navDataSize))
     {
-        cout<<"hello"<<endl;
-        printf("%s%s\n","Could not build Detour navmesh.",RC_LOG_ERROR );
         return false;
     }
 
     ////////////////////////////////////////////////////
+
 
     //Allocating the navmesh
     ////////////////////////////////////////////////////
@@ -87,13 +85,14 @@ bool NLdtNavMesh::init()
     if (!m_navMesh)
     {
         dtFree(navData);
-        printf("%s%s\n","Could not build Detour navmesh.",RC_LOG_ERROR );
         return false;
     }
     else {
         data = m_navMesh;
     }
     ////////////////////////////////////////////////////
+    
+
     constructDebugMesh();
     clearDirty();
     return true;
