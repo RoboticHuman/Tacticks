@@ -61,9 +61,11 @@ void Core::loadMesh(string fpath, bool resetCam){
 	contourParams.push_back(new PassObjectInt(12/cs)); //maxEdgeLenth/cs
 	pipeline.addNavigationLibrary("NLrcContourSet")->getNav()->setParameters(contourParams);
 
+
 	vector<PassObject*> polyMeshParams;
 	polyMeshParams.push_back(new PassObjectInt(6));
 	pipeline.addNavigationLibrary("NLrcPolyMesh")->getNav()->setParameters(polyMeshParams);
+
 
 	vector<PassObject*> polyMeshDetailParams;
 	float detailSampleDist =6;
@@ -73,7 +75,7 @@ void Core::loadMesh(string fpath, bool resetCam){
 
 	pipeline.compile();
 	dRenderer.update();
-	dRenderer.bDrawDebugMeshes[3] = true;
+	dRenderer.bDrawDebugMeshes.back() = true;
 }
 
 void Core::preLoop()

@@ -43,9 +43,9 @@ bool NLrcHeightfield::init()
 	data = rcAllocHeightfield();
     rcCalcGridSize(bmin, bmax, cs, &(data->width), &(data->height));
 
-    if(!rcCreateHeightfield(&ctx, *data, data->width, data->height, bmin, bmax, cs,  ch)) ;//return false;
+    if(!rcCreateHeightfield(&ctx, *data, data->width, data->height, bmin, bmax, cs,  ch)) return false;
     rcMarkWalkableTriangles(&ctx, walkableSlopeAngle, &verts[0], nv, &tris[0], nt, areas);
-    if(!rcRasterizeTriangles(&ctx, &verts[0], nv, &tris[0], areas, nt, *data, flagMergeThr)) ;//return false;
+    if(!rcRasterizeTriangles(&ctx, &verts[0], nv, &tris[0], areas, nt, *data, flagMergeThr)) return false;
 	rcFilterLowHangingWalkableObstacles(&ctx, walkableClimb,*data);
     rcFilterLedgeSpans(&ctx, walkableHeight, walkableClimb, *data);
     rcFilterWalkableLowHeightSpans(&ctx, walkableHeight, *data);

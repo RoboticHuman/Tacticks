@@ -5,9 +5,10 @@
 #include <limits>
 #include <cmath>
 #include <glm/vec3.hpp>
+#include <iostream>
 using namespace std;
 NLrcPolyMeshDetail::NLrcPolyMeshDetail(const World* world) : AbstractNavigation(world){data = nullptr;}
-NLrcPolyMeshDetail::~NLrcPolyMeshDetail(){if(data) rcPolyMeshDetail(data);}
+NLrcPolyMeshDetail::~NLrcPolyMeshDetail(){if(data) rcFreePolyMeshDetail(data);}
 
 bool NLrcPolyMeshDetail::init()
 {
@@ -17,9 +18,11 @@ bool NLrcPolyMeshDetail::init()
     AbstractNavigation* polyMeshNav = NavigationFactory::getNav("NLrcPolyMesh").getNav();
     rcCompactHeightfield* compactHeightfieldData = static_cast<rcCompactHeightfield*>(compactHeigtfieldNav->getRawData()[0]);
     rcPolyMesh* polyMeshData = static_cast<rcPolyMesh*>(polyMeshNav->getRawData()[0]);
+
     rcContext ctx;
     data = rcAllocPolyMeshDetail();
-    if (!rcBuildPolyMeshDetail	(&ctx, *polyMeshData, *compactHeightfieldData,sampleDist,sampleMaxError,*data)) return false;
+    if (!rcBuildPolyMeshDetail	(&ctx, *polyMeshData, *compactHeightfieldData,sampleDist,sampleMaxError,*data)) 
+    	return false;
 	constructDebugMesh();
 	return true;
 }
@@ -39,8 +42,8 @@ vector<void*> NLrcPolyMeshDetail::getRawData()
 void NLrcPolyMeshDetail::constructDebugMesh()
 {
 	debugMesh = DebugFactory::createDebugMesh("polymeshdetail");
-    AbstractNavigation* polyMeshNav = NavigationFactory::getNav("NLrcPolyMesh").getNav();
-	for (int i = 0; i < data->nmeshes; ++i)
+
+	for (int i = 0; i < data->nmeshes; i++)
 	{
 		const unsigned int* m = &data->meshes[i*4];
 		const unsigned int bverts = m[0];
@@ -48,14 +51,15 @@ void NLrcPolyMeshDetail::constructDebugMesh()
 		const int ntris = (int)m[3];
 		const float* verts = &data->verts[bverts*3];
 		const unsigned char* tris = &data->tris[btris*4];
-        vector<glm::vec3> poly;
-		for (int j = 0; j < ntris; ++j)
-		{
-            poly.push_back(glm::vec3(verts[tris[j*4+0]*3],verts[tris[j*4+1]*3],verts[tris[j*4+2]*3]));
 
+		for (int j = 0; j < ntris; j++)
+		{
+			vector<glm::vec3> triangle(3);
+            triangle[0] = glm::vec3(verts[tris[j*4+0]*3],verts[tris[j*4+0]*3+1],verts[tris[j*4+0]*3+2]);
+            triangle[1] = glm::vec3(verts[tris[j*4+1]*3],verts[tris[j*4+1]*3+1],verts[tris[j*4+1]*3+2]);
+            triangle[2] = glm::vec3(verts[tris[j*4+2]*3],verts[tris[j*4+2]*3+1],verts[tris[j*4+2]*3+2]);
+        	debugMesh->drawConvexPolygon(triangle,(rand()%1000)/1000.0,(rand()%1000)/1000.0,(rand()%1000)/1000.0,1.0);
 		}
-        debugMesh->drawConvexPolygon(poly,(rand()%1000)/1000.0,(rand()%1000)/1000.0,(rand()%1000)/1000.0,1.0);
-        //triangle.clear();
 	}
 }
 

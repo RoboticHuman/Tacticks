@@ -17,7 +17,8 @@ bool NLrcPolyMesh::init()
     rcContourSet* rcContourData =  static_cast<rcContourSet*>(contoursetNav->getRawData()[0]);
     rcContext ctx;
     data = rcAllocPolyMesh();
-    if (!rcBuildPolyMesh (&ctx,*rcContourData, nvp, *data)) return false;
+    if (!rcBuildPolyMesh (&ctx,*rcContourData, nvp, *data)) 
+    	return false;
 	constructDebugMesh();
 	return true;
 }
@@ -42,38 +43,40 @@ void NLrcPolyMesh::constructDebugMesh()
 	const float ch = data->ch;
 	const float* orig = data->bmin;
 
+	vector<float> color[3] {vector<float>(data->maxpolys),
+                vector<float>(data->maxpolys),
+                vector<float>(data->maxpolys)};
+
+    for (int i=0; i<color[0].size(); i++) {
+        color[0][i] = (rand()%1000)/1000.0;
+        color[1][i] = (rand()%1000)/1000.0;
+        color[2][i] = (rand()%1000)/1000.0;
+    }
+
 	for (int i = 0; i < data->npolys; ++i)
 	{
 		const unsigned short* p = &data->polys[i*nvp*2];
 
-		vector<float> color;
-		if (data->areas[i] == RC_WALKABLE_AREA)
-			color = vector<float>{0,192,255,64};
-		else if (data->areas[i] == RC_NULL_AREA)
-			color = vector<float>{0,0,0,64};
-		//else
-			//color = duIntToCol(data->areas[i], 255);
-
-		unsigned short vi[3];
-		for (int j = 2; j < nvp; ++j)
+		vector<glm::vec3> poly;
+		for (int j = 0; j < nvp && p[j] != RC_MESH_NULL_IDX; j++)
 		{
-			vector<glm::vec3> triangle;
-			if (p[j] == RC_MESH_NULL_IDX) break;
-			vi[0] = p[0];
-			vi[1] = p[j-1];
-			vi[2] = p[j];
-			for (int k = 0; k < 3; ++k)
-			{
-				const unsigned short* v = &data->verts[vi[k]*3];
-				const float x = orig[0] + v[0]*cs;
-				const float y = orig[1] + (v[1]+1)*ch;
-				const float z = orig[2] + v[2]*cs;
-				triangle.push_back(glm::vec3(x,y,z));
-			}
-			debugMesh->drawConvexPolygon(triangle,color[0],
-											color[1],
-											color[2],color[3]);
+			const unsigned short* v = &(data->verts[p[j]*3]);
+
+			const float x = orig[0] + v[0]*cs;
+			const float y = orig[1] + (v[1]+1)*ch;
+			const float z = orig[2] + v[2]*cs;
+
+			poly.push_back(glm::vec3(x,y,z));
 		}
+		if (data->areas[i] == RC_WALKABLE_AREA) {
+			debugMesh->drawConvexPolygon(poly,color[0][data->regs[i]],
+										color[1][data->regs[i]],
+										color[2][data->regs[i]],1);
+		}
+		else if (data->areas[i] == RC_NULL_AREA) {
+			debugMesh->drawConvexPolygon(poly,0,0,0,1);
+		}
+
 	}
 }
 

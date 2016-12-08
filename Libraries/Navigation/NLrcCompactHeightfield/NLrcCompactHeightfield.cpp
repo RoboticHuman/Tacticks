@@ -24,25 +24,23 @@ bool NLrcCompactHeightfield::init()
 	int walkableHeight = dynamic_cast<PassObjectInt*>(heightFieldNav->getData("walkableHeight", {})[0])->getValue();
 	int walkableClimb = dynamic_cast<PassObjectInt*>(heightFieldNav->getData("walkableClimb", {})[0])->getValue();
 
-	cout << endl << endl << endl;
-	cout << heightField->width << endl;
-	cout << heightField->height << endl;
-	cout << heightField->cs << endl;
-	cout << heightField->ch << endl;
-	cout << endl << endl << endl;
-
 	rcContext ctx;
 
 	data = rcAllocCompactHeightfield();
 
-	if(!rcBuildCompactHeightfield(&ctx, walkableHeight, walkableClimb, *heightField, *data)) return false;
-	if(!rcErodeWalkableArea (&ctx, radius, *data)) return false;
-	if(!rcBuildDistanceField (&ctx, *data)) return false;
+	if(!rcBuildCompactHeightfield(&ctx, walkableHeight, walkableClimb, *heightField, *data)) 
+		return false;
+	if(!rcErodeWalkableArea (&ctx, radius, *data)) 
+		return false;
+	if(!rcBuildDistanceField (&ctx, *data)) 
+		return false;
 	if(useMonotone){
-		if(!rcBuildRegionsMonotone (&ctx,*data, borderSize, minRegionArea, mergeRegionArea)) return false;
+		if(!rcBuildRegionsMonotone (&ctx,*data, borderSize, minRegionArea, mergeRegionArea)) 
+			return false;
 	}
 	else{
-		if (!rcBuildRegions (&ctx, *data, borderSize, minRegionArea, mergeRegionArea)) return false;
+		if (!rcBuildRegions (&ctx, *data, borderSize, minRegionArea, mergeRegionArea)) 
+			return false;
 	}
 
 	constructDebugMesh();
