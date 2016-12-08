@@ -23,7 +23,7 @@ public:
 	virtual ~AbstractNavigation() = default;
 	virtual bool init() = 0;
 	virtual std::vector<PassObject*> getData(std::string dataName, std::vector<PassObject*> args) = 0;
-	virtual std::vector<void*> getRawData() = 0;
+	virtual std::vector<void*> getRawData();
 	virtual void constructDebugMesh();
 };
 

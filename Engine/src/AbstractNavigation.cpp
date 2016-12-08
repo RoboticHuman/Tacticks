@@ -7,3 +7,4 @@ void AbstractNavigation::setParameters(const std::vector<PassObject*>& args){dir
 bool AbstractNavigation::isDirty(){return dirty;}
 void AbstractNavigation::clearDirty(){dirty = false;}
 void AbstractNavigation::constructDebugMesh(){}
+std::vector<void*> AbstractNavigation::getRawData(){return {nullptr};}
