@@ -224,7 +224,7 @@ void Core::start()
 				if (drawableAgents[i].getAgentID() == p.first)
 					drawableAgents[i].getAgentModel().setPosition(pos->getValue());
 			}
-		} 
+		}
 
 		while(SDL_PollEvent(&event)){	//Handling events
 			coreHUD.injectEvent(event);
@@ -260,7 +260,7 @@ void Core::start()
 									agentPos->setValue(pos);
 									agentTarget->setValue(pos + vec3(0,100,0));
 									coreHUD.addAgenthud(agentID);
-									drawableAgents.push_back(DrawableAgent("EditorAssets/models/AgentCylinder.obj",agentID));
+									drawableAgents.push_back(DrawableAgent("EditorAssets/models/Yoda/Joda.obj",agentID));
 									drawableAgents.back().getAgentModel().setPosition(pos);
 								}
 							}
