@@ -47,17 +47,21 @@ void Core::loadMesh(string fpath, bool resetCam){
 
 	pipeline.addNavigationLibrary("NLrcHeightfield")->getNav()->setParameters(hfParams);
 
+
+	int temp = 0;
 	vector<PassObject*> chfParams;
+
 	chfParams.push_back(new PassObjectInt(ceilf(agentRadius / cs)));
 	chfParams.push_back(new PassObjectInt(0));
+
 	chfParams.push_back(new PassObjectInt(minRegionSize*minRegionSize));
 	chfParams.push_back(new PassObjectInt(mergedRegionSize*mergedRegionSize));
 	chfParams.push_back(new PassObjectBool(false));
-	pipeline.addNavigationLibrary("NLrcCompactHeightfield")->getNav()->setParameters(chfParams);
 
+	pipeline.addNavigationLibrary("NLrcCompactHeightfield")->getNav()->setParameters(chfParams);
 	pipeline.compile();
 	dRenderer.update();
-	dRenderer.bDrawDebugMeshes[0] = true;
+	dRenderer.bDrawDebugMeshes[1] = true;
 }
 
 void Core::preLoop()

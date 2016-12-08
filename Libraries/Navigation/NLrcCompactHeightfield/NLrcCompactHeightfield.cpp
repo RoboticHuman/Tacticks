@@ -24,8 +24,15 @@ bool NLrcCompactHeightfield::init()
 	int walkableHeight = dynamic_cast<PassObjectInt*>(hieghtFieldNav->getData("walkableHeight", {})[0])->getValue();
 	int walkableClimb = dynamic_cast<PassObjectInt*>(hieghtFieldNav->getData("walkableClimb", {})[0])->getValue();
 
+	cout << endl << endl << endl;
+	cout << heightField->width << endl;
+	cout << heightField->height << endl;
+	cout << heightField->cs << endl;
+	cout << heightField->ch << endl;
+	cout << endl << endl << endl;
 
 	rcContext ctx;
+
 	data = rcAllocCompactHeightfield();
 
 	if(!rcBuildCompactHeightfield(&ctx, walkableHeight, walkableClimb, *heightField, *data)) return false;
@@ -39,6 +46,7 @@ bool NLrcCompactHeightfield::init()
 	}
 
 	constructDebugMesh();
+	clearDirty();
 	return true;
 }
 vector<PassObject*> NLrcCompactHeightfield::getData(string, vector<PassObject*>){return {};}
@@ -68,6 +76,7 @@ void NLrcCompactHeightfield::constructDebugMesh()
         color[2][i] = (rand()%1000)/1000.0;
     }
 
+
 	for (int y = 0; y < data->height; ++y)
 	{
 		for (int x = 0; x < data->width; ++x)
@@ -95,8 +104,6 @@ void NLrcCompactHeightfield::constructDebugMesh()
                 else {
                     debugMesh->drawConvexPolygon(grid,0,0,0,1);
                 }
-
-
 			}
 		}
 	}

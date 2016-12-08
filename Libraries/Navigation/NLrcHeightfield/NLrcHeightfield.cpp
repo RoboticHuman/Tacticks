@@ -28,7 +28,6 @@ bool NLrcHeightfield::init()
 	float cs = dynamic_cast<PassObjectFloat*>(args[3])->getValue();
 	float ch = dynamic_cast<PassObjectFloat*>(args[4])->getValue();
 	int flagMergeThr = dynamic_cast<PassObjectInt*>(args[5])->getValue();
-
 	float bmin[3];
 	float bmax[3];
 	if(args.size() == 8){
@@ -52,12 +51,13 @@ bool NLrcHeightfield::init()
     rcFilterWalkableLowHeightSpans(&ctx, walkableHeight, *data);
 	delete areas;
     constructDebugMesh();
+	clearDirty();
 	return true;
 }
 vector<PassObject*> NLrcHeightfield::getData(string dataName, vector<PassObject*> args)
 {
 	if(isDirty()){
-		if(data) rcFreeHeightField(data);
+		if(data != nullptr) rcFreeHeightField(data);
 		data = nullptr;
 		init();
 	}
@@ -68,7 +68,7 @@ vector<PassObject*> NLrcHeightfield::getData(string dataName, vector<PassObject*
 vector<void*> NLrcHeightfield::getRawData()
 {
 	if(isDirty()){
-		if(data) rcFreeHeightField(data);
+		if(data != nullptr) rcFreeHeightField(data);
 		data = nullptr;
 		init();
 	}

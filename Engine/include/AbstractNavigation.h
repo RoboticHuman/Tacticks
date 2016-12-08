@@ -10,7 +10,7 @@ class World;
 class AbstractNavigation
 {
 private:
-	bool dirty=true;
+	bool dirty;
 protected:
 	std::vector<PassObject*> args;
 	const World* world;
