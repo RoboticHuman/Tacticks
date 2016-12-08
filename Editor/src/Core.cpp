@@ -63,9 +63,16 @@ void Core::loadMesh(string fpath, bool resetCam){
 	vector<PassObject*> polyMeshParams;
 	polyMeshParams.push_back(new PassObjectInt(6));
 	pipeline.addNavigationLibrary("NLrcPolyMesh")->getNav()->setParameters(polyMeshParams);
+
+	vector<PassObject*> polyMeshDetailParams;
+	float detailSampleDist =6;
+	polyMeshDetailParams.push_back(new PassObjectFloat(detailSampleDist < 0.9f ? 0 : cs* detailSampleDist)); //Sample Distance
+	polyMeshDetailParams.push_back(new PassObjectFloat(1*ch)); //Max Sample Error
+	pipeline.addNavigationLibrary("NLrcPolyMeshDetail")->getNav()->setParameters(polyMeshDetailParams);
+
 	pipeline.compile();
 	dRenderer.update();
-	dRenderer.bDrawDebugMeshes[2] = true;
+	dRenderer.bDrawDebugMeshes[3] = true;
 }
 
 void Core::preLoop()

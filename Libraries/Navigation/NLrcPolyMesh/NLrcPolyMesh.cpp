@@ -14,10 +14,10 @@ bool NLrcPolyMesh::init()
 {
 	const int nvp= dynamic_cast<PassObjectInt*>(args[0])->getValue();
     AbstractNavigation* contoursetNav = NavigationFactory::getNav("NLrcContourSet").getNav();
-    rcContourSet* rcCompactHeightfieldData =  static_cast<rcContourSet*>(contoursetNav->getRawData()[0]);
+    rcContourSet* rcContourData =  static_cast<rcContourSet*>(contoursetNav->getRawData()[0]);
     rcContext ctx;
     data = rcAllocPolyMesh();
-    if (!rcBuildPolyMesh (&ctx,*rcCompactHeightfieldData, nvp, *data)) return false;
+    if (!rcBuildPolyMesh (&ctx,*rcContourData, nvp, *data)) return false;
 	constructDebugMesh();
 	return true;
 }
