@@ -63,10 +63,7 @@ public:
 	 */
 	bool shouldCoreMove() const;
 	void addAgenthud(int);
-	void addBoolhud(std::string);
-	void addInthud(std::string);
-	void addFloathud(std::string);
-	void addDropdownhud(std::string);
+	void addAttributetoHud(std::string);
 	void addNewForce(std::string);
 	void addNewMilestone(std::string);
 };

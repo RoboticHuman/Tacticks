@@ -40,10 +40,7 @@ private:	//callbacks
 public:		//JS Method Calls
 	void JSCallExamples(std::string);
 	void addAgent(int);
-	void addCheckbox(std::string);
-	void addInt(std::string);
-	void addFloat(std::string);
-	void addDropbox(std::string);
+	void addAttrtoHud(std::string);
 	void addNewMilestone(std::string);
 	void addNewForce(std::string);
 

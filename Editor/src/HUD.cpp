@@ -360,17 +360,8 @@ void HUD::addAgenthud(int agentID){
 	js_handler->addAgent(agentID);
 }
 
-void HUD::addBoolhud(std::string elementText){
-	js_handler->addCheckbox(elementText);
-}
-void HUD::addInthud(std::string elementText){
-	js_handler->addInt(elementText);
-}
-void HUD::addFloathud(std::string elementText){
-	js_handler->addFloat(elementText);
-}
-void HUD::addDropdownhud(std::string elementText){
-	js_handler->addDropbox(elementText);
+void HUD::addAttributetoHud(std::string elementText){
+	js_handler->addAttrtoHud(elementText);
 }
 void HUD::addNewForce(std::string ForceModule){
 	js_handler->addNewForce(ForceModule);

@@ -121,26 +121,11 @@ void JSHandler::addAgent(int agentID){
 	args.Push(WSLit(agent.c_str()));
 	mainObject.Invoke(WSLit("addAgent"), args);
 }
-void JSHandler::addCheckbox(string elementText){
-	JSArray args;
-	args.Push(WSLit(elementText.c_str()));
-	mainObject.Invoke(WSLit("addcheckbox"), args);
-}
-void JSHandler::addInt(string elementText){
-	JSArray args;
-	args.Push(WSLit(elementText.c_str()));
-	mainObject.Invoke(WSLit("addint"), args);
-}
-void JSHandler::addFloat(string elementText){
 
+void JSHandler::addAttrtoHud(string elementText){
 	JSArray args;
 	args.Push(WSLit(elementText.c_str()));
-	mainObject.Invoke(WSLit("addfloat"), args);
-}
-void JSHandler::addDropbox(string elementText){
-	JSArray args;
-	args.Push(WSLit(elementText.c_str()));
-	mainObject.Invoke(WSLit("adddropbox"), args);
+	mainObject.Invoke(WSLit("addAttrtoHud"), args);
 }
 JSValue JSHandler::getDefaultPath(JSArray args)
 {

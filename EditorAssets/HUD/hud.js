@@ -46,31 +46,13 @@ $("body").onload=function(){
     }
   };
 
-  function addcheckbox(inputtext){
-     var attr = inputtext
+  function addAttrtoHud(inputtext){
+     var attr = inputtext;
+     console.log("inputtext");
      if(attr.length){
          $('<li />', {html: attr}).appendTo('ul.AgentAttributes')
      }
    };
-   function addint(inputtext){
-      var attr = inputtext
-      if(attr.length){
-          $('<li />', {html: attr}).appendTo('ul.AgentAttributes')
-      }
-    };
-    function addfloat(inputtext){
-       var attr = inputtext;
-       if(inputtext.length){
-           $('<li />', {html: inputtext}).appendTo('ul.AgentAttributes')
-       }
-     };
-     function adddropbox(inputtext){
-        var attr = inputtext
-        if(attr.length){
-            $('<li />', {html: attr}).appendTo('ul.AgentAttributes')
-        }
-      };
-
 /* Placing/Editing agents toggle button */
  $(document).on('click', '.toggle-button', function() {
      $(this).toggleClass('toggle-button-selected');

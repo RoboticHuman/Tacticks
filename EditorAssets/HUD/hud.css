@@ -34,6 +34,14 @@ input[type="text"]:focus {
   border: none;
   margin-bottom: 2px;
 }
+.vec3textbox {
+  width: 50px;
+  height: 20px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  color: #333;
+}
 /* Editor Coloumns*/
 #agentsandgroups {
     color: white;

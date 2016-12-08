@@ -269,7 +269,7 @@ void Core::getagentAttrbyID(int agentID)
 							elementText.append("false>");}
 					elementText.append(temp->getName());
 					elementText.append("<br>");
-					coreHUD.addBoolhud(elementText);
+					coreHUD.addAttributetoHud(elementText);
 			}
 			else if (dynamic_cast<const AgentAttributeEnum*>(agentattr)) {
 					const AgentAttributeEnum* temp = dynamic_cast<const AgentAttributeEnum*>(agentattr);
@@ -280,7 +280,7 @@ void Core::getagentAttrbyID(int agentID)
 						elementText.append(possibleValues.at(i));
 						elementText.append("</a>");
 					}
-					coreHUD.addDropdownhud(elementText);
+					coreHUD.addAttributetoHud(elementText);
 			}
 			else if (dynamic_cast<const AgentAttributeFloat*>(agentattr)) {\
 					const AgentAttributeFloat* temp = dynamic_cast<const AgentAttributeFloat*>(agentattr);\
@@ -292,7 +292,7 @@ void Core::getagentAttrbyID(int agentID)
 					elementText.append("\" max=\"");
 					elementText.append(to_string(temp->getMaxValue()));
 					elementText.append("\" />");
-					coreHUD.addFloathud(elementText);
+					coreHUD.addAttributetoHud(elementText);
 			}
 			else if (dynamic_cast<const AgentAttributeInt*>(agentattr)) {
 					const AgentAttributeInt* temp = dynamic_cast<const AgentAttributeInt*>(agentattr);
@@ -304,19 +304,19 @@ void Core::getagentAttrbyID(int agentID)
 					elementText.append("\" max=\"");
 					elementText.append(to_string(temp->getMaxValue()));
 					elementText.append("\" />");
-					coreHUD.addInthud(elementText);
+					coreHUD.addAttributetoHud(elementText);
 			}
 				else if (dynamic_cast<const AgentAttributeVec3*>(agentattr)) {
 				const AgentAttributeVec3* temp = dynamic_cast<const AgentAttributeVec3*>(agentattr);
 				elementText = temp->getName();
-				elementText.append("<input type=\"number\" value=");
+				elementText.append("<br><input type=\"number\" class=\"vec3textbox\" value=");
 				elementText.append(std::to_string((temp->getValue())[0]));
-				elementText.append(" ><input type=\"number\" value=");
+				elementText.append(" ><input type=\"number\" class=\"vec3textbox\"value=");
 				elementText.append(std::to_string((temp->getValue())[1]));
-				elementText.append(" ><input type=\"number\" value=");
+				elementText.append(" ><input type=\"number\" class=\"vec3textbox\"value=");
 				elementText.append(std::to_string((temp->getValue())[2]));
 				elementText.append(" > <br>");
-				coreHUD.addFloathud(elementText);
+				coreHUD.addAttributetoHud(elementText);
 				}
 	}
 }
