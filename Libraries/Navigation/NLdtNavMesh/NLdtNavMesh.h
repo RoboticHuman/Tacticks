@@ -13,13 +13,17 @@
 
 ///  @brief A wrapper for detour that create the constructed polymesh from the outputs of recast.
 class NLdtNavMesh : public AbstractNavigation{
-      /// Actual data of the navigation library
-      dtNavMesh* data;
+    /// Actual data of the navigation library
+    dtNavMesh* data;
+	std::shared_ptr<DebugMesh> debugMesh;
+
+    void constructDebugMesh();
+	void duDebugDrawNavMeshPoly(dtPolyRef ref);
 public:
     NLdtNavMesh(const World* world);
     virtual ~NLdtNavMesh();
 	virtual bool init();
 	virtual std::vector<PassObject*> getData(std::string dataName, std::vector<PassObject*> args);
 	virtual std::vector<void*> getRawData();
-	virtual void constructDebugMesh();
+
 };

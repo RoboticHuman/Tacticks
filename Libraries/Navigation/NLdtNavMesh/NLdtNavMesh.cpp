@@ -6,6 +6,7 @@
 #include <Tacticks/PassObjectFloat.h>
 #include <Tacticks/PassObjectInt.h>
 #include <Tacticks/PassObjectBool.h>
+#include <iostream>
 using namespace std;
 
 NLdtNavMesh::NLdtNavMesh(const World* world) : AbstractNavigation(world){data = nullptr;}
@@ -110,8 +111,99 @@ vector<void*> NLdtNavMesh::getRawData()
 	return {data};
 }
 
+
+
+
+
+
+
+
+void NLdtNavMesh::duDebugDrawNavMeshPoly(dtPolyRef ref)
+{
+    const dtMeshTile* tile = 0;
+    const dtPoly* poly = 0;
+
+    cout << "------PAAAAASSED 2" << endl;
+
+    if (dtStatusFailed(data->getTileAndPolyByRef(ref, &tile, &poly)))
+        return;
+
+    cout << "------PAAAAASSED 1" << endl;
+        
+    const unsigned int ip = (unsigned int)(poly - tile->polys);
+
+    if (poly->getType() == DT_POLYTYPE_OFFMESH_CONNECTION)
+    {
+        return;
+    }
+    else
+    {
+        cout << "------PAAAAASSED 2" << endl;
+
+        const dtPolyDetail* pd = &tile->detailMeshes[ip];
+
+        glm::vec3 color = glm::vec3((rand()%1000)/1000.0,(rand()%1000)/1000.0,(rand()%1000)/1000.0);
+        
+        for (int i = 0; i < pd->triCount; ++i)
+        {
+            const unsigned char* t = &tile->detailTris[(pd->triBase+i)*4];
+            vector<glm::vec3> polygon;
+
+            for (int j = 0; j < 3; ++j)
+            {
+                if (t[j] < poly->vertCount) {
+                    polygon.push_back(glm::vec3(tile->verts[poly->verts[t[j]]*3], tile->verts[poly->verts[t[j]]*3+1], tile->verts[poly->verts[t[j]]*3+1]));
+                }
+                else {
+                    polygon.push_back(glm::vec3(tile->detailVerts[(pd->vertBase+t[j]-poly->vertCount)*3], 
+                        tile->detailVerts[(pd->vertBase+t[j]-poly->vertCount)*3+1], 
+                        tile->detailVerts[(pd->vertBase+t[j]-poly->vertCount)*3+2]));
+                }
+            }                
+            debugMesh->drawConvexPolygon(polygon,color[0],color[1],color[2],1);
+
+        }
+    }
+}
+
+
+
+
+
+
 void NLdtNavMesh::constructDebugMesh()
 {
+    debugMesh = DebugFactory::createDebugMesh("dtNavMesh");
+
+
+    cout << "--------DREW" << endl;
+    cout << data->getMaxTiles() << endl;
+
+    for (int i = 0; i < data->getMaxTiles(); i++)
+    {
+
+        cout << "--------DREW 2" << endl;
+
+        const dtNavMesh* temp = data;
+        const dtMeshTile* tile = temp->getTile(i);
+        if (!tile->header) continue;
+
+        cout << "--------DREW 3" << endl;
+
+        dtPolyRef base = data->getPolyRefBase(tile);
+
+        for (int j = 0; j < tile->header->polyCount; j++)
+        {
+            const dtPoly* p = &tile->polys[j];
+            
+
+            duDebugDrawNavMeshPoly(base|(dtPolyRef)j);
+        }
+    }
+
+
+    
+    //debugMesh->drawConvexPolygon(       ,color[0],color[1],color[2],1);
 
 }
 

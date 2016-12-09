@@ -1,6 +1,5 @@
 #include "Mesh.h"
 #include <algorithm>
-#include <iostream>
 #include <glm/gtc/type_ptr.hpp>
 #define GLM_SWIZZLE_XYZW
 #include <glm/glm.hpp>
@@ -82,7 +81,6 @@ bool Mesh::raycast(const vec3& start, const vec3& end, float& tmin, glm::mat4& g
 		Triangle tri(vertices[indices[i-2]], vertices[indices[i-1]], vertices[indices[i]]);
 		tri.updateVertices(globalTransform);
 		if(tri.getIntersect(start, end, t)){
-			cout<<t<<endl;
 			tmin = std::min(tmin, t);
 			hit = true;
 		}
