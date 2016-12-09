@@ -332,6 +332,7 @@ void Core::loadBehaviorModules(){
 }
 
 void Core::addFtoPipeline(std::string Force){
+	cout<<Force<<endl;
 	pipeline.addForcesModule(Force);
 }
 void Core::addMtoPipeline(std::string Milestone){

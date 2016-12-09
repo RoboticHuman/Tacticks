@@ -1,7 +1,8 @@
 
 $("body").onload=function(){
-  document.getElementById('MyTextBox').value = getDefaultPath();
   loadBehaviorModules(true);
+  document.getElementById('MyTextBox').value = getDefaultPath();
+
 }
 
 /*/////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
@@ -48,7 +49,6 @@ $("body").onload=function(){
 
   function addAttrtoHud(inputtext){
      var attr = inputtext;
-     console.log("inputtext");
      if(attr.length){
          $('<li />', {html: attr}).appendTo('ul.AgentAttributes')
      }
@@ -77,37 +77,33 @@ function getAttr(currentagent){
 
 /*Pipeline*/
 function addNewForce(forceName){
-  var forceModule = forceName + '<button type="button" onClick="addForcetoPipeline(this.id)" id="'+forceName+ '" class="forcemod">'+'+'+'</button>';
+
+  var forceModule = forceName + '<input type=\"button\" onClick="addForcetoPipeline(this.id)" id="'+forceName+ '" class="forcemod\" value=\"+\" > ';
   if(forceModule.length){
     $('<li />', {html: forceModule}).appendTo('ul.AvailableBehMod')
   }
 }
 
 function addNewMilestone(milestoneName){
-  var milestoneModule = milestoneName + '<button type="button" onClick="addMilestonetoPipeline(this.id)" id="'+milestoneName+ '" class="milestonemod">'+'+'+'</button>';
+  var milestoneModule = milestoneName + '<input type=\"button\" onClick="addMilestonetoPipeline(this.id)" id="'+milestoneName+ '" class="milestonemod" value=\"+\">';
   if(milestoneModule.length){
     $('<li />', {html: milestoneModule}).appendTo('ul.AvailableBehMod')
   }
 }
 
 function addForcetoPipeline(behName){
-  elementText = behName + '<button type="button" value="-">';
-  addForcetoPipeline(behName);
-  if(behName.length){
-    $('<li />', {html: behName}).appendTo('ul.Forces');
+  var elementText = behName + '<input type=\"button\" value="-" onClick="$(this).parent().remove();">';
+  //addForcetoPipeline(behName);
+  if(elementText.length){
+    $('<li />', {html: elementText}).appendTo('ul.Forces');
   }
 }
 
 function addMilestonetoPipeline(behName){
-  elementText = behName + '<button type="button" value="-">';
-  addForcetoPipeline(behName);
-  if(behName.length){
-    $('<li />', {html: behName}).appendTo('ul.Milestones');
-  } else {
-    addMilestonetoPipeline(behName);
-    if(behName.length){
-      $('<li />', {html: behName}).appendTo('ul.Milestones');
-    }
+  var elementText = behName + '<button type="button" value="-">';
+  //addMilestonetoPipeline(behName);
+  if(elementText.length){
+    $('<li />', {html: elementText}).appendTo('ul.Milestones');
   }
 }
 

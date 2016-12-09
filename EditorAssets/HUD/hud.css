@@ -72,7 +72,7 @@ input[type="text"]:focus {
 }
 .list-group-item {
   background-color: rgba(0,0,0,0.8);
-  height: 50px;
+  /*height: 50px;*/
   border: none;
 }
 h3 {

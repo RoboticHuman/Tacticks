@@ -87,12 +87,14 @@ JSValue JSHandler::callbackWithReturn(string methodName, JSArray args)
 void JSHandler::loadMesh(JSArray args)
 {
 	coreInstance->loadMesh(ToString(args.At(0).ToString()).c_str(), true);
+
 }
 void JSHandler::togglePlacingAgents(JSArray args)
 {
 	coreInstance->setplaceAgents(args.At(0).ToBoolean());
 }
 void JSHandler::addForcetoPipeline(JSArray args){
+	cout<<"entered"<<endl;
 	coreInstance->addFtoPipeline(Awesomium::ToString(args.At(0).ToString()));
 }
 void JSHandler::addMilestonetoPipeline(JSArray args){
@@ -103,7 +105,7 @@ void JSHandler::getAttrforAgent(JSArray args)
 	coreInstance->getagentAttrbyID(args.At(0).ToInteger());
 }
 void JSHandler::loadBehaviorModules(JSArray args){
-		coreInstance->loadBehaviorModules();
+	coreInstance->loadBehaviorModules();
 }
 void JSHandler::addNewForce(string forceName){
 	JSArray args;

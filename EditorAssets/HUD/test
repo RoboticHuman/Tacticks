@@ -8,7 +8,7 @@
    <script src="hud.js"></script>
  </head>
 
- <body onload="document.getElementById('MyTextBox').value = getDefaultPath()">
+ <body onload="document.getElementById('MyTextBox').value = getDefaultPath();loadBehaviorModules(true);">
 
    <div class="navbar">
        <input type="button" value="Load Mesh" onclick="loadMesh(document.getElementById('MyTextBox').value)">
@@ -40,15 +40,12 @@
   <div id="forcesandmilestones" class="list-group">
     <div class="list-group-item">
       <h3>Pipeline</h3>
-      <ul class="AvailableBehMod" style="display:block"></ul>
     </div>
-
       <div class="list-group-item">
           <h3 onclick="javascript:toggle('Milestones')">Milestones</h3>
           <ul class="Milestones" style="display:block">  </ul>
       </div>
       <div class="list-group-item">
-
         <h3 onclick="javascript:toggle('Forces')">Forces</h3>
         <ul class="Forces" style="display:block"></ul>
       </div>
@@ -56,15 +53,7 @@
         <h3 onclick="javascript:toggle('AvailableBehaviorModules')">Behavior Modules</h3>
         <ul class="AvailableBehMod" style="display:block"></ul>
       </div>
-      <div class="list-group-item">
-          <h3 onclick="javascript:toggle('Milestones')">Milestones</h3>
-          <ul class="Milestones" style="display:block">  </ul>
-      </div>
-      <div class="list-group-item">
-
-        <h3 onclick="javascript:toggle('Forces')">Forces</h3>
-        <ul class="Forces" style="display:block"></ul>
-      </div>
+      
   </div>
 
  </body>
