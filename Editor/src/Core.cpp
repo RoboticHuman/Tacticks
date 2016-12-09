@@ -37,6 +37,7 @@ void Core::loadMesh(string fpath, bool resetCam){
 	float ch = 0.2;
 	float minRegionSize = 8;
 	float mergedRegionSize = 20;
+
 	vector<PassObject*> hfParams;
 	hfParams.push_back(new PassObjectInt(ceilf(agentHeight/ch)));
 	hfParams.push_back(new PassObjectInt(floorf(maxClimb/ch)));
@@ -44,7 +45,6 @@ void Core::loadMesh(string fpath, bool resetCam){
 	hfParams.push_back(new PassObjectFloat(cs));
 	hfParams.push_back(new PassObjectFloat(ch));
 	hfParams.push_back(new PassObjectInt(1));
-
 	pipeline.addNavigationLibrary("NLrcHeightfield")->getNav()->setParameters(hfParams);
 
 
@@ -80,11 +80,12 @@ void Core::loadMesh(string fpath, bool resetCam){
 	dtNavMeshParams.push_back(new PassObjectFloat(maxClimb));
 	pipeline.addNavigationLibrary("NLdtNavMesh")->getNav()->setParameters(dtNavMeshParams);
 
+	//dRenderer.bDrawDebugMeshes.back() = true;
+	pipeline.addForcesModule("SimpleMoveForward");
+	pipeline.addMilestonesModule("DetourQueries");
+
 	pipeline.compile();
 	dRenderer.update();
-	dRenderer.bDrawDebugMeshes.back() = true;
-
-	pipeline.addForcesModule("SimpleMoveForward");
 }
 
 void Core::preLoop()

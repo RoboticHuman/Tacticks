@@ -20,7 +20,7 @@ AbstractBehaviourModule* newBeh(BehaviourModuleData* behData)
 extern "C"
 BehaviourInfo declareDependencies()
 {
-	return {BehaviourInfo::Type::Force, {""}};
+	return {BehaviourInfo::Type::Force, {}};
 }
 
 SimpleMoveForward::SimpleMoveForward(BehaviourModuleData* behData) : ForcesBehaviourModule(behData){}
@@ -38,7 +38,7 @@ glm::vec3 SimpleMoveForward::simulateAgent(const Agent& agent)
 	if(target == nullptr) return glm::vec3(1,0,0);
 
 
-	
+
 	return glm::normalize(target->getValue() - pos->getValue());
 }
 vector<pair<int, glm::vec3> > SimpleMoveForward::simulateGroup(const AgentGroup& agentGroup)
@@ -48,4 +48,3 @@ vector<pair<int, glm::vec3> > SimpleMoveForward::simulateGroup(const AgentGroup&
 		res.push_back(make_pair(aID, simulateAgent(*behData->getAgentByID(aID))));
 	return res;
 }
-
