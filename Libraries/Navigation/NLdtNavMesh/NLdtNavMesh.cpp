@@ -67,7 +67,7 @@ bool NLdtNavMesh::init()
     params.cs = rcHeightfieldData->cs;
     params.buildBvTree = true;
     ////////////////////////////////////////////////////
-    
+
     //Building navmesh
     ////////////////////////////////////////////////////
     if (!dtCreateNavMeshData(&params, &navData, &navDataSize))
@@ -91,7 +91,7 @@ bool NLdtNavMesh::init()
         data = m_navMesh;
     }
     ////////////////////////////////////////////////////
-    
+    m_navMesh->init(navData,navDataSize,DT_TILE_FREE_DATA);
 
     constructDebugMesh();
     clearDirty();

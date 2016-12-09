@@ -80,12 +80,13 @@ void Core::loadMesh(string fpath, bool resetCam){
 	dtNavMeshParams.push_back(new PassObjectFloat(maxClimb));
 	pipeline.addNavigationLibrary("NLdtNavMesh")->getNav()->setParameters(dtNavMeshParams);
 
-	//dRenderer.bDrawDebugMeshes.back() = true;
+
 	pipeline.addForcesModule("SimpleMoveForward");
 	pipeline.addMilestonesModule("DetourQueries");
 
 	pipeline.compile();
 	dRenderer.update();
+	dRenderer.bDrawDebugMeshes.back() = true;
 }
 
 void Core::preLoop()
