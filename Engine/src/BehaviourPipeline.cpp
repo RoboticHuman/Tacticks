@@ -46,7 +46,6 @@ Behaviour* BehaviourPipeline::addForcesModule(string behName)
 	forcesPipeline.back().newBeh(&behData);
     return &forcesPipeline.back();
 }
-
 Behaviour* BehaviourPipeline::addMilestonesModule(string behName)
 {
 	milestonesPipeline.push_back(BehaviourModuleFactory::getBeh(behName, false));
@@ -55,7 +54,8 @@ Behaviour* BehaviourPipeline::addMilestonesModule(string behName)
 		milestonesPipeline.pop_back();
 		return nullptr;
 	}
-	forcesPipeline.back().newBeh(&behData);
+
+	milestonesPipeline.back().newBeh(&behData);
     return &milestonesPipeline.back();
 }
 

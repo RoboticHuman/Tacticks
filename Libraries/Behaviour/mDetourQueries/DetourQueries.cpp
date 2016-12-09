@@ -9,7 +9,6 @@
 #include "DetourQueries.h"
 #include <DetourNavMeshBuilder.h>
 #include <DetourCommon.h>
-#include <iostream>
 using namespace std;
 
 
@@ -37,7 +36,6 @@ bool DetourQueries::init()
 
 glm::vec3 DetourQueries::simulateAgent(const Agent& agent)
 {
-	cout << "THIS IS SPAAAAARTAAAAAAA" << endl;
 	const AgentAttributeVec3* pos = dynamic_cast<const AgentAttributeVec3*>(agent.getAttribute("Position"));
 	const AgentAttributeVec3* target = dynamic_cast<const AgentAttributeVec3*>(agent.getAttribute("Target"));
 

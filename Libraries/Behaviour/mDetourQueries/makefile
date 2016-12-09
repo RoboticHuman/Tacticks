@@ -7,7 +7,7 @@ LPath = .
 CompileFlags = -std=c++11 -fPIC
 LinkFlags = -shared
 Libs = -lTacticks
-Objects = DetourQueries.o
+Objects = $(addsuffix .o, $(basename $(wildcard *.cpp) $(wildcard ../../Detour/Source/*.cpp)))
 dtIPath = ../../Detour/Include
 
 ifeq ($(shell uname), Darwin)
