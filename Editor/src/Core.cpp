@@ -85,6 +85,8 @@ void Core::loadMesh(string fpath, bool resetCam){
 	dRenderer.bDrawDebugMeshes.back() = true;
 
 	pipeline.addForcesModule("SimpleMoveForward");
+	cout << "THIS ADDRESSSSSS: " << pipeline.addMilestonesModule("DetourQueries") << endl;
+
 }
 
 void Core::preLoop()
