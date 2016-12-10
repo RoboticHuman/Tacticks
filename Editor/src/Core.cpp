@@ -221,10 +221,8 @@ void Core::start()
 		vector<pair<int, vec3> > newPos = pipeline.simulate();
 		for(auto& p : newPos){
 			AgentAttributeVec3* pos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(p.first)->getAttribute("Position"));
-			vec3 tempPos,vec3origPos = pos->getValue();
-			if (glm::length(p.second)==0) tempPos=glm::vec3(0,0,0);
-			else tempPos = glm::normalize(p.second)*3.f*dt;
-			pos->setValue(pos->getValue() + tempPos);
+			
+			pos->setValue(pos->getValue() + p.second);
 			for (int i=0; i<drawableAgents.size(); i++) {
 				if (drawableAgents[i].getAgentID() == p.first)
 					{
