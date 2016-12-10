@@ -18,7 +18,8 @@
 #include <Tacticks/AgentAttributeFloat.h>
 #include <Tacticks/AgentAttributeInt.h>
 #include <Tacticks/AgentAttributeVec3.h>
-
+#include <glm/geometric.hpp>
+#include <glm/gtx/vector_angle.hpp>
 using namespace std;
 using namespace glm;
 
@@ -81,7 +82,7 @@ void Core::loadMesh(string fpath, bool resetCam){
 	pipeline.addNavigationLibrary("NLdtNavMesh")->getNav()->setParameters(dtNavMeshParams);
 
 
-	pipeline.addForcesModule("SimpleMoveForward");
+	//pipeline.addForcesModule("SimpleMoveForward");
 	pipeline.addMilestonesModule("DetourQueries");
 
 	pipeline.compile();
@@ -217,14 +218,18 @@ void Core::start()
 			if (ms >= 0) SDL_Delay(ms);
 		}
 
-		placeAgents = true;
 		vector<pair<int, vec3> > newPos = pipeline.simulate();
 		for(auto& p : newPos){
 			AgentAttributeVec3* pos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(p.first)->getAttribute("Position"));
-			pos->setValue(pos->getValue() + p.second * dt * 0.01f);
+			vec3 tempPos,vec3origPos = pos->getValue();
+			if (glm::length(p.second)==0) tempPos=glm::vec3(0,0,0);
+			else tempPos = glm::normalize(p.second)*3.f*dt;
+			pos->setValue(pos->getValue() + tempPos);
 			for (int i=0; i<drawableAgents.size(); i++) {
 				if (drawableAgents[i].getAgentID() == p.first)
-					drawableAgents[i].getAgentModel().setPosition(pos->getValue());
+					{
+						drawableAgents[i].getAgentModel().setPosition(pos->getValue());
+					}
 			}
 		}
 
@@ -246,6 +251,22 @@ void Core::start()
 						case SDL_BUTTON_RIGHT:
 							shouldRotateView = true;
 							origCameraAngle=cameraAngle;
+							//TODO: CLEAN THIS SHITHOLE DOWN HERE WHICH PLACES THE TARGETS ON THE CURRENTLY SELECTED AGENT
+							{
+								vec3 ray[2];
+								ray[0] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 0.0));
+								ray[1] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 1.0));
+								vec3 pos;
+								float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
+								if(drawableModel&&drawableModel->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
+									//TODO: FIX GETAGENTBYID IF ID IS WRONG.
+									Agent* currAgent = pipeline.getAgentByID(currentSelectedAgent);
+									if(currAgent) {
+										AgentAttributeVec3* agentTarget = dynamic_cast<AgentAttributeVec3*>(currAgent->getAttribute("Target"));
+										agentTarget->setValue(pos);
+									}
+								}
+							}
 						break;
 						case SDL_BUTTON_LEFT:
 							vec3 ray[2];
@@ -260,7 +281,7 @@ void Core::start()
 									AgentAttributeVec3* agentPos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agentID)->getAttribute("Position"));
 									AgentAttributeVec3* agentTarget = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agentID)->getAttribute("Target"));
 									agentPos->setValue(pos);
-									agentTarget->setValue(pos + vec3(0,100,0));
+									agentTarget->setValue(pos);
 									coreHUD.addAgenthud(agentID);
 									drawableAgents.push_back(DrawableAgent("EditorAssets/models/Yoda/Joda.obj",agentID));
 									drawableAgents.back().getAgentModel().setPosition(pos);
@@ -269,7 +290,10 @@ void Core::start()
 							else
 							{
 								for(auto& drawableAgent : drawableAgents){
-									if(drawableAgent.getAgentModel().raycast(ray[0],ray[1],pos,NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)) cout<<drawableAgent.getAgentID()<<endl;
+									if(drawableAgent.getAgentModel().raycast(ray[0],ray[1],pos,NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)) {
+										cout<<drawableAgent.getAgentID()<<endl;
+										currentSelectedAgent=drawableAgent.getAgentID();
+									}
 								}
 							}
 						break;
@@ -310,6 +334,7 @@ void Core::start()
 			if(keyState[SDL_SCANCODE_S]) cam.moveForward(-moveSpeed * dt);
 			if(keyState[SDL_SCANCODE_D]) cam.moveRight(moveSpeed * dt);
 			if(keyState[SDL_SCANCODE_A]) cam.moveRight(-moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_Q]) placeAgents=!placeAgents;
 			if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 50.f; else moveSpeed=10.0f;
 			cam.updateCameraAngle(glm::radians(cameraAngle.y)* dt , glm::radians(cameraAngle.x) * dt);
 		}

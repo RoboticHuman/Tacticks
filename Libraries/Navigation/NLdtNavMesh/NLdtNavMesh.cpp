@@ -30,7 +30,14 @@ bool NLdtNavMesh::init()
 
     //Initializing dtNavMeshCreateParams
     ////////////////////////////////////////////////////
-
+    for (int i = 0; i < m_pmesh->npolys; ++i)
+     {
+        if (m_pmesh->areas[i] == RC_WALKABLE_AREA)
+        {
+           m_pmesh->areas[i] = 0;
+           m_pmesh->flags[i] = 0x01;
+        }
+     }
     memset(&params, 0, sizeof(params));
     params.verts = m_pmesh->verts;
     params.vertCount = m_pmesh->nverts;
@@ -68,7 +75,7 @@ bool NLdtNavMesh::init()
     params.cs = rcHeightfieldData->cs;
     params.buildBvTree = true;
     ////////////////////////////////////////////////////
-    
+
     //Building navmesh
     ////////////////////////////////////////////////////
     if (!dtCreateNavMeshData(&params, &navData, &navDataSize))
@@ -147,8 +154,8 @@ void NLdtNavMesh::constructDebugMesh()
                         polygon.push_back(glm::vec3(tile->verts[p->verts[t[k]]*3], tile->verts[p->verts[t[k]]*3+1], tile->verts[p->verts[t[k]]*3+2]));
                     }
                     else {
-                        polygon.push_back(glm::vec3(tile->detailVerts[(pd->vertBase+t[k]-p->vertCount)*3], 
-                                tile->detailVerts[(pd->vertBase+t[k]-p->vertCount)*3+1], 
+                        polygon.push_back(glm::vec3(tile->detailVerts[(pd->vertBase+t[k]-p->vertCount)*3],
+                                tile->detailVerts[(pd->vertBase+t[k]-p->vertCount)*3+1],
                                 tile->detailVerts[(pd->vertBase+t[k]-p->vertCount)*3+2]));
                     }
                 }

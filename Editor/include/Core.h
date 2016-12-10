@@ -42,6 +42,7 @@ private:
 	HUD coreHUD;
 	DebugMeshRenderer dRenderer;
 	GLuint transformLocation;
+	int currentSelectedAgent;
 
 	/**
 	 * @brief      This functions is called exactly once just after initializing the window and right before the main loop.
