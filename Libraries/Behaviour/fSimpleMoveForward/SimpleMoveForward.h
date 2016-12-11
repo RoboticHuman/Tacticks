@@ -14,6 +14,9 @@
 
 class SimpleMoveForward : public ForcesBehaviourModule
 {
+	float radius;
+	float calculateVectorScore(glm::vec3& testVector, glm::vec3& preferedVector, const Agent&agent);
+	bool calculateTau(const Agent& cur, glm::vec3& vTest, float rCur, const Agent& obj, glm::vec3& vObj, float rObj, float& tau);
 public:
 	SimpleMoveForward(BehaviourModuleData* behData);
 	virtual bool init() override;

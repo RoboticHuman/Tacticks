@@ -12,10 +12,12 @@
 #include <Tacticks/PassObjectInt.h>
 #include <Tacticks/PassObjectFloat.h>
 #include <Tacticks/PassObjectBool.h>
+#include <Tacticks/PassObjectVec3.h>
 #include <Tacticks/AbstractNavigation.h>
 #include <Tacticks/AgentAttributeBool.h>
 #include <Tacticks/AgentAttributeEnum.h>
 #include <Tacticks/AgentAttributeFloat.h>
+#include <Tacticks/AbstractBehaviourModule.h>
 #include <Tacticks/AgentAttributeInt.h>
 #include <Tacticks/AgentAttributeVec3.h>
 #include <glm/geometric.hpp>
@@ -81,8 +83,13 @@ void Core::loadMesh(string fpath, bool resetCam){
 	dtNavMeshParams.push_back(new PassObjectFloat(maxClimb));
 	pipeline.addNavigationLibrary("NLdtNavMesh")->getNav()->setParameters(dtNavMeshParams);
 
-
-	//pipeline.addForcesModule("SimpleMoveForward");
+	vector<PassObject*> collisionAvoidanceParams;
+	collisionAvoidanceParams.push_back(new PassObjectFloat(45.f));
+	collisionAvoidanceParams.push_back(new PassObjectInt(30));
+	collisionAvoidanceParams.push_back(new PassObjectVec3(glm::vec3(0,1,0)));
+	collisionAvoidanceParams.push_back(new PassObjectFloat(agentRadius));
+	collisionAvoidanceParams.push_back(new PassObjectFloat(0.01));
+	pipeline.addForcesModule("SimpleMoveForward")->getBeh()->setParameters(collisionAvoidanceParams);
 	pipeline.addMilestonesModule("DetourQueries");
 
 	pipeline.compile();
