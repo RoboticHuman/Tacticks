@@ -7,7 +7,7 @@ LPath = .
 CompileFlags = -std=c++11 -fPIC
 LinkFlags = -shared
 Libs = -lTacticks
-Objects = Behaviour.o
+Objects = $(addsuffix .o, $(basename $(wildcard *.cpp)))
 
 ifeq ($(shell uname), Darwin)
 	CompileFlags += -m32

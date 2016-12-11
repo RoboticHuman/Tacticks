@@ -10,7 +10,7 @@
 #include <glm/vec3.hpp>
 #include <glm/geometric.hpp>
 #include <glm/gtx/rotate_vector.hpp>
-#include "SimpleMoveForward.h"
+#include "RVO.h"
 using namespace std;
 using namespace glm;
 
@@ -18,7 +18,7 @@ using namespace glm;
 extern "C"
 AbstractBehaviourModule* newBeh(BehaviourModuleData* behData)
 {
-	return new SimpleMoveForward(behData);
+	return new RVO(behData);
 }
 
 
@@ -28,18 +28,19 @@ BehaviourInfo declareDependencies()
 	return {BehaviourInfo::Type::Force, {}};
 }
 
-SimpleMoveForward::SimpleMoveForward(BehaviourModuleData* behData) : ForcesBehaviourModule(behData){}
+RVO::RVO(BehaviourModuleData* behData) : ForcesBehaviourModule(behData){}
 
-bool SimpleMoveForward::init()
+bool RVO::init()
 {
 	radius = dynamic_cast<PassObjectFloat*>(args[3])->getValue();
 	clearDirty();
 	return true;
 }
-bool SimpleMoveForward::calculateTau(const Agent& cur, vec3& vTest, float rCur, const Agent& obj, vec3& vObj, float rObj, float& tau)
+bool RVO::calculateTau(const Agent& cur, vec3& vTest, float rCur, const Agent& obj, vec3& vObj, float rObj, float& tau)
 {
-	vec3 pCur = dynamic_cast<const AgentAttributeVec3*>(cur.getAttribute("Position"))->getValue();
-	vec3 pObj = dynamic_cast<const AgentAttributeVec3*>(obj.getAttribute("Position"))->getValue();
+	//RVO Daived Cherry Implementation ??? Not working
+	vec3 pCur = dynamic_cast<const AgentAttributeVec3*>(cur.getAttribute("Position"))->getValue(); //- curMeanPos;
+	vec3 pObj = dynamic_cast<const AgentAttributeVec3*>(obj.getAttribute("Position"))->getValue(); //- curMeanPos;
 
 	float len_vTest_vObj = glm::length(vTest - vObj);
 	float len_pCur_pObj = glm::length(pCur - pObj);
@@ -52,21 +53,16 @@ bool SimpleMoveForward::calculateTau(const Agent& cur, vec3& vTest, float rCur, 
 	float t2 = (-b - sqrt(b*b - 4 * a * c)) / (2 * a + 1e-9);
 
 	if(std::max(t1, t2) <= 0) return false;
-	cout << "Hmmm" << endl;
-
-	assert(a >= 0 && "a is freaking smaller than 0!");
-	if(std::min(t1, t2) > 0)
-		cout << "a " << a << " b " << b << " c " << c << " t1 " << t1 << " t2 " << t2 << endl;
 
 	//if(std::min(t1, t2) < 0 && std::max(t1, t2) > 0){
 	//	return 1e9;
-	t1 = std::max(t1, 0.0f);
-	t2 = std::max(t2, 0.0f);
-	tau = std::min(t1, t2);
+	if(t1 < 0) tau = t2;
+	else if(t2 < 0) tau = t1;
+	else tau = std::min(t1, t2);
 
 	return true;
 }
-float SimpleMoveForward::calculateVectorScore(glm::vec3& testVector, glm::vec3& preferedVelocity, const Agent& agent)
+float RVO::calculateVectorScore(glm::vec3& testVector, glm::vec3& preferedVelocity, const Agent& agent)
 {
 	float el3shama = dynamic_cast<PassObjectFloat*>(args[4])->getValue(); //i.e. el3'ashama
 	float tau = 1e9;
@@ -82,7 +78,7 @@ float SimpleMoveForward::calculateVectorScore(glm::vec3& testVector, glm::vec3& 
 	return score;
 	//Possible Improvment to have radius and el3'shama as an agent attribute
 }
-glm::vec3 SimpleMoveForward::simulateAgent(const Agent& agent)
+glm::vec3 RVO::simulateAgent(const Agent& agent)
 {
 	// const AgentAttributeVec3* pos = dynamic_cast<const AgentAttributeVec3*>(agent.getAttribute("Position"));
 	// const AgentAttributeVec3* target = dynamic_cast<const AgentAttributeVec3*>(agent.getAttribute("Target"));
@@ -92,6 +88,15 @@ glm::vec3 SimpleMoveForward::simulateAgent(const Agent& agent)
 	//
 	//
 	// return glm::normalize(target->getValue() - pos->getValue());
+	curMeanPos = vec3(0, 0, 0);
+	int agentCount = 0;
+	for(AgentIterator aIt = behData->beginAgent(); aIt != behData->endAgent(); aIt++){
+		curMeanPos = curMeanPos + dynamic_cast<const AgentAttributeVec3*>(aIt->getAttribute("Position"))->getValue();
+		agentCount++;
+	}
+	curMeanPos /= agentCount * 1.0f;
+
+
 	glm::vec3 preferedVelocity = behData->getTargetVelocityVector(&agent);
 	float rho = dynamic_cast<PassObjectFloat*>(args[0])->getValue();
 	int numberOfSamples = dynamic_cast<PassObjectInt*>(args[1])->getValue();
@@ -112,10 +117,9 @@ glm::vec3 SimpleMoveForward::simulateAgent(const Agent& agent)
 			res = sampleVector;
 		}
 	}
-	cout << "maxScore = " << maxScore << endl;
 	return res;
 }
-vector<pair<int, glm::vec3> > SimpleMoveForward::simulateGroup(const AgentGroup& agentGroup)
+vector<pair<int, glm::vec3> > RVO::simulateGroup(const AgentGroup& agentGroup)
 {
 	vector<pair<int, glm::vec3> > res;
 	for(const int aID : agentGroup.getAgentList())

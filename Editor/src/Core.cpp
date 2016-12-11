@@ -84,12 +84,9 @@ void Core::loadMesh(string fpath, bool resetCam){
 	pipeline.addNavigationLibrary("NLdtNavMesh")->getNav()->setParameters(dtNavMeshParams);
 
 	vector<PassObject*> collisionAvoidanceParams;
-	collisionAvoidanceParams.push_back(new PassObjectFloat(45.f));
-	collisionAvoidanceParams.push_back(new PassObjectInt(30));
-	collisionAvoidanceParams.push_back(new PassObjectVec3(glm::vec3(0,1,0)));
+	collisionAvoidanceParams.push_back(new PassObjectFloat(1.0));
 	collisionAvoidanceParams.push_back(new PassObjectFloat(agentRadius));
-	collisionAvoidanceParams.push_back(new PassObjectFloat(0.01));
-	pipeline.addForcesModule("SimpleMoveForward")->getBeh()->setParameters(collisionAvoidanceParams);
+	pipeline.addForcesModule("CollisionAvoidance")->getBeh()->setParameters(collisionAvoidanceParams);
 	pipeline.addMilestonesModule("DetourQueries");
 
 	pipeline.compile();
@@ -228,7 +225,7 @@ void Core::start()
 		vector<pair<int, vec3> > newPos = pipeline.simulate();
 		for(auto& p : newPos){
 			AgentAttributeVec3* pos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(p.first)->getAttribute("Position"));
-			
+
 			pos->setValue(pos->getValue() + p.second);
 			for (int i=0; i<drawableAgents.size(); i++) {
 				if (drawableAgents[i].getAgentID() == p.first)
@@ -265,11 +262,13 @@ void Core::start()
 								float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
 								if(drawableModel&&drawableModel->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
 									//TODO: FIX GETAGENTBYID IF ID IS WRONG.
-									Agent* currAgent = pipeline.getAgentByID(currentSelectedAgent);
-									if(currAgent) {
-										AgentAttributeVec3* agentTarget = dynamic_cast<AgentAttributeVec3*>(currAgent->getAttribute("Target"));
-										agentTarget->setValue(pos);
-									}
+									// Agent* currAgent = pipeline.getAgentByID(currentSelectedAgent);
+									// if(currAgent) {
+									// 	AgentAttributeVec3* agentTarget = dynamic_cast<AgentAttributeVec3*>(currAgent->getAttribute("Target"));
+									// 	agentTarget->setValue(pos);
+									// }
+									for(auto& agent : drawableAgents)
+										dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agent.getAgentID()) ->getAttribute("Target"))->setValue(pos);
 								}
 							}
 						break;
