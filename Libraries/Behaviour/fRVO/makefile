@@ -1,13 +1,13 @@
 .PHONY: first build clean run
 RootDir = $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
-AppName = SimpleMoveForward.so
+AppName = RVO.so
 CleanFiles = *.log
 IPath = .
 LPath = .
 CompileFlags = -std=c++11 -fPIC
 LinkFlags = -shared
 Libs = -lTacticks
-Objects = SimpleMoveForward.o
+Objects = $(addsuffix .o, $(basename $(wildcard *.cpp)))
 
 ifeq ($(shell uname), Darwin)
 	CompileFlags += -m32

@@ -84,6 +84,7 @@ void Core::loadMesh(string fpath, bool resetCam){
 	pipeline.addNavigationLibrary("NLdtNavMesh")->getNav()->setParameters(dtNavMeshParams);
 
 	vector<PassObject*> collisionAvoidanceParams;
+
 	collisionAvoidanceParams.push_back(new PassObjectFloat(agentRadius*3));
 	collisionAvoidanceParams.push_back(new PassObjectFloat(0.5));
 	pipeline.addForcesModule("NaiveCollisionAvoidance")->getBeh()->setParameters(collisionAvoidanceParams);
