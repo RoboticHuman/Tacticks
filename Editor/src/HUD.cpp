@@ -277,7 +277,7 @@ WebKeyboardEvent HUD::SDLToAwesomium(SDL_KeyboardEvent event, bool forceCharType
 
 void HUD::init(int screenWidth, int screenHeight)
 {
-	WebURL url(WSLit("asset://Tacticks/EditorAssets/HUD/test"));
+	WebURL url(WSLit("asset://Tacticks/EditorAssets/HUD/hud.html"));
 	sprite = new Sprite(ResourceManager::getShader("hudShader"),screenWidth,screenHeight);
 	data_source = new HUDDataSource();
 	js_handler = new JSHandler();

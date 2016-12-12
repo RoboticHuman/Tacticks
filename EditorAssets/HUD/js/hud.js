@@ -76,6 +76,20 @@ var simulationToggleState = 0;
      }
  });
 
+/*
+ $(document).on('click', '#placeAgentsToggle', function() {
+    console.log('OHAOHAOHAOHAOHAOHAOHAO');
+    if ($(this).hasClass('off')) {
+      $this.bootstrapToggle('on');
+      togglePlacingAgents(true);
+    }
+    else {
+      $this.bootstrapToggle('false');
+      togglePlacingAgents(false);
+    }
+ });
+ */
+
 /* Clicking on an agent*/
 function getAttr(currentagent){
 +  $( ".AgentAttributes" ).empty();

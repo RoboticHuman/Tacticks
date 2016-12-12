@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html>
  <head>
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-   <link rel="stylesheet" href="hud.css" />
-   <script src="jquery-3.1.0.min.js"></script>
-   <script src="jquery-ui.js"></script>
-   <script src="hud.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-toggle.min.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/hud.css" />
+
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-toggle.min.js"></script>
+
+    <script src="js/hud.js"></script>
+
  </head>
 
  <body onload="document.getElementById('MyTextBox').value = getDefaultPath();loadBehaviorModules(true);">
@@ -16,14 +22,20 @@
        <input type="button" id="toggleSimulationButton" value="Start" onclick="toggleSimulation()">
 
    </div>
-<!------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------->
    <div id="agentsandgroups">
 
      <h3 style="padding-left:10px;color:#eee">Place Agents</h3>
-     <!--placeAgents Toggle Button-->
+
      <div class="toggle-button">
         <button id="placeAgent"></button>
      </div>
+     
+     <!--
+     <input id="placeAgentsToggle" type="checkbox" checked data-toggle="toggle" data-on="Select Agents" data-off="Place Agents">
+     -->
+
+
      </label>
      <br><br>
       <!--Agents List-->
@@ -38,7 +50,7 @@
        </div>
 
         </div>
-<!------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------->
   <div id="forcesandmilestones" class="list-group">
     <div class="list-group-item">
       <h3>Pipeline</h3>
