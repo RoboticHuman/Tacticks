@@ -93,10 +93,16 @@ void DebugMeshRenderer::update()
     }
 }
 
-void DebugMeshRenderer::draw(){
+void DebugMeshRenderer::draw()
+{
     for(int i=0;i<bDrawDebugMeshes.size();i++)
     {
         if(bDrawDebugMeshes[i])
             debugMeshData[i].draw(debugMeshPtrs[i].lock()->getGlobalTransform());
     }
+}
+
+const std::vector<std::weak_ptr<DebugMesh> >& DebugMeshRenderer::getDebugMeshCache() 
+{
+	return debugMeshPtrs;
 }

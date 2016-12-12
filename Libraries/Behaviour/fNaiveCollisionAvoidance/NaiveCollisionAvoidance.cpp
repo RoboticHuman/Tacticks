@@ -45,8 +45,9 @@ glm::vec3 NaiveCollisionAvoidance::simulateAgent(const Agent& agent)
 	vec3 agentPos = dynamic_cast<const AgentAttributeVec3*>(agent.getAttribute("Position"))->getValue();
 	vec3 agentVel = behData->getTargetVelocityVector(&agent);
 
-	float cnt = 0;
-	vec3 avgSteer = vec3(0, 0, 0);
+	int count = 0;
+	glm::vec3 change(0,0,0);
+
 	for(AgentIterator aIt = behData->beginAgent(); aIt != behData->endAgent(); aIt++){
 		if(agent.getAgentID() == aIt->getAgentID()) continue;
 		vec3 targetPos = dynamic_cast<const AgentAttributeVec3*>(aIt->getAttribute("Position"))->getValue();
@@ -55,16 +56,15 @@ glm::vec3 NaiveCollisionAvoidance::simulateAgent(const Agent& agent)
 		distVec.y = 0;
 		float dist = glm::length(distVec);
 
-		if(dist > radius) continue;	//Far enough for collision to happen
-
-		vec3 distVec_norm = glm::normalize(distVec);	//Assuming target and agent are never in the same corrdinate
-		distVec_norm /= dist;
-		avgSteer += distVec_norm * alpha;
-		cnt += 1.0;
+		if(dist > radius) continue;	// Close enough for collision to happen
+		change += (distVec / dist) * alpha;
+		count ++;
 	}
-	if(cnt > 0)
-		agentVel -= avgSteer / cnt;
-	return agentVel;
+
+	agentVel -= change;
+
+	if (glm::length(agentVel)==0) return glm::vec3(0,0,0);
+	else return (glm::normalize(agentVel) * 0.06f); // glm::normalize(agentVel) * 0.07f;
 }
 vector<pair<int, glm::vec3> > NaiveCollisionAvoidance::simulateGroup(const AgentGroup& agentGroup)
 {
