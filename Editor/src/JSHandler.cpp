@@ -94,7 +94,6 @@ void JSHandler::togglePlacingAgents(JSArray args)
 	coreInstance->setplaceAgents(args.At(0).ToBoolean());
 }
 void JSHandler::addForcetoPipeline(JSArray args){
-	cout<<"entered"<<endl;
 	coreInstance->addFtoPipeline(Awesomium::ToString(args.At(0).ToString()));
 }
 void JSHandler::addMilestonetoPipeline(JSArray args){

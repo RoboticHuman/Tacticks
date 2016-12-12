@@ -8,6 +8,7 @@
 #include "DrawableModel.h"
 #include "ResourceManager.h"
 #include <Tacticks/BehaviourPipeline.h>
+#include <Tacticks/BehaviourModuleFactory.h>
 #include <Tacticks/AttributeFactory.h>
 #include <Tacticks/PassObjectInt.h>
 #include <Tacticks/PassObjectFloat.h>
@@ -111,7 +112,7 @@ void Core::render()
 {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	glClearColor(0.2f,0.2f,0.2f,0.0f);
 	glEnable(GL_DEPTH_TEST);
 	ResourceManager::getShader("meshShader")->use();
 	if(drawableModel)drawableModel->draw(ResourceManager::getShader("meshShader"));
@@ -334,7 +335,6 @@ void Core::start()
 			if(keyState[SDL_SCANCODE_S]) cam.moveForward(-moveSpeed * dt);
 			if(keyState[SDL_SCANCODE_D]) cam.moveRight(moveSpeed * dt);
 			if(keyState[SDL_SCANCODE_A]) cam.moveRight(-moveSpeed * dt);
-			if(keyState[SDL_SCANCODE_Q]) placeAgents=!placeAgents;
 			if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 50.f; else moveSpeed=10.0f;
 			cam.updateCameraAngle(glm::radians(cameraAngle.y)* dt , glm::radians(cameraAngle.x) * dt);
 		}
