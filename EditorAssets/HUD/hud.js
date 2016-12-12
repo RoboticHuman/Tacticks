@@ -12,6 +12,17 @@ $("body").onload=function(){
 /*Sections*/
 /*nav bar*/
 /* Calls on function to create Folder Structure*/
+var simulationToggleState = 0;
+ function toggleSimulation(){
+     if (simulationToggleState == 1) {
+         document.getElementById("toggleSimulationButton").value  = "Start"
+         simulationToggleState = 0;
+     }else {
+         document.getElementById("toggleSimulationButton").value  = "Stop"
+         simulationToggleState = 1;
+     }
+
+ }
  function createProjectHUD(){
       document.getElementById("saveProject").disabled = false;
       createProject(projectName);
@@ -93,15 +104,15 @@ function addNewMilestone(milestoneName){
 
 function addForcetoPipeline(behName){
   var elementText = behName + '<input type=\"button\" value="-" onClick="$(this).parent().remove();">';
-  //addForcetoPipeline(behName);
+  addFtoPipeline(behName);
   if(elementText.length){
     $('<li />', {html: elementText}).appendTo('ul.Forces');
   }
 }
 
 function addMilestonetoPipeline(behName){
-  var elementText = behName + '<button type="button" value="-">';
-  //addMilestonetoPipeline(behName);
+  var elementText = behName + '<input type=\"button\" value="-" onClick="$(this).parent().remove();">';
+  addMtoPipeline(behName);
   if(elementText.length){
     $('<li />', {html: elementText}).appendTo('ul.Milestones');
   }

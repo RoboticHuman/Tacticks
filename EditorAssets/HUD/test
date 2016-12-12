@@ -13,6 +13,8 @@
    <div class="navbar">
        <input type="button" value="Load Mesh" onclick="loadMesh(document.getElementById('MyTextBox').value)">
        <input type="text" id="MyTextBox" >
+       <input type="button" id="toggleSimulationButton" value="Start" onclick="toggleSimulation()">
+
    </div>
 <!------------------------------------------------------------------------------------------->
    <div id="agentsandgroups">
@@ -53,7 +55,7 @@
         <h3 onclick="javascript:toggle('AvailableBehaviorModules')">Behavior Modules</h3>
         <ul class="AvailableBehMod" style="display:block"></ul>
       </div>
-      
+
   </div>
 
  </body>
