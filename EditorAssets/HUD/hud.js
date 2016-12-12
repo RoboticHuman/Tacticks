@@ -16,9 +16,11 @@ var simulationToggleState = 0;
  function toggleSimulation(){
      if (simulationToggleState == 1) {
          document.getElementById("toggleSimulationButton").value  = "Start"
+         toggleSimulationState(false);
          simulationToggleState = 0;
      }else {
          document.getElementById("toggleSimulationButton").value  = "Stop"
+         toggleSimulationState(true);
          simulationToggleState = 1;
      }
 

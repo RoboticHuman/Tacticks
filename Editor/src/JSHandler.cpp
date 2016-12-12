@@ -18,6 +18,8 @@ void JSHandler::init(JSObject mainObj)
   registerCallback("loadBehaviorModules", &JSHandler::loadBehaviorModules);
 	registerCallback("addFtoPipeline", &JSHandler::addFtoPipeline);
 	registerCallback("addMtoPipeline", &JSHandler::addMtoPipeline);
+	registerCallback("toggleSimulationState", &JSHandler::toggleSimulationState);
+
 
 }
 void JSHandler::shutdown()
@@ -88,6 +90,10 @@ void JSHandler::loadMesh(JSArray args)
 {
 	coreInstance->loadMesh(ToString(args.At(0).ToString()).c_str(), true);
 
+}
+
+void JSHandler::toggleSimulationState(JSArray args){
+	coreInstance->simulateAgents(args.At(0).ToBoolean());
 }
 void JSHandler::togglePlacingAgents(JSArray args)
 {
