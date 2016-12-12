@@ -198,43 +198,49 @@ vec3 safeNormalize(vec3 v, const Agent* agent)
 }
 std::vector<std::pair<int, glm::vec3>> BehaviourPipeline::simulate()
 {
+    // Set the private agent's initial intermediate
+    // target position and velocity 
 	for(auto& a : behData.agents){
 		a.second.targetPosition = dynamic_cast<const AgentAttributeVec3*>(a.second.agent.getAttribute("Target"))->getValue();
 		a.second.targetVelocity = a.second.targetPosition - dynamic_cast<const AgentAttributeVec3*>(a.second.agent.getAttribute("Position"))->getValue();
-		a.second.targetVelocity = safeNormalize(a.second.targetVelocity, &a.second.agent);
 	}
 
+    // Run milestones pipeline
     for(Behaviour& tBeh : milestonesPipeline){
         AbstractBehaviourModule* beh = tBeh.getBeh();
         beh->eventPreSimulate();
-        for(GroupIterator gIt = behData.beginGroup(); gIt != behData.endGroup(); gIt++){
-            vector<pair<int, vec3> > ret = beh->simulateGroup(*gIt);
-            for(auto res : ret){
+
+        // Pass the groups through the module
+        for(GroupIterator groupIter = behData.beginGroup(); groupIter != behData.endGroup(); groupIter++){
+            vector<pair<int, vec3> > ret = beh->simulateGroup(*groupIter);
+            // Update the agent's intermediate position and velocity
+            for(auto& res : ret){
 				BehaviourModuleData::PrivateAgent& agent = behData.agents[res.first];
                 agent.targetPosition = res.second;
                 agent.targetVelocity = res.second - dynamic_cast<const AgentAttributeVec3*>(agent.agent.getAttribute("Position"))->getValue();
-				agent.targetVelocity = safeNormalize(agent.targetVelocity, &agent.agent);
             }
         }
+
+        // Pass the individual agents through the module
         for(int aID : behData.nullGroup.getAgentList()){
             vec3 res = beh->simulateAgent(behData.agents[aID].agent);
-			BehaviourModuleData::PrivateAgent& agent = behData.agents[aID];
+			BehaviourModuleData::PrivateAgent& agent = behData.agents[aID];            
+            // Update the agent's intermediate position and velocity
             agent.targetPosition = res;
             agent.targetVelocity = res - dynamic_cast<const AgentAttributeVec3*>(agent.agent.getAttribute("Position"))->getValue();;
-			agent.targetVelocity = safeNormalize(agent.targetVelocity, &agent.agent);
         }
     }
 
     for(Behaviour& tBeh : forcesPipeline){
         AbstractBehaviourModule* beh = tBeh.getBeh();
         beh->eventPreSimulate();
-        for(GroupIterator gIt = behData.beginGroup(); gIt != behData.endGroup(); gIt++){
-            vector<pair<int, vec3> > ret = beh->simulateGroup(*gIt);
-            for(auto res : ret)
-                behData.agents[res.first].targetVelocity = safeNormalize(res.second, &behData.agents[res.first].agent);
+        for(GroupIterator groupIter = behData.beginGroup(); groupIter != behData.endGroup(); groupIter++){
+            vector<pair<int, vec3> > ret = beh->simulateGroup(*groupIter);
+            for(auto& res : ret)
+                behData.agents[res.first].targetVelocity = res.second;
         }
         for(int aID : behData.nullGroup.getAgentList()){
-            behData.agents[aID].targetVelocity = safeNormalize(beh->simulateAgent(behData.agents[aID].agent), &behData.agents[aID].agent);
+            behData.agents[aID].targetVelocity = beh->simulateAgent(behData.agents[aID].agent);
 		}
     }
 

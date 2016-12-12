@@ -26,12 +26,14 @@ class DebugMeshRenderer {
     };
 
 private:
-    std::vector<std::weak_ptr<DebugMesh> > debugMeshPtrs;
-    std::vector<DebugMeshRenderData> debugMeshData;
+    static std::vector<std::weak_ptr<DebugMesh> > debugMeshPtrs;
+    static std::vector<DebugMeshRenderData> debugMeshData;
 public:
-    std::vector<bool> bDrawDebugMeshes;
+    static std::vector<bool> bDrawDebugMeshes;
+    static const std::vector<std::weak_ptr<DebugMesh> >& getDebugMeshCache();
+    
     DebugMeshRenderer()=default;
-    void draw();
-    void update();
+    static void draw();
+    static void update();
 
 };

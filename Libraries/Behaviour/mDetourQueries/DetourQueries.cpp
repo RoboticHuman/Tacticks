@@ -86,7 +86,7 @@ glm::vec3 DetourQueries::simulateAgent(const Agent& agent)
 	glm::vec3 intermediateTarget = glm::vec3(agentPathData.straightPath[agentPathData.currentPathVertexIndex],
 		agentPathData.straightPath[agentPathData.currentPathVertexIndex+1],
 		agentPathData.straightPath[agentPathData.currentPathVertexIndex+2]);
-	if(intermediateTarget!=glm::vec3(0,0,0) && glm::distance(agentPos,intermediateTarget)>0.05f) {return intermediateTarget;}
+	if(intermediateTarget!=glm::vec3(0,0,0) && glm::distance(agentPos,intermediateTarget)>1.0f) {return intermediateTarget;}
 	else{
 		agentPathData.currentPathVertexIndex+=3;
 	}
