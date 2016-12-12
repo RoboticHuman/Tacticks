@@ -122,6 +122,12 @@ void JSHandler::addNewMilestone(string milestoneName){
 	args.Push(WSLit(milestoneName.c_str()));
 	mainObject.Invoke(WSLit("addNewMilestone"), args);
 }
+
+void JSHandler::addDebugMesh(string DebugMeshName){
+	JSArray args;
+	args.Push(WSLit(DebugMeshName.c_str()));
+	mainObject.Invoke(WSLit("addDebugMesh"), args);
+}
 void JSHandler::addAgent(int agentID){
 	JSArray args;
 	std::string agent = std::to_string(agentID);

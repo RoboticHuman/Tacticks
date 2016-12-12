@@ -44,5 +44,5 @@ public:		//JS Method Calls
 	void addAttrtoHud(std::string);
 	void addNewMilestone(std::string);
 	void addNewForce(std::string);
-
+	void addDebugMesh(std::string);
 };

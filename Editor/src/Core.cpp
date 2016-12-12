@@ -24,6 +24,7 @@
 #include <Tacticks/AgentAttributeVec3.h>
 #include <glm/geometric.hpp>
 #include <glm/gtx/vector_angle.hpp>
+#include <DebugMeshRenderer.h>
 using namespace std;
 using namespace glm;
 
@@ -457,4 +458,14 @@ void Core::addFtoPipeline(std::string Force){
 }
 void Core::addMtoPipeline(std::string Milestone){
 	pipeline.addMilestonesModule(Milestone);
+}
+
+void Core::renderDebugMesh(){
+	 std::vector<bool> drawStates = DebugMeshRenderer::bDrawDebugMeshes;
+	 std::vector<std::weak_ptr<DebugMesh>> debugMesh  = DebugMeshRenderer::getDebugMeshCache();
+	 for (int i=0; i< drawStates.size(); i++){
+		 drawStates[i] = false;
+		 coreHUD.renderDebugM(debugMesh[i].lock()->name);
+
+	 }
 }

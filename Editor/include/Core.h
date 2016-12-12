@@ -83,4 +83,5 @@ public:
 	void loadBehaviorModules();
 	void addFtoPipeline(std::string);
 	void addMtoPipeline(std::string);
+	void renderDebugMesh();
 };
