@@ -106,6 +106,8 @@ bool NLdtNavMesh::init()
     return true;
 }
 
+
+
 vector<PassObject*> NLdtNavMesh::getData(string, vector<PassObject*>){return {};}
 
 vector<void*> NLdtNavMesh::getRawData()

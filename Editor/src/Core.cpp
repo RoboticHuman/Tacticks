@@ -9,6 +9,7 @@
 #include "ResourceManager.h"
 #include <Tacticks/BehaviourPipeline.h>
 #include <Tacticks/BehaviourModuleFactory.h>
+#include <Tacticks/NavigationFactory.h>
 #include <Tacticks/AttributeFactory.h>
 #include <Tacticks/PassObjectInt.h>
 #include <Tacticks/PassObjectFloat.h>
@@ -281,8 +282,9 @@ void Core::start()
 									int agentID = pipeline.addAgent();
 									AgentAttributeVec3* agentPos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agentID)->getAttribute("Position"));
 									AgentAttributeVec3* agentTarget = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agentID)->getAttribute("Target"));
-									agentPos->setValue(pos);
-									agentTarget->setValue(pos);
+									glm::vec3 testRandPoint = dynamic_cast<PassObjectVec3*>(NavigationFactory::getNav("NLrcPolyMesh").getNav()->getData(string("getRandomPosition"),{})[0])->getValue();
+									agentPos->setValue(testRandPoint);
+									//agentTarget->setValue(pos);
 									coreHUD.addAgenthud(agentID);
 									drawableAgents.push_back(DrawableAgent("EditorAssets/models/Yoda/Joda.obj",agentID));
 									drawableAgents.back().getAgentModel().setPosition(pos);

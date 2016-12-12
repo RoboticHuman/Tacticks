@@ -16,7 +16,6 @@ class NLdtNavMesh : public AbstractNavigation{
     /// Actual data of the navigation library
     dtNavMesh* data;
 	std::shared_ptr<DebugMesh> debugMesh;
-
     void constructDebugMesh();
 	void duDebugDrawNavMeshPoly(dtPolyRef ref);
 public:
