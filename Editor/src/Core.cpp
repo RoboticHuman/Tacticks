@@ -285,7 +285,6 @@ void Core::start()
 							{
 								for(auto& drawableAgent : drawableAgents){
 									if(drawableAgent.getAgentModel().raycast(ray[0],ray[1],pos,NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)) {
-										cout<<drawableAgent.getAgentID()<<endl;
 										currentSelectedAgent=drawableAgent.getAgentID();
 									}
 								}
@@ -453,7 +452,6 @@ void Core::loadBehaviorModules(){
 }
 
 void Core::addFtoPipeline(std::string Force){
-	cout<<Force<<endl;
 	pipeline.addForcesModule(Force);
 }
 void Core::addMtoPipeline(std::string Milestone){

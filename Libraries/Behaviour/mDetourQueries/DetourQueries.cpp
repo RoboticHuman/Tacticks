@@ -61,7 +61,6 @@ void DetourQueries::findPathToTargetInAgent(const Agent& agent)
 	status=navQuery->findNearestPoly(floatPos,extent,&m_filter,&startPolyRef,nearestStartPoint);
 	if((status&DT_FAILURE) || (status&DT_STATUS_DETAIL_MASK)) {cout<<"damn, can't find start poly ref"<<endl;}
 	status=navQuery->findNearestPoly(floatTarget,extent,&m_filter,&endPolyRef,nearestEndPoint);
-	cout<<nearestEndPoint[0]<<" "<<nearestEndPoint[1]<<" "<<nearestEndPoint[1]<<endl;
 	if((status&DT_FAILURE) || (status&DT_STATUS_DETAIL_MASK)) {cout<<"damn, can't find end poly ref"<<endl;}
 	status=navQuery->findPath(startPolyRef, endPolyRef, nearestStartPoint, nearestEndPoint, &m_filter, polyPath, &nPathCount, MAX_PATHPOLY);
 	if((status&DT_FAILURE) || (status&DT_STATUS_DETAIL_MASK)) {cout<<"damn, can't find path"<<endl;}
