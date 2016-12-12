@@ -37,6 +37,7 @@ private:	//callbacks
 	void loadBehaviorModules(Awesomium::JSArray);
 	void addFtoPipeline(Awesomium::JSArray);
 	void addMtoPipeline(Awesomium::JSArray);
+	void toggleSimulationState(Awesomium::JSArray);
 public:		//JS Method Calls
 	void JSCallExamples(std::string);
 	void addAgent(int);
