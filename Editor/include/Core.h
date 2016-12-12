@@ -40,8 +40,10 @@ private:
 	Camera cam;
 	Timer timer;
 	HUD coreHUD;
+	float dt;
 	DebugMeshRenderer dRenderer;
 	GLuint transformLocation;
+	bool shouldSimulate = false;
 	int currentSelectedAgent;
 
 	/**
@@ -56,6 +58,7 @@ private:
 	 * @brief      This function is called once right after exiting the main loop. It's main purpose is to deallocate and clean up things before the destruction of the window.
 	 */
 	void postLoop();
+	void simulatePipeline();
 public:
 	Core() = default;
 	~Core() = default;
@@ -73,7 +76,7 @@ public:
 	 * @brief      This function takes care of cleaning SDL related structures and quits SDL safely.
 	 */
 	void shutdown();
-
+	void simulateAgents(bool shouldSimulate);
 	void loadMesh(std::string, bool = false);
 	void getagentAttrbyID(int);
 	void setplaceAgents(bool = false);

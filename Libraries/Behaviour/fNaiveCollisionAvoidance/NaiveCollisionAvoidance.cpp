@@ -9,6 +9,7 @@
 #include <Tacticks/AgentGroup.h>
 #include <glm/vec3.hpp>
 #include <glm/geometric.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include "NaiveCollisionAvoidance.h"
 using namespace std;
@@ -43,7 +44,6 @@ glm::vec3 NaiveCollisionAvoidance::simulateAgent(const Agent& agent)
 {
 	vec3 agentPos = dynamic_cast<const AgentAttributeVec3*>(agent.getAttribute("Position"))->getValue();
 	vec3 agentVel = behData->getTargetVelocityVector(&agent);
-
 
 	int count = 0;
 	glm::vec3 change(0,0,0);

@@ -17,6 +17,7 @@ class NLrcPolyMesh : public AbstractNavigation{
     /// Actual data of the navigation library
     rcPolyMesh* data;
     std::shared_ptr<DebugMesh> debugMesh;
+    glm::vec3 getRandomPosition();
 public:
     NLrcPolyMesh(const World* world);
     virtual ~NLrcPolyMesh();

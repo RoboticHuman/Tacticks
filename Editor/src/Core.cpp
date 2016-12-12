@@ -9,6 +9,7 @@
 #include "ResourceManager.h"
 #include <Tacticks/BehaviourPipeline.h>
 #include <Tacticks/BehaviourModuleFactory.h>
+#include <Tacticks/NavigationFactory.h>
 #include <Tacticks/AttributeFactory.h>
 #include <Tacticks/PassObjectInt.h>
 #include <Tacticks/PassObjectFloat.h>
@@ -72,7 +73,7 @@ void Core::loadMesh(string fpath, bool resetCam){
 
 
 	vector<PassObject*> polyMeshDetailParams;
-	float detailSampleDist =6;
+	float detailSampleDist = 6;
 	polyMeshDetailParams.push_back(new PassObjectFloat(detailSampleDist < 0.9f ? 0 : cs* detailSampleDist)); //Sample Distance
 	polyMeshDetailParams.push_back(new PassObjectFloat(1*ch)); //Max Sample Error
 	pipeline.addNavigationLibrary("NLrcPolyMeshDetail")->getNav()->setParameters(polyMeshDetailParams);
@@ -86,8 +87,8 @@ void Core::loadMesh(string fpath, bool resetCam){
 
 	vector<PassObject*> collisionAvoidanceParams;
 
-	collisionAvoidanceParams.push_back(new PassObjectFloat(agentRadius*3));
-	collisionAvoidanceParams.push_back(new PassObjectFloat(0.5));
+	collisionAvoidanceParams.push_back(new PassObjectFloat(agentRadius*2.0));
+	collisionAvoidanceParams.push_back(new PassObjectFloat(0.18));
 	pipeline.addForcesModule("NaiveCollisionAvoidance")->getBeh()->setParameters(collisionAvoidanceParams);
 	pipeline.addMilestonesModule("DetourQueries");
 
@@ -217,25 +218,15 @@ void Core::start()
 
 		const double MIN_FRAME_TIME = 1.0f / 40.0f;
 		cameraAngle = vec2(0,0);
-		float dt = timer.GetDelta();
+		dt = timer.GetDelta();
 		if(dt < MIN_FRAME_TIME){
 			int ms = (int)((MIN_FRAME_TIME - dt) * 1000.0f);
 			if (ms > 10) ms = 10;
 			if (ms >= 0) SDL_Delay(ms);
 		}
 
-		vector<pair<int, vec3> > newPos = pipeline.simulate();
-		for(auto& p : newPos){
-			AgentAttributeVec3* pos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(p.first)->getAttribute("Position"));
+		if(shouldSimulate) simulatePipeline();
 
-			pos->setValue(pos->getValue() + p.second);
-			for (int i=0; i<drawableAgents.size(); i++) {
-				if (drawableAgents[i].getAgentID() == p.first)
-					{
-						drawableAgents[i].getAgentModel().setPosition(pos->getValue());
-					}
-			}
-		}
 
 		while(SDL_PollEvent(&event)){	//Handling events
 			coreHUD.injectEvent(event);
@@ -281,8 +272,9 @@ void Core::start()
 									int agentID = pipeline.addAgent();
 									AgentAttributeVec3* agentPos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agentID)->getAttribute("Position"));
 									AgentAttributeVec3* agentTarget = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agentID)->getAttribute("Target"));
+									glm::vec3 testRandPoint = dynamic_cast<PassObjectVec3*>(NavigationFactory::getNav("NLrcPolyMesh").getNav()->getData(string("getRandomPosition"),{})[0])->getValue();
+									agentTarget->setValue(testRandPoint);
 									agentPos->setValue(pos);
-									agentTarget->setValue(pos);
 									coreHUD.addAgenthud(agentID);
 									drawableAgents.push_back(DrawableAgent("EditorAssets/models/Yoda/Joda.obj",agentID));
 									drawableAgents.back().getAgentModel().setPosition(pos);
@@ -354,6 +346,12 @@ void Core::start()
 void Core::setplaceAgents(bool placeAgentsFlag){
 	placeAgents = placeAgentsFlag;
 }
+
+void Core::simulateAgents(bool shouldSimulate)
+{
+	this->shouldSimulate = shouldSimulate;
+}
+
 void Core::getagentAttrbyID(int agentID)
 {
 	Agent* currentagent = pipeline.getAgentByID(agentID);
@@ -424,6 +422,22 @@ void Core::getagentAttrbyID(int agentID)
 				elementText.append(" > <br>");
 				coreHUD.addAttributetoHud(elementText);
 				}
+	}
+}
+
+void Core::simulatePipeline()
+{
+	vector<pair<int, vec3> > newPos = pipeline.simulate();
+	for(auto& p : newPos){
+		AgentAttributeVec3* pos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(p.first)->getAttribute("Position"));
+
+		pos->setValue(pos->getValue() + p.second);
+		for (int i=0; i<drawableAgents.size(); i++) {
+			if (drawableAgents[i].getAgentID() == p.first)
+				{
+					drawableAgents[i].getAgentModel().setPosition(pos->getValue());
+				}
+		}
 	}
 }
 
