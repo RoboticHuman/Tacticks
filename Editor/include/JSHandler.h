@@ -35,8 +35,8 @@ private:	//callbacks
 	void getAttrforAgent(Awesomium::JSArray);
 	Awesomium::JSValue getDefaultPath(Awesomium::JSArray);
 	void loadBehaviorModules(Awesomium::JSArray);
-	void addForcetoPipeline(Awesomium::JSArray);
-	void addMilestonetoPipeline(Awesomium::JSArray);
+	void addFtoPipeline(Awesomium::JSArray);
+	void addMtoPipeline(Awesomium::JSArray);
 public:		//JS Method Calls
 	void JSCallExamples(std::string);
 	void addAgent(int);

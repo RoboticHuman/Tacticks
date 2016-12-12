@@ -16,8 +16,8 @@ void JSHandler::init(JSObject mainObj)
 	registerCallback("getDefaultPath", &JSHandler::getDefaultPath);
 	registerCallback("getAttrforAgent", &JSHandler::getAttrforAgent);
   registerCallback("loadBehaviorModules", &JSHandler::loadBehaviorModules);
-	registerCallback("addForcetoPipeline", &JSHandler::addForcetoPipeline);
-	registerCallback("addMilestonetoPipeline", &JSHandler::addMilestonetoPipeline);
+	registerCallback("addFtoPipeline", &JSHandler::addFtoPipeline);
+	registerCallback("addMtoPipeline", &JSHandler::addMtoPipeline);
 
 }
 void JSHandler::shutdown()
@@ -93,10 +93,10 @@ void JSHandler::togglePlacingAgents(JSArray args)
 {
 	coreInstance->setplaceAgents(args.At(0).ToBoolean());
 }
-void JSHandler::addForcetoPipeline(JSArray args){
-	coreInstance->addFtoPipeline(Awesomium::ToString(args.At(0).ToString()));
+void JSHandler::addFtoPipeline(JSArray args){
+	//coreInstance->addFtoPipeline(Awesomium::ToString(args.At(0).ToString()));
 }
-void JSHandler::addMilestonetoPipeline(JSArray args){
+void JSHandler::addMtoPipeline(JSArray args){
 	coreInstance->addMtoPipeline(Awesomium::ToString(args.At(0).ToString()));
 }
 void JSHandler::getAttrforAgent(JSArray args)
