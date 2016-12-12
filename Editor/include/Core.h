@@ -43,7 +43,7 @@ private:
 	float dt;
 	DebugMeshRenderer dRenderer;
 	GLuint transformLocation;
-	bool shouldSimulate = true;
+	bool shouldSimulate = false;
 	int currentSelectedAgent;
 
 	/**
