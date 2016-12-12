@@ -1,5 +1,10 @@
 #include "DebugMeshRenderer.h"
 
+
+std::vector<std::weak_ptr<DebugMesh> > DebugMeshRenderer::debugMeshPtrs;
+std::vector<DebugMeshRenderer::DebugMeshRenderData> DebugMeshRenderer::debugMeshData;
+std::vector<bool> DebugMeshRenderer::bDrawDebugMeshes;
+
 DebugMeshRenderer::DebugMeshRenderData::DebugMeshRenderData(std::vector<DebugMesh::Vertex>& vertices,std::vector<GLuint>& indices){
 	sizeOfIndices=indices.size();
 	setupBuffers(vertices,indices);

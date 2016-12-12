@@ -1,4 +1,3 @@
-#pragma once
 #include <map>
 #include <memory>
 #include <GL/glew.h>
@@ -10,7 +9,8 @@
 #include "ResourceManager.h"
 #include <glm/gtc/type_ptr.hpp>
 
-using namespace std;
+#pragma once
+
 class DebugMeshRenderer {
 
     struct DebugMeshRenderData{
@@ -31,9 +31,19 @@ private:
 public:
     static std::vector<bool> bDrawDebugMeshes;
     static const std::vector<std::weak_ptr<DebugMesh> >& getDebugMeshCache();
-    
+
     DebugMeshRenderer()=default;
     static void draw();
     static void update();
 
 };
+
+
+
+
+
+
+
+
+
+
