@@ -218,25 +218,15 @@ void Core::start()
 
 		const double MIN_FRAME_TIME = 1.0f / 40.0f;
 		cameraAngle = vec2(0,0);
-		float dt = timer.GetDelta();
+		dt = timer.GetDelta();
 		if(dt < MIN_FRAME_TIME){
 			int ms = (int)((MIN_FRAME_TIME - dt) * 1000.0f);
 			if (ms > 10) ms = 10;
 			if (ms >= 0) SDL_Delay(ms);
 		}
 
-		vector<pair<int, vec3> > newPos = pipeline.simulate();
-		for(auto& p : newPos){
-			AgentAttributeVec3* pos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(p.first)->getAttribute("Position"));
+		if(shouldSimulate) simulatePipeline();
 
-			pos->setValue(pos->getValue() + p.second);
-			for (int i=0; i<drawableAgents.size(); i++) {
-				if (drawableAgents[i].getAgentID() == p.first)
-					{
-						drawableAgents[i].getAgentModel().setPosition(pos->getValue());
-					}
-			}
-		}
 
 		while(SDL_PollEvent(&event)){	//Handling events
 			coreHUD.injectEvent(event);
@@ -283,8 +273,8 @@ void Core::start()
 									AgentAttributeVec3* agentPos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agentID)->getAttribute("Position"));
 									AgentAttributeVec3* agentTarget = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agentID)->getAttribute("Target"));
 									glm::vec3 testRandPoint = dynamic_cast<PassObjectVec3*>(NavigationFactory::getNav("NLrcPolyMesh").getNav()->getData(string("getRandomPosition"),{})[0])->getValue();
-									agentPos->setValue(testRandPoint);
-									//agentTarget->setValue(pos);
+									agentTarget->setValue(testRandPoint);
+									agentPos->setValue(pos);
 									coreHUD.addAgenthud(agentID);
 									drawableAgents.push_back(DrawableAgent("EditorAssets/models/Yoda/Joda.obj",agentID));
 									drawableAgents.back().getAgentModel().setPosition(pos);
@@ -356,6 +346,12 @@ void Core::start()
 void Core::setplaceAgents(bool placeAgentsFlag){
 	placeAgents = placeAgentsFlag;
 }
+
+void Core::simulateAgents(bool shouldSimulate)
+{
+	this->shouldSimulate = shouldSimulate;
+}
+
 void Core::getagentAttrbyID(int agentID)
 {
 	Agent* currentagent = pipeline.getAgentByID(agentID);
@@ -426,6 +422,22 @@ void Core::getagentAttrbyID(int agentID)
 				elementText.append(" > <br>");
 				coreHUD.addAttributetoHud(elementText);
 				}
+	}
+}
+
+void Core::simulatePipeline()
+{
+	vector<pair<int, vec3> > newPos = pipeline.simulate();
+	for(auto& p : newPos){
+		AgentAttributeVec3* pos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(p.first)->getAttribute("Position"));
+
+		pos->setValue(pos->getValue() + p.second);
+		for (int i=0; i<drawableAgents.size(); i++) {
+			if (drawableAgents[i].getAgentID() == p.first)
+				{
+					drawableAgents[i].getAgentModel().setPosition(pos->getValue());
+				}
+		}
 	}
 }
 
