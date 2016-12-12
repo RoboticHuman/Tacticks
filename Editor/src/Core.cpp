@@ -7,15 +7,21 @@
 #include "Shader.h"
 #include "DrawableModel.h"
 #include "ResourceManager.h"
-#include "Tacticks/BehaviourPipeline.h"
-#include "Tacticks/BehaviourModuleFactory.h"
-#include "Tacticks/AttributeFactory.h"
-#include "Tacticks/AgentAttributeBool.h"
-#include "Tacticks/AgentAttributeEnum.h"
-#include "Tacticks/AgentAttributeFloat.h"
-#include "Tacticks/AgentAttributeInt.h"
-#include "Tacticks/AgentAttributeVec3.h"
-
+#include <Tacticks/BehaviourPipeline.h>
+#include <Tacticks/AttributeFactory.h>
+#include <Tacticks/PassObjectInt.h>
+#include <Tacticks/PassObjectFloat.h>
+#include <Tacticks/PassObjectBool.h>
+#include <Tacticks/PassObjectVec3.h>
+#include <Tacticks/AbstractNavigation.h>
+#include <Tacticks/AgentAttributeBool.h>
+#include <Tacticks/AgentAttributeEnum.h>
+#include <Tacticks/AgentAttributeFloat.h>
+#include <Tacticks/AbstractBehaviourModule.h>
+#include <Tacticks/AgentAttributeInt.h>
+#include <Tacticks/AgentAttributeVec3.h>
+#include <glm/geometric.hpp>
+#include <glm/gtx/vector_angle.hpp>
 using namespace std;
 using namespace glm;
 
@@ -25,8 +31,68 @@ void Core::loadMesh(string fpath, bool resetCam){
 	if(!drawableModel){
 		drawableModel = new DrawableModel(&pipeline.getWorldInstance().getWorldModel());
 	}
-
 	if(resetCam) cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
+
+	float agentHeight = 2;
+	float agentRadius = 0.6;
+	float maxClimb = 0.9;
+	float cs = 0.3;
+	float ch = 0.2;
+	float minRegionSize = 8;
+	float mergedRegionSize = 20;
+
+	vector<PassObject*> hfParams;
+	hfParams.push_back(new PassObjectInt(ceilf(agentHeight/ch)));
+	hfParams.push_back(new PassObjectInt(floorf(maxClimb/ch)));
+	hfParams.push_back(new PassObjectFloat(45));
+	hfParams.push_back(new PassObjectFloat(cs));
+	hfParams.push_back(new PassObjectFloat(ch));
+	hfParams.push_back(new PassObjectInt(1));
+	pipeline.addNavigationLibrary("NLrcHeightfield")->getNav()->setParameters(hfParams);
+
+
+	vector<PassObject*> chfParams;
+	chfParams.push_back(new PassObjectInt(ceilf(agentRadius / cs)));
+	chfParams.push_back(new PassObjectInt(0));
+	chfParams.push_back(new PassObjectInt(minRegionSize*minRegionSize));
+	chfParams.push_back(new PassObjectInt(mergedRegionSize*mergedRegionSize));
+	chfParams.push_back(new PassObjectBool(false));
+	pipeline.addNavigationLibrary("NLrcCompactHeightfield")->getNav()->setParameters(chfParams);
+
+	vector<PassObject*> contourParams;
+	contourParams.push_back(new PassObjectFloat(1)); //maxError
+	contourParams.push_back(new PassObjectInt(12/cs)); //maxEdgeLenth/cs
+	pipeline.addNavigationLibrary("NLrcContourSet")->getNav()->setParameters(contourParams);
+
+
+	vector<PassObject*> polyMeshParams;
+	polyMeshParams.push_back(new PassObjectInt(6));
+	pipeline.addNavigationLibrary("NLrcPolyMesh")->getNav()->setParameters(polyMeshParams);
+
+
+	vector<PassObject*> polyMeshDetailParams;
+	float detailSampleDist =6;
+	polyMeshDetailParams.push_back(new PassObjectFloat(detailSampleDist < 0.9f ? 0 : cs* detailSampleDist)); //Sample Distance
+	polyMeshDetailParams.push_back(new PassObjectFloat(1*ch)); //Max Sample Error
+	pipeline.addNavigationLibrary("NLrcPolyMeshDetail")->getNav()->setParameters(polyMeshDetailParams);
+
+
+	vector<PassObject*> dtNavMeshParams;
+	dtNavMeshParams.push_back(new PassObjectFloat(agentHeight));
+	dtNavMeshParams.push_back(new PassObjectFloat(agentRadius));
+	dtNavMeshParams.push_back(new PassObjectFloat(maxClimb));
+	pipeline.addNavigationLibrary("NLdtNavMesh")->getNav()->setParameters(dtNavMeshParams);
+
+	vector<PassObject*> collisionAvoidanceParams;
+
+	collisionAvoidanceParams.push_back(new PassObjectFloat(agentRadius*3));
+	collisionAvoidanceParams.push_back(new PassObjectFloat(0.5));
+	pipeline.addForcesModule("NaiveCollisionAvoidance")->getBeh()->setParameters(collisionAvoidanceParams);
+	pipeline.addMilestonesModule("DetourQueries");
+
+	pipeline.compile();
+	dRenderer.update();
+	dRenderer.bDrawDebugMeshes.back() = true;
 }
 
 void Core::preLoop()
@@ -49,7 +115,8 @@ void Core::render()
 	glEnable(GL_DEPTH_TEST);
 	ResourceManager::getShader("meshShader")->use();
 	if(drawableModel)drawableModel->draw(ResourceManager::getShader("meshShader"));
-
+	ResourceManager::getShader("debugMeshShader")->use();
+	dRenderer.draw();
 	ResourceManager::getShader("meshShader")->use();
 	for(auto& drawableAgent : drawableAgents) {drawableAgent.getAgentDrawableModel().draw(ResourceManager::getShader("meshShader"));}
 
@@ -132,6 +199,7 @@ bool Core::init()
 
 	ResourceManager::loadShader("EditorAssets/shaders/VS.vs", "EditorAssets/shaders/FS.fs","meshShader");
 	ResourceManager::loadShader("EditorAssets/shaders/VSHUD.vs", "EditorAssets/shaders/FSHUD.fs","hudShader");
+	ResourceManager::loadShader("EditorAssets/shaders/DebugMesh.vs", "EditorAssets/shaders/DebugMesh.fs","debugMeshShader");
 	coreHUD.init(screenWidth,screenHeight);
 
 	return true;
@@ -142,17 +210,33 @@ void Core::start()
 	SDL_Event event;
 	preLoop();
 	int textBoxValue = 0;
+
 	while(!exitFlag){
+
+
 		const double MIN_FRAME_TIME = 1.0f / 40.0f;
 		cameraAngle = vec2(0,0);
-		double dt = timer.GetDelta();
+		float dt = timer.GetDelta();
 		if(dt < MIN_FRAME_TIME){
 			int ms = (int)((MIN_FRAME_TIME - dt) * 1000.0f);
 			if (ms > 10) ms = 10;
 			if (ms >= 0) SDL_Delay(ms);
 		}
 
-		while(SDL_PollEvent(&event)){	//Handeling events
+		vector<pair<int, vec3> > newPos = pipeline.simulate();
+		for(auto& p : newPos){
+			AgentAttributeVec3* pos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(p.first)->getAttribute("Position"));
+
+			pos->setValue(pos->getValue() + p.second);
+			for (int i=0; i<drawableAgents.size(); i++) {
+				if (drawableAgents[i].getAgentID() == p.first)
+					{
+						drawableAgents[i].getAgentModel().setPosition(pos->getValue());
+					}
+			}
+		}
+
+		while(SDL_PollEvent(&event)){	//Handling events
 			coreHUD.injectEvent(event);
 			switch(event.type){
 				case SDL_KEYDOWN:
@@ -170,6 +254,19 @@ void Core::start()
 						case SDL_BUTTON_RIGHT:
 							shouldRotateView = true;
 							origCameraAngle=cameraAngle;
+							//TODO: CLEAN THIS SHITHOLE DOWN HERE WHICH PLACES THE TARGETS ON THE CURRENTLY SELECTED AGENT
+							{
+								vec3 ray[2];
+								ray[0] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 0.0));
+								ray[1] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 1.0));
+								vec3 pos;
+								float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
+								if(drawableModel&&drawableModel->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
+									//TODO: FIX GETAGENTBYID IF ID IS WRONG.
+									for(auto& agent : drawableAgents)
+										dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agent.getAgentID())->getAttribute("Target"))->setValue(pos);
+								}
+							}
 						break;
 						case SDL_BUTTON_LEFT:
 							vec3 ray[2];
@@ -181,15 +278,22 @@ void Core::start()
 							{
 								if(drawableModel&&drawableModel->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
 									int agentID = pipeline.addAgent();
+									AgentAttributeVec3* agentPos = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agentID)->getAttribute("Position"));
+									AgentAttributeVec3* agentTarget = dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agentID)->getAttribute("Target"));
+									agentPos->setValue(pos);
+									agentTarget->setValue(pos);
 									coreHUD.addAgenthud(agentID);
-									drawableAgents.push_back(DrawableAgent("EditorAssets/models/AgentCylinder.obj",agentID));
+									drawableAgents.push_back(DrawableAgent("EditorAssets/models/Yoda/Joda.obj",agentID));
 									drawableAgents.back().getAgentModel().setPosition(pos);
 								}
 							}
 							else
 							{
 								for(auto& drawableAgent : drawableAgents){
-									if(drawableAgent.getAgentModel().raycast(ray[0],ray[1],pos,NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)) cout<<drawableAgent.getAgentID()<<endl;
+									if(drawableAgent.getAgentModel().raycast(ray[0],ray[1],pos,NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)) {
+										cout<<drawableAgent.getAgentID()<<endl;
+										currentSelectedAgent=drawableAgent.getAgentID();
+									}
 								}
 							}
 						break;
@@ -230,6 +334,7 @@ void Core::start()
 			if(keyState[SDL_SCANCODE_S]) cam.moveForward(-moveSpeed * dt);
 			if(keyState[SDL_SCANCODE_D]) cam.moveRight(moveSpeed * dt);
 			if(keyState[SDL_SCANCODE_A]) cam.moveRight(-moveSpeed * dt);
+			if(keyState[SDL_SCANCODE_Q]) placeAgents=!placeAgents;
 			if(keyState[SDL_SCANCODE_LSHIFT]) moveSpeed = 50.f; else moveSpeed=10.0f;
 			cam.updateCameraAngle(glm::radians(cameraAngle.y)* dt , glm::radians(cameraAngle.x) * dt);
 		}
@@ -238,7 +343,8 @@ void Core::start()
 		//need to use the shader before the operation after it, TODO: need to fix this crap...
 		ResourceManager::getShader("meshShader")->use();
 		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
-
+		ResourceManager::getShader("debugMeshShader")->use();
+		glUniformMatrix4fv(ResourceManager::getShader("debugMeshShader")->getUniformLocation("transform"), 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
 		render();
 
 		SDL_GL_SwapWindow(mainwindow);

@@ -1,11 +1,15 @@
 #include "BehaviourPipeline.h"
 #include <vector>
 #include <utility>
+#include <glm/vec3.hpp>
+#include <glm/geometric.hpp>
+#include <glm/gtx/vector_angle.hpp>
 #include "ForcesBehaviourModule.h"
 #include "MilestonesBehaviourModule.h"
 #include "BehaviourModuleFactory.h"
 #include "NavigationFactory.h"
 #include "AgentAttributeVec3.h"
+#include "AgentAttributeFloat.h"
 using namespace std;
 using namespace glm;
 
@@ -14,10 +18,9 @@ BehaviourPipeline::BehaviourPipeline() : behData() , attrFactory(behData.agents)
 
 }
 
-
 Navigation* BehaviourPipeline::addNavigationLibrary(std::string navName)
 {
-	Navigation* ret = &NavigationFactory::getNav(navName);
+	Navigation* ret = &NavigationFactory::newNav(navName);
 	if(!ret->isValid()) return nullptr;
 	ret->newNav(&World::getInstance());
 	return ret;
@@ -47,7 +50,6 @@ Behaviour* BehaviourPipeline::addForcesModule(string behName)
 	forcesPipeline.back().newBeh(&behData);
     return &forcesPipeline.back();
 }
-
 Behaviour* BehaviourPipeline::addMilestonesModule(string behName)
 {
 	milestonesPipeline.push_back(BehaviourModuleFactory::getBeh(behName, false));
@@ -56,7 +58,8 @@ Behaviour* BehaviourPipeline::addMilestonesModule(string behName)
 		milestonesPipeline.pop_back();
 		return nullptr;
 	}
-	forcesPipeline.back().newBeh(&behData);
+
+	milestonesPipeline.back().newBeh(&behData);
     return &milestonesPipeline.back();
 }
 
@@ -184,11 +187,21 @@ bool BehaviourPipeline::compile()
 	NavigationFactory::compileAll();
 	return true;
 }
+vec3 safeNormalize(vec3 v, float mag = 1.0)
+{
+	if (glm::length(v)==0) return glm::vec3(0,0,0);
+	else return glm::normalize(v)*mag;
+}
+vec3 safeNormalize(vec3 v, const Agent* agent)
+{
+	return safeNormalize(v, dynamic_cast<const AgentAttributeFloat*>(agent->getAttribute("MaxVelocity"))->getValue());
+}
 std::vector<std::pair<int, glm::vec3>> BehaviourPipeline::simulate()
 {
 	for(auto& a : behData.agents){
 		a.second.targetPosition = dynamic_cast<const AgentAttributeVec3*>(a.second.agent.getAttribute("Target"))->getValue();
 		a.second.targetVelocity = a.second.targetPosition - dynamic_cast<const AgentAttributeVec3*>(a.second.agent.getAttribute("Position"))->getValue();
+		a.second.targetVelocity = safeNormalize(a.second.targetVelocity, &a.second.agent);
 	}
 
     for(Behaviour& tBeh : milestonesPipeline){
@@ -199,7 +212,8 @@ std::vector<std::pair<int, glm::vec3>> BehaviourPipeline::simulate()
             for(auto res : ret){
 				BehaviourModuleData::PrivateAgent& agent = behData.agents[res.first];
                 agent.targetPosition = res.second;
-                agent.targetVelocity = res.second - dynamic_cast<const AgentAttributeVec3*>(agent.agent.getAttribute("Position"))->getValue();;
+                agent.targetVelocity = res.second - dynamic_cast<const AgentAttributeVec3*>(agent.agent.getAttribute("Position"))->getValue();
+				agent.targetVelocity = safeNormalize(agent.targetVelocity, &agent.agent);
             }
         }
         for(int aID : behData.nullGroup.getAgentList()){
@@ -207,6 +221,7 @@ std::vector<std::pair<int, glm::vec3>> BehaviourPipeline::simulate()
 			BehaviourModuleData::PrivateAgent& agent = behData.agents[aID];
             agent.targetPosition = res;
             agent.targetVelocity = res - dynamic_cast<const AgentAttributeVec3*>(agent.agent.getAttribute("Position"))->getValue();;
+			agent.targetVelocity = safeNormalize(agent.targetVelocity, &agent.agent);
         }
     }
 
@@ -216,10 +231,10 @@ std::vector<std::pair<int, glm::vec3>> BehaviourPipeline::simulate()
         for(GroupIterator gIt = behData.beginGroup(); gIt != behData.endGroup(); gIt++){
             vector<pair<int, vec3> > ret = beh->simulateGroup(*gIt);
             for(auto res : ret)
-                behData.agents[res.first].targetVelocity = res.second;
+                behData.agents[res.first].targetVelocity = safeNormalize(res.second, &behData.agents[res.first].agent);
         }
         for(int aID : behData.nullGroup.getAgentList()){
-            behData.agents[aID].targetVelocity = beh->simulateAgent(behData.agents[aID].agent);
+            behData.agents[aID].targetVelocity = safeNormalize(beh->simulateAgent(behData.agents[aID].agent), &behData.agents[aID].agent);
 		}
     }
 

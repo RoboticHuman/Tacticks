@@ -14,7 +14,7 @@ protected:
 	BehaviourModuleData* behData;
 	AbstractBehaviourModule(BehaviourModuleData* data);
 	std::vector<PassObject*> args;
-	bool dirty=true;
+	bool dirty;
 
 public:
 	virtual ~AbstractBehaviourModule() = default;

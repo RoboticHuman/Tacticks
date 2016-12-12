@@ -5,7 +5,6 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <algorithm>
-#include <iostream>
 using namespace std;
 using namespace glm;
 
@@ -60,6 +59,9 @@ const std::vector<Mesh>& Model::getMeshes() const
 std::vector<Model>& Model::getModels(){
 	return nodes;
 }
+const std::vector<Model>& Model::getModels() const{
+	return nodes;
+}
 
 void Model::loadModel(string path)
 {
@@ -81,8 +83,7 @@ Model::Model()
 {
 
 }
-
-void Model::processNode(aiNode *node, const aiScene *scene,Model &rootModel)
+void Model::processNode(aiNode *node, const aiScene *scene, Model &rootModel)
 {
 	copyAiMat(&(node->mTransformation),rootModel.globalTransform);
 	for(uint32_t i=0;i<node->mNumMeshes;i++)

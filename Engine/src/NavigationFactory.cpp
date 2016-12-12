@@ -46,9 +46,11 @@ void NavigationFactory::rmNav_force(std::string navName)
 
 bool NavigationFactory::compileAll()
 {
-	for(auto navLib : nav){
-		navLib.second->getNav()->init();
+	for(auto& navLib : nav) {
+		if(navLib.second->getNav()->isDirty() && !navLib.second->getNav()->init())
+			return false;
 	}
+	return true;
 }
 
 vector<string> NavigationFactory::getNavList()

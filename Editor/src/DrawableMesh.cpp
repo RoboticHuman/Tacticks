@@ -19,9 +19,9 @@ DrawableMesh::DrawableMesh(vector<Texture> &textures, const Mesh* mesh)
 
 void DrawableMesh::cleanup()
 {
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
-  glEnableVertexAttribArray(2);
+  glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
+  glDisableVertexAttribArray(2);
   glDeleteVertexArrays(1,&VAO);
   glDeleteBuffers(1,&VBO);
   glDeleteBuffers(1,&EBO);

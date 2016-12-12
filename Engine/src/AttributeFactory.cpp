@@ -14,6 +14,8 @@ AttributeFactory::AttributeFactory(std::unordered_map<int, BehaviourModuleData::
 		"Position",pair<int,AgentAttribute*>(1, new AgentAttributeVec3(glm::vec3(0,0,0), "Position"))));
 	attributeMap.insert(pair<std::string,std::pair<int,AgentAttribute*> >(
 		"Target",pair<int,AgentAttribute*>(2, new AgentAttributeVec3(glm::vec3(0,0,0), "Target"))));
+	attributeMap.insert(pair<std::string,std::pair<int,AgentAttribute*> >(
+		"MaxVelocity",pair<int,AgentAttribute*>(3, new AgentAttributeFloat(3*0.016, -1e9, 1e9, "MaxVelocity"))));
 }
 
 void AttributeFactory::addAttribute(const AgentAttribute* attribute)

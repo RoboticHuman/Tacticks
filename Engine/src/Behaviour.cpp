@@ -39,12 +39,15 @@ bool Behaviour::load(const char* soPath)
 	if(soPath == nullptr || access(soPath, F_OK | R_OK) == -1) return false;
 
 	soHandle = dlopen(soPath, RTLD_NOW);
-	if(soHandle == nullptr) return false;
+
+	if(soHandle == nullptr){
+		printf("%s\n", dlerror());
+		return false;
+	}
 
 	typedef BehaviourInfo (*declDep_t)();
 	declDep_t declDep = (declDep_t)dlsym(soHandle, "declareDependencies");
 	if(declDep == nullptr) return false;
-
 	behInfo = move(declDep());
 	return true;
 }

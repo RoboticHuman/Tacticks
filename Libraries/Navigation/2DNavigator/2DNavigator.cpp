@@ -31,8 +31,10 @@ bool Navigator2D::init()
 			n = navGrid.size();
 			m = navGrid[0].size();
 		    clearDirty();
+			return true;
 		}
 	}
+	return false;
 }
 
 std::vector<PassObject*> Navigator2D::getPossibleNextLocations(int x, int y)
@@ -54,7 +56,7 @@ std::vector<PassObject*> Navigator2D::getPossibleNextLocations(int x, int y)
 	}
     return tempVec;
 }
-
+std::vector<void*> Navigator2D::getRawData(){return {};}
 std::vector<PassObject*> Navigator2D::getData(std::string dataName, std::vector<PassObject*> args)
 {
     if(isDirty()){

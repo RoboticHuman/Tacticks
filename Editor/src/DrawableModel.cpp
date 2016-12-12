@@ -82,7 +82,13 @@ GLuint DrawableModel::textureFromFile(string path)
 	GLuint textureID;
     glGenTextures(1, &textureID);
     int width,height;
-    unsigned char* image = SOIL_load_image(path.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+    unsigned char* image;
+    try {
+    	image = SOIL_load_image(path.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+	}
+	catch(...) {
+		// TODO THROW ERROR OF PROPER TYPE
+	}
     // Assign texture to ID
     glBindTexture(GL_TEXTURE_2D, textureID);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);

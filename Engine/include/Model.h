@@ -29,6 +29,7 @@ public:
 	const std::vector<Mesh>& getMeshes() const;
 	const glm::mat4& getTransform() const;
 	std::vector<Model>& getModels();
+	const std::vector<Model>& getModels() const;
 	bool raycast(const glm::vec3& start, const glm::vec3& end, glm::vec3& hitPos, float &tmin);
 	/**
 	 * @brief      This function starts the loading process and is called by the constructor

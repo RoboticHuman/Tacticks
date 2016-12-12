@@ -1,6 +1,6 @@
 .PHONY: first build clean run install
 RootDir = $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
-InstallFolder = /usr
+InstallFolder = /usr/local
 FileSrc = Engine.proj
 AppName = libTacticks.so
 CleanFiles = *.log
