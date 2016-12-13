@@ -66,15 +66,7 @@ var simulationToggleState = 0;
          $('<li />', {html: attr}).appendTo('ul.AgentAttributes')
      }
    };
-/* Placing/Editing agents toggle button */
- $(document).on('click', '.toggle-button', function() {
-     $(this).toggleClass('toggle-button-selected');
-     if ($(this).hasClass("toggle-button-selected")) {
-       togglePlacingAgents(true);
-     }else {
-       togglePlacingAgents(false);
-     }
- });
+
 $('#placeAgentsToggle').change(function(){
   if (!$(this).prop('checked')) {
     togglePlacingAgents(true);
@@ -83,7 +75,6 @@ $('#placeAgentsToggle').change(function(){
     togglePlacingAgents(false);
   }
 });
-   
 
 /* Clicking on an agent*/
 function getAttr(currentagent){
@@ -111,7 +102,31 @@ function addNewMilestone(milestoneName){
   if(milestoneModule.length){
     $('<li />', {html: milestoneModule}).appendTo('ul.AvailableBehMod')
   }
-}
+};
+var DebugMeshID = 0;
+function addDebugMesh(debugMeshName){
+    debugMeshListItem = debugMeshName + '<input type=\"checkbox\" class="toggle"  data-size="mini" id="DebugMesh_'+DebugMeshID+ '" data-toggle="toggle" data-on="On" data-off="Off" data-onstyle="success" data-offstyle="warning" >';
+
+    $('<li />', {html: debugMeshListItem}).appendTo('ul.DebugMeshs');
+    //console.log('#'+DebugMeshID);
+    $('#DebugMesh_'+DebugMeshID).bootstrapToggle();
+    //'ul.DebugMeshs li'
+    console.log(document.getElementById('#'+DebugMeshID));
+    $('#DebugMesh_'+DebugMeshID).change(function(){
+         // if (!$(this).prop('checked')) {
+            console.log("checked");
+            toggleDebugNavMesh(this.id[10]);
+        //  }
+        //  else {
+        //    console.log("unchecked");
+        //    toggleDebugNavMesh(DebugMeshID);
+        //  }
+
+    });
+    DebugMeshID++;
+};
+
+
 
 function addForcetoPipeline(behName){
   var elementText = behName + '<input type=\"button\" value="-" onClick="$(this).parent().remove();">';

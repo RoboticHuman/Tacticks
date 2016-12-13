@@ -38,6 +38,7 @@ private:	//callbacks
 	void addFtoPipeline(Awesomium::JSArray);
 	void addMtoPipeline(Awesomium::JSArray);
 	void toggleSimulationState(Awesomium::JSArray);
+	void toggleDebugNavMesh(Awesomium::JSArray);
 public:		//JS Method Calls
 	void JSCallExamples(std::string);
 	void addAgent(int);

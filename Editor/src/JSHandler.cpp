@@ -13,9 +13,10 @@ void JSHandler::init(JSObject mainObj)
 
 	registerCallback("loadMesh", &JSHandler::loadMesh);
 	registerCallback("togglePlacingAgents", &JSHandler::togglePlacingAgents);
+	registerCallback("toggleDebugNavMesh", &JSHandler::toggleDebugNavMesh);
 	registerCallback("getDefaultPath", &JSHandler::getDefaultPath);
 	registerCallback("getAttrforAgent", &JSHandler::getAttrforAgent);
-  registerCallback("loadBehaviorModules", &JSHandler::loadBehaviorModules);
+  	registerCallback("loadBehaviorModules", &JSHandler::loadBehaviorModules);
 	registerCallback("addFtoPipeline", &JSHandler::addFtoPipeline);
 	registerCallback("addMtoPipeline", &JSHandler::addMtoPipeline);
 	registerCallback("toggleSimulationState", &JSHandler::toggleSimulationState);
@@ -89,7 +90,7 @@ JSValue JSHandler::callbackWithReturn(string methodName, JSArray args)
 void JSHandler::loadMesh(JSArray args)
 {
 	coreInstance->loadMesh(ToString(args.At(0).ToString()).c_str(), true);
-
+	coreInstance->renderDebugMesh();
 }
 
 void JSHandler::toggleSimulationState(JSArray args){
@@ -98,6 +99,11 @@ void JSHandler::toggleSimulationState(JSArray args){
 void JSHandler::togglePlacingAgents(JSArray args)
 {
 	coreInstance->setplaceAgents(args.At(0).ToBoolean());
+}
+
+void JSHandler::toggleDebugNavMesh(JSArray args)
+{
+	coreInstance->toggleDNavMesh(args.At(0).ToInteger());
 }
 void JSHandler::addFtoPipeline(JSArray args){
 	//coreInstance->addFtoPipeline(Awesomium::ToString(args.At(0).ToString()));
@@ -112,6 +118,7 @@ void JSHandler::getAttrforAgent(JSArray args)
 void JSHandler::loadBehaviorModules(JSArray args){
 	coreInstance->loadBehaviorModules();
 }
+
 void JSHandler::addNewForce(string forceName){
 	JSArray args;
 	args.Push(WSLit(forceName.c_str()));
@@ -123,9 +130,9 @@ void JSHandler::addNewMilestone(string milestoneName){
 	mainObject.Invoke(WSLit("addNewMilestone"), args);
 }
 
-void JSHandler::addDebugMesh(string DebugMeshName){
+void JSHandler::addDebugMesh(string debugMeshName){
 	JSArray args;
-	args.Push(WSLit(DebugMeshName.c_str()));
+	args.Push(WSLit(debugMeshName.c_str()));
 	mainObject.Invoke(WSLit("addDebugMesh"), args);
 }
 void JSHandler::addAgent(int agentID){

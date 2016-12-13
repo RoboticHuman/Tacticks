@@ -96,7 +96,7 @@ void Core::loadMesh(string fpath, bool resetCam){
 
 	pipeline.compile();
 	dRenderer.update();
-	dRenderer.bDrawDebugMeshes.back() = true;
+	//dRenderer.bDrawDebugMeshes.back() = true;
 }
 
 void Core::preLoop()
@@ -483,11 +483,12 @@ void Core::addMtoPipeline(std::string Milestone){
 }
 
 void Core::renderDebugMesh(){
-	 std::vector<bool> drawStates = DebugMeshRenderer::bDrawDebugMeshes;
-	 std::vector<std::weak_ptr<DebugMesh>> debugMesh  = DebugMeshRenderer::getDebugMeshCache();
-	 for (int i=0; i< drawStates.size(); i++){
-		 drawStates[i] = false;
+	std::vector<std::weak_ptr<DebugMesh>> debugMesh  = DebugMeshRenderer::getDebugMeshCache();
+	 for (int i=0; i< DebugMeshRenderer::bDrawDebugMeshes.size(); i++){
 		 coreHUD.renderDebugM(debugMesh[i].lock()->name);
 
 	 }
+}
+void Core::toggleDNavMesh(int DebugMeshID){
+	DebugMeshRenderer::bDrawDebugMeshes[DebugMeshID] = ! DebugMeshRenderer::bDrawDebugMeshes[DebugMeshID];
 }
