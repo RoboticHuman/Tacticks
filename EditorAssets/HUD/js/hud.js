@@ -132,7 +132,7 @@ function addForcetoPipeline(behName){
   var elementText = behName + '<input type=\"button\" value="-" onClick="$(this).parent().remove();">';
   addFtoPipeline(behName);
   if(elementText.length){
-    $('<li />', {html: elementText}).appendTo('ul.Forces');
+    $('<li />', {html: elementText}).prependTo('ul.Forces');
   }
 }
 
@@ -140,7 +140,7 @@ function addMilestonetoPipeline(behName){
   var elementText = behName + '<input type=\"button\" value="-" onClick="$(this).parent().remove();">';
   addMtoPipeline(behName);
   if(elementText.length){
-    $('<li />', {html: elementText}).appendTo('ul.Milestones');
+    $('<li />', {html: elementText}).prependTo('ul.Milestones');
   }
 }
 

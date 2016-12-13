@@ -6,11 +6,13 @@
 #include "Mesh.h"
 #include <assimp/matrix4x4.h>
 #include <glm/vec3.hpp>
-
+#include <map>
+#include <assimp/Importer.hpp>
 class aiNode;
 class aiScene;
 class aiMesh;
 class aiString;
+class Importer;
 
 class Model
 {
@@ -20,8 +22,7 @@ public:
 	 *
 	 * @param[in]  path  The path to the model file
 	 */
-	Model(std::string path);
-
+	Model(std::string path, bool cacheThisModel=true);
 	Model();
 
 	void move(const glm::vec3 &offset);
@@ -36,14 +37,16 @@ public:
 	 *
 	 * @param[in]  path  The path to the model passed from the constructor
 	 */
-	void loadModel(std::string path);
+	void loadModel(std::string path, bool cacheThisModel);
+	static const std::map<std::string, Assimp::Importer*>& getModelCache() {return modelCache;}
 private:
+	static std::map<std::string, Assimp::Importer*> modelCache;
 	void cleanup();
 	std::vector<Mesh> meshes;
 	std::vector<Model> nodes;
 	glm::mat4 globalTransform;
-	glm::vec3 minBoundary, maxBoundary;
 	std::string containingDir;
+	std::string lastLoadedModelPath;
 	void copyAiMat(const aiMatrix4x4 *from, glm::mat4 &to);
 	/**
 	 * @brief      This function is responsible for traversing ASSIMP's tree to preserve parent-child relations

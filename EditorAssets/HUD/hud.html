@@ -13,7 +13,7 @@
 
 <body onload="document.getElementById('MyTextBox').value = getDefaultPath();loadBehaviorModules(true);">
 
- <div class="navbar">
+ <div class="navbar" style="color:black">
    <input type="button" value="Load Mesh" onclick="loadMesh(document.getElementById('MyTextBox').value)">
    <input type="text" id="MyTextBox" >
    <input type="button" id="toggleSimulationButton" value="Start Simulation" onclick="toggleSimulation()">
@@ -46,14 +46,14 @@
     <h3>Pipeline</h3>
   </div>
   <div class="list-group-item">
-    <h3 onclick="javascript:toggle('Milestones')">Milestones</h3>
-    <ul class="Milestones" style="display:block">  </ul>
-  </div>
-  <div class="list-group-item">
     <h3 onclick="javascript:toggle('Forces')">Forces</h3>
     <ul class="Forces" style="display:block"></ul>
   </div>
   <div class="list-group-item">
+    <h3 onclick="javascript:toggle('Milestones')">Milestones</h3>
+    <ul class="Milestones" style="display:block">  </ul>
+  </div>
+  <div class="list-group-item" style="border-bottom:none">
     <h3 onclick="javascript:toggle('AvailableBehaviorModules')">Behavior Modules</h3>
     <ul class="AvailableBehMod" style="display:block"></ul>
   </div>

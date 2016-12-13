@@ -199,7 +199,7 @@ vec3 safeNormalize(vec3 v, const Agent* agent)
 std::vector<std::pair<int, glm::vec3>> BehaviourPipeline::simulate()
 {
     // Set the private agent's initial intermediate
-    // target position and velocity 
+    // target position and velocity
 	for(auto& a : behData.agents){
 		a.second.targetPosition = dynamic_cast<const AgentAttributeVec3*>(a.second.agent.getAttribute("Target"))->getValue();
 		a.second.targetVelocity = a.second.targetPosition - dynamic_cast<const AgentAttributeVec3*>(a.second.agent.getAttribute("Position"))->getValue();
@@ -224,7 +224,7 @@ std::vector<std::pair<int, glm::vec3>> BehaviourPipeline::simulate()
         // Pass the individual agents through the module
         for(int aID : behData.nullGroup.getAgentList()){
             vec3 res = beh->simulateAgent(behData.agents[aID].agent);
-			BehaviourModuleData::PrivateAgent& agent = behData.agents[aID];            
+			BehaviourModuleData::PrivateAgent& agent = behData.agents[aID];
             // Update the agent's intermediate position and velocity
             agent.targetPosition = res;
             agent.targetVelocity = res - dynamic_cast<const AgentAttributeVec3*>(agent.agent.getAttribute("Position"))->getValue();;
@@ -253,7 +253,7 @@ std::vector<std::pair<int, glm::vec3>> BehaviourPipeline::simulate()
 
 void BehaviourPipeline::constructWorld(std::string worldPath)
 {
-	World::getInstance().getWorldModel().loadModel(worldPath);
+	World::getInstance().getWorldModel().loadModel(worldPath,false);
 }
 World& BehaviourPipeline::getWorldInstance()
 {
