@@ -1,75 +1,74 @@
 <!DOCTYPE html>
 <html>
- <head>
-    <link rel="stylesheet" href="css/bootstrap-toggle.min.css" />
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/hud.css" />
+<head>
+  <link rel="stylesheet" href="css/bootstrap-toggle.min.css" />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/hud.css" />
 
-    <script src="js/jquery-3.1.0.min.js"></script>
-    <script src="js/jquery-ui.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/bootstrap-toggle.min.js"></script>
+  <script src="js/jquery-3.1.0.min.js"></script>
+  <script src="js/jquery-ui.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/bootstrap-toggle.min.js"></script>
+</head>
 
-    <script src="js/hud.js"></script>
+<body onload="document.getElementById('MyTextBox').value = getDefaultPath();loadBehaviorModules(true);">
 
- </head>
+ <div class="navbar">
+   <input type="button" value="Load Mesh" onclick="loadMesh(document.getElementById('MyTextBox').value)">
+   <input type="text" id="MyTextBox" >
+   <input type="button" id="toggleSimulationButton" value="Start Simulation" onclick="toggleSimulation()">
+ </div>
 
- <body onload="document.getElementById('MyTextBox').value = getDefaultPath();loadBehaviorModules(true);">
+ <!---------------------------------------------------------------------------------------->
 
-   <div class="navbar">
-       <input type="button" value="Load Mesh" onclick="loadMesh(document.getElementById('MyTextBox').value)">
-       <input type="text" id="MyTextBox" >
-       <input type="button" id="toggleSimulationButton" value="Start" onclick="toggleSimulation()">
+ <div id="agentsandgroups">
 
-   </div>
+  <br><br>
+  <input class="toggle" id="placeAgentsToggle" type="checkbox" checked data-toggle="toggle" data-on="Select Agents" data-off="Place Agents" data-onstyle="success" data-offstyle="warning">
+
+
+  <br><br>
+  <!--Agents List-->
+  <h3 style="padding-left:10px;color:#eee">Agents</h3>
+  <ul class="AgentsList"></ul>
+
+  <!--Groups and Agent link to engine in progress -->
+
+  <div id="attributesList">
+   <ul class="AgentAttributes">
+   </ul>
+ </div>
+
+</div>
 <!---------------------------------------------------------------------------------------->
-   <div id="agentsandgroups">
-
-     <h3 style="padding-left:10px;color:#eee">Place Agents</h3>
-
-     <div class="toggle-button">
-        <button id="placeAgent"></button>
-     </div>
-     
-     <!--
-     <input id="placeAgentsToggle" type="checkbox" checked data-toggle="toggle" data-on="Select Agents" data-off="Place Agents">
-     -->
-
-
-     </label>
-     <br><br>
-      <!--Agents List-->
-      <h3 style="padding-left:10px;color:#eee">Agents</h3>
-      <ul class="AgentsList"></ul>
-
-      <!--Groups and Agent link to engine in progress -->
-
-       <div id="attributesList">
-         <ul class="AgentAttributes">
-         </ul>
-       </div>
-
-        </div>
-<!---------------------------------------------------------------------------------------->
-  <div id="forcesandmilestones" class="list-group">
-    <div class="list-group-item">
-      <h3>Pipeline</h3>
-    </div>
-      <div class="list-group-item">
-          <h3 onclick="javascript:toggle('Milestones')">Milestones</h3>
-          <ul class="Milestones" style="display:block">  </ul>
-      </div>
-      <div class="list-group-item">
-        <h3 onclick="javascript:toggle('Forces')">Forces</h3>
-        <ul class="Forces" style="display:block"></ul>
-      </div>
-      <div class="list-group-item">
-        <h3 onclick="javascript:toggle('AvailableBehaviorModules')">Behavior Modules</h3>
-        <ul class="AvailableBehMod" style="display:block"></ul>
-      </div>
-
+<div id="forcesandmilestones" class="list-group">
+  <div class="list-group-item">
+    <h3>Pipeline</h3>
+  </div>
+  <div class="list-group-item">
+    <h3 onclick="javascript:toggle('Milestones')">Milestones</h3>
+    <ul class="Milestones" style="display:block">  </ul>
+  </div>
+  <div class="list-group-item">
+    <h3 onclick="javascript:toggle('Forces')">Forces</h3>
+    <ul class="Forces" style="display:block"></ul>
+  </div>
+  <div class="list-group-item">
+    <h3 onclick="javascript:toggle('AvailableBehaviorModules')">Behavior Modules</h3>
+    <ul class="AvailableBehMod" style="display:block"></ul>
   </div>
 
- </body>
+</div>
+
+</body>
+
+<script>
+  $(function() {
+    $('#placeAgentsToggle').bootstrapToggle();
+  });
+</script>
+
+<script src="js/hud.js"></script>
+
 
 </html>

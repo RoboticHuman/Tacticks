@@ -15,11 +15,11 @@ $("body").onload=function(){
 var simulationToggleState = 0;
  function toggleSimulation(){
      if (simulationToggleState == 1) {
-         document.getElementById("toggleSimulationButton").value  = "Start"
+         document.getElementById("toggleSimulationButton").value  = "Start Simulation"
          toggleSimulationState(false);
          simulationToggleState = 0;
      }else {
-         document.getElementById("toggleSimulationButton").value  = "Stop"
+         document.getElementById("toggleSimulationButton").value  = "Stop Simulation"
          toggleSimulationState(true);
          simulationToggleState = 1;
      }
@@ -75,20 +75,15 @@ var simulationToggleState = 0;
        togglePlacingAgents(false);
      }
  });
-
-/*
- $(document).on('click', '#placeAgentsToggle', function() {
-    console.log('OHAOHAOHAOHAOHAOHAOHAO');
-    if ($(this).hasClass('off')) {
-      $this.bootstrapToggle('on');
-      togglePlacingAgents(true);
-    }
-    else {
-      $this.bootstrapToggle('false');
-      togglePlacingAgents(false);
-    }
- });
- */
+$('#placeAgentsToggle').change(function(){
+  if (!$(this).prop('checked')) {
+    togglePlacingAgents(true);
+  }
+  else {
+    togglePlacingAgents(false);
+  }
+});
+   
 
 /* Clicking on an agent*/
 function getAttr(currentagent){
