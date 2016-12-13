@@ -40,8 +40,8 @@ void Core::loadMesh(string fpath, bool resetCam){
 	float agentHeight = 2;
 	float agentRadius = 0.6;
 	float maxClimb = 0.9;
-	float cs = 10;
-	float ch = 10;
+	float cs = 0.3;
+	float ch = 0.2;
 	float minRegionSize = 8;
 	float mergedRegionSize = 20;
 
