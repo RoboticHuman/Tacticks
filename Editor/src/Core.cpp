@@ -40,8 +40,8 @@ void Core::loadMesh(string fpath, bool resetCam){
 	float agentHeight = 2;
 	float agentRadius = 0.6;
 	float maxClimb = 0.9;
-	float cs = 0.3;
-	float ch = 0.2;
+	float cs = 1.5;
+	float ch = 1.5;
 	float minRegionSize = 8;
 	float mergedRegionSize = 20;
 
@@ -261,17 +261,25 @@ void Core::start()
 						case SDL_BUTTON_RIGHT:
 							shouldRotateView = true;
 							origCameraAngle=cameraAngle;
-							//TODO: CLEAN THIS SHITHOLE DOWN HERE WHICH PLACES THE TARGETS ON THE CURRENTLY SELECTED AGENT
+							// //TODO: CLEAN THIS SHITHOLE DOWN HERE WHICH PLACES THE TARGETS ON THE CURRENTLY SELECTED AGENT
+							// {
+							// 	vec3 ray[2];
+							// 	ray[0] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 0.0));
+							// 	ray[1] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 1.0));
+							// 	vec3 pos;
+							// 	float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
+							// 	if(drawableModel&&drawableModel->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
+							// 		//TODO: FIX GETAGENTBYID IF ID IS WRONG.
+							// 		for(auto& agent : drawableAgents)
+							// 			dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agent.getAgentID())->getAttribute("Target"))->setValue(pos);
+							// 	}
+							// }
 							{
-								vec3 ray[2];
-								ray[0] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 0.0));
-								ray[1] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 1.0));
-								vec3 pos;
-								float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
-								if(drawableModel&&drawableModel->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
-									//TODO: FIX GETAGENTBYID IF ID IS WRONG.
-									for(auto& agent : drawableAgents)
-										dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agent.getAgentID())->getAttribute("Target"))->setValue(pos);
+
+								for(auto& agent : drawableAgents)
+								{
+											glm::vec3 testRandPoint = dynamic_cast<PassObjectVec3*>(NavigationFactory::getNav("NLrcPolyMesh").getNav()->getData(string("getRandomPosition"),{})[0])->getValue();
+											dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agent.getAgentID())->getAttribute("Target"))->setValue(testRandPoint);
 								}
 							}
 						break;

@@ -142,7 +142,7 @@ void JSHandler::addAttrtoHud(string elementText){
 }
 JSValue JSHandler::getDefaultPath(JSArray args)
 {
-	return JSValue(WSLit("EditorAssets/models/dungeon.obj"));
+	return JSValue(WSLit("EditorAssets/models/old fashion town/old town block.obj"));
 }
 void JSHandler::JSCallExamples(string str){	//P.S. This calls a function "setTextboxValue" with 1 string argument P.S. Not intended to be called just there for reference
 	JSArray args;
