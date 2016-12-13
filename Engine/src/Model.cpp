@@ -1,12 +1,14 @@
 #include "Model.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <algorithm>
+#include <stdexcept>
 using namespace std;
 using namespace glm;
+
+std::map<std::string, Assimp::Importer*> Model::modelCache;
 
 void Model::copyAiMat(const aiMatrix4x4 *from, glm::mat4 &to) {
 	to[0][0] = from->a1; to[1][0] = from->a2;
@@ -19,9 +21,9 @@ void Model::copyAiMat(const aiMatrix4x4 *from, glm::mat4 &to) {
 	to[2][3] = from->d3; to[3][3] = from->d4;
 }
 
-Model::Model(string path)
+Model::Model(std::string path, bool cacheThisModel)
 {
-	loadModel(path);
+	loadModel(path, cacheThisModel);
 }
 
 void Model::cleanup()
@@ -63,20 +65,46 @@ const std::vector<Model>& Model::getModels() const{
 	return nodes;
 }
 
-void Model::loadModel(string path)
+void Model::loadModel(string path, bool cacheThisModel)
 {
+	if(lastLoadedModelPath==path) return;
+	else{
 		cleanup();
-		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FlipUVs);
+		lastLoadedModelPath=path;
+
+		Assimp::Importer *importer;
+		bool foundImporter = true;
+
+		try {
+			importer = modelCache.at(path);
+		}
+		catch(const std::out_of_range& err) {
+			importer = new Assimp::Importer;
+			foundImporter = false;
+		}
+
+		const aiScene* scene = importer->ReadFile(path, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FlipUVs);
 
 		if(!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
-			printf("ERROR::ASSIMP:: %s\n", importer.GetErrorString());
+			printf("ERROR::ASSIMP:: %s\n", importer->GetErrorString());
 			return;
 		}
 
 		containingDir = path.substr(0, path.find_last_of('/'));
 		processNode(scene->mRootNode, scene, *this);
+
+		if (!foundImporter) {
+			if (cacheThisModel) {
+				modelCache.insert(pair<string, Assimp::Importer*>(path, importer));
+			}
+			else {
+				delete importer;
+			}
+
+		}
+
+	}
 }
 
 Model::Model()
