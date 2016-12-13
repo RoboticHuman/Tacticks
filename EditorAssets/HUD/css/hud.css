@@ -24,8 +24,6 @@ input[type='button']:hover {
 input[type="text"] {
   border: none;
   border-radius: 5px;
-  border-bottom: solid 2px #c9c9c9;
-  transition: border 0.3s;
 }
 input[type="text"]:focus {
   border-bottom: solid 2px #969696;
@@ -73,6 +71,7 @@ input[type="text"]:focus {
 .list-group-item {
   background-color: rgba(0,0,0,0.8);
   border: none;
+  border-bottom: 2px solid white;
 }
 h3 {
   font-family: sans-serif;

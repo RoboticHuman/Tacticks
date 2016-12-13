@@ -111,12 +111,12 @@ void Core::preLoop()
 	cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
 	transformLocation = ResourceManager::getShader("meshShader")->getUniformLocation("transform");
 	vector<const GLchar*> faces;
-    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/right.jpg");
-    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/left.jpg");
-    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/top.jpg");
-    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/bottom.jpg");
-    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/back.jpg");
-    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/front.jpg");
+    faces.push_back("EditorAssets/SkyboxTextures/right.jpg");
+    faces.push_back("EditorAssets/SkyboxTextures/left.jpg");
+    faces.push_back("EditorAssets/SkyboxTextures/top.jpg");
+    faces.push_back("EditorAssets/SkyboxTextures/bottom.jpg");
+    faces.push_back("EditorAssets/SkyboxTextures/back.jpg");
+    faces.push_back("EditorAssets/SkyboxTextures/front.jpg");
 	skybox = new CubeMap(faces);
 }
 void Core::render()
