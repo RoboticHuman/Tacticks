@@ -66,4 +66,5 @@ public:
 	void addAttributetoHud(std::string);
 	void addNewForce(std::string);
 	void addNewMilestone(std::string);
+	void renderDebugM(std::string);
 };

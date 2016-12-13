@@ -26,7 +26,7 @@ public:
 	~Camera() = default;
 	/**
 	 * @brief		This functions sets up the initial camera position and settings.
-	 * 
+	 *
 	 * @param[in] fov The field of view of the camera, default is 90 degrees.
 	 * @param[in] aspectRatio The aspect ratio as a fraction of screenWidth/screenHeight.
 	 * @param[in] position The position of the camera in the scene.
@@ -39,6 +39,7 @@ public:
 	 *	@breif		Returns the View transformation materix.
 	 */
 	glm::mat4 getViewMatrix() const;
+	glm::mat4 getNonTranslatedViewMatrix() const;
 	/**
 	 *	@breif		return the position parameter
 	 */

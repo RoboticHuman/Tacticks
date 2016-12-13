@@ -24,6 +24,8 @@
 #include <Tacticks/AgentAttributeVec3.h>
 #include <glm/geometric.hpp>
 #include <glm/gtx/vector_angle.hpp>
+#include <DebugMeshRenderer.h>
+#include <CubeMap.h>
 using namespace std;
 using namespace glm;
 
@@ -38,8 +40,8 @@ void Core::loadMesh(string fpath, bool resetCam){
 	float agentHeight = 2;
 	float agentRadius = 0.6;
 	float maxClimb = 0.9;
-	float cs = 0.3;
-	float ch = 0.2;
+	float cs = 1.5;
+	float ch = 1.5;
 	float minRegionSize = 8;
 	float mergedRegionSize = 20;
 
@@ -108,12 +110,24 @@ void Core::preLoop()
 
 	cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
 	transformLocation = ResourceManager::getShader("meshShader")->getUniformLocation("transform");
+	vector<const GLchar*> faces;
+    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/right.jpg");
+    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/left.jpg");
+    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/top.jpg");
+    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/bottom.jpg");
+    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/back.jpg");
+    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/front.jpg");
+	skybox = new CubeMap(faces);
 }
 void Core::render()
 {
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.2f,0.2f,0.2f,0.0f);
+
+	// Draw skybox first
+	glDepthMask(GL_FALSE);// Remember to turn depth writing off
+	ResourceManager::getShader("skyboxShader")->use();
+	skybox->draw();
 	glEnable(GL_DEPTH_TEST);
 	ResourceManager::getShader("meshShader")->use();
 	if(drawableModel)drawableModel->draw(ResourceManager::getShader("meshShader"));
@@ -202,6 +216,7 @@ bool Core::init()
 	ResourceManager::loadShader("EditorAssets/shaders/VS.vs", "EditorAssets/shaders/FS.fs","meshShader");
 	ResourceManager::loadShader("EditorAssets/shaders/VSHUD.vs", "EditorAssets/shaders/FSHUD.fs","hudShader");
 	ResourceManager::loadShader("EditorAssets/shaders/DebugMesh.vs", "EditorAssets/shaders/DebugMesh.fs","debugMeshShader");
+	ResourceManager::loadShader("EditorAssets/shaders/Skybox.vs", "EditorAssets/shaders/Skybox.fs","skyboxShader");
 	coreHUD.init(screenWidth,screenHeight);
 
 	return true;
@@ -246,17 +261,25 @@ void Core::start()
 						case SDL_BUTTON_RIGHT:
 							shouldRotateView = true;
 							origCameraAngle=cameraAngle;
-							//TODO: CLEAN THIS SHITHOLE DOWN HERE WHICH PLACES THE TARGETS ON THE CURRENTLY SELECTED AGENT
+							// //TODO: CLEAN THIS SHITHOLE DOWN HERE WHICH PLACES THE TARGETS ON THE CURRENTLY SELECTED AGENT
+							// {
+							// 	vec3 ray[2];
+							// 	ray[0] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 0.0));
+							// 	ray[1] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 1.0));
+							// 	vec3 pos;
+							// 	float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
+							// 	if(drawableModel&&drawableModel->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
+							// 		//TODO: FIX GETAGENTBYID IF ID IS WRONG.
+							// 		for(auto& agent : drawableAgents)
+							// 			dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agent.getAgentID())->getAttribute("Target"))->setValue(pos);
+							// 	}
+							// }
 							{
-								vec3 ray[2];
-								ray[0] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 0.0));
-								ray[1] = cam.screenToWorld(vec3(event.button.x, screenHeight - event.button.y, 1.0));
-								vec3 pos;
-								float NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN = 1.0f;
-								if(drawableModel&&drawableModel->raycast(ray[0], ray[1], pos, NEEDS_TO_BE_FIXED_AND_DONE_PROPERLY_TMIN)){
-									//TODO: FIX GETAGENTBYID IF ID IS WRONG.
-									for(auto& agent : drawableAgents)
-										dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agent.getAgentID())->getAttribute("Target"))->setValue(pos);
+
+								for(auto& agent : drawableAgents)
+								{
+											glm::vec3 testRandPoint = dynamic_cast<PassObjectVec3*>(NavigationFactory::getNav("NLrcPolyMesh").getNav()->getData(string("getRandomPosition"),{})[0])->getValue();
+											dynamic_cast<AgentAttributeVec3*>(pipeline.getAgentByID(agent.getAgentID())->getAttribute("Target"))->setValue(testRandPoint);
 								}
 							}
 						break;
@@ -336,6 +359,8 @@ void Core::start()
 		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
 		ResourceManager::getShader("debugMeshShader")->use();
 		glUniformMatrix4fv(ResourceManager::getShader("debugMeshShader")->getUniformLocation("transform"), 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
+		ResourceManager::getShader("skyboxShader")->use();
+		glUniformMatrix4fv(ResourceManager::getShader("skyboxShader")->getUniformLocation("transform"), 1, GL_FALSE, value_ptr(cam.getNonTranslatedViewMatrix()));
 		render();
 
 		SDL_GL_SwapWindow(mainwindow);
@@ -455,4 +480,14 @@ void Core::addFtoPipeline(std::string Force){
 }
 void Core::addMtoPipeline(std::string Milestone){
 	pipeline.addMilestonesModule(Milestone);
+}
+
+void Core::renderDebugMesh(){
+	 std::vector<bool> drawStates = DebugMeshRenderer::bDrawDebugMeshes;
+	 std::vector<std::weak_ptr<DebugMesh>> debugMesh  = DebugMeshRenderer::getDebugMeshCache();
+	 for (int i=0; i< drawStates.size(); i++){
+		 drawStates[i] = false;
+		 coreHUD.renderDebugM(debugMesh[i].lock()->name);
+
+	 }
 }

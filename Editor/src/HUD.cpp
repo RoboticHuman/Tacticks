@@ -369,3 +369,6 @@ void HUD::addNewForce(std::string ForceModule){
 void HUD::addNewMilestone(std::string MilestoneModule){
 	js_handler->addNewMilestone(MilestoneModule);
 }
+void HUD::renderDebugM(std::string DebugMeshName){
+	js_handler->addDebugMesh(DebugMeshName);
+}
