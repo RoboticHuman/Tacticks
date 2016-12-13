@@ -12,6 +12,7 @@
 #include "DebugMeshRenderer.h"
 class Shader;
 class Model;
+class CubeMap;
 
 /**
  * @brief      This class is responsible for initializing the windowing system as well as handling input.
@@ -45,6 +46,7 @@ private:
 	GLuint transformLocation;
 	bool shouldSimulate = false;
 	int currentSelectedAgent;
+	CubeMap* skybox;
 
 	/**
 	 * @brief      This functions is called exactly once just after initializing the window and right before the main loop.

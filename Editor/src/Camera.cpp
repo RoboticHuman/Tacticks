@@ -28,6 +28,12 @@ mat4 Camera::getViewMatrix() const{
 	return projection * transformation;
 }
 
+mat4 Camera::getNonTranslatedViewMatrix() const{
+	mat4 projection = perspective(fov, aspectRatio, near, far);
+	mat4 transformation = mat4(mat3(lookAt(position, at, up)));
+	return projection * transformation;
+}
+
 vec3 Camera::getCameraWorldPosition(){
 	return this->position;
 }

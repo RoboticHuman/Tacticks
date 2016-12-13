@@ -25,6 +25,7 @@
 #include <glm/geometric.hpp>
 #include <glm/gtx/vector_angle.hpp>
 #include <DebugMeshRenderer.h>
+#include <CubeMap.h>
 using namespace std;
 using namespace glm;
 
@@ -39,8 +40,8 @@ void Core::loadMesh(string fpath, bool resetCam){
 	float agentHeight = 2;
 	float agentRadius = 0.6;
 	float maxClimb = 0.9;
-	float cs = 0.3;
-	float ch = 0.2;
+	float cs = 10;
+	float ch = 10;
 	float minRegionSize = 8;
 	float mergedRegionSize = 20;
 
@@ -109,12 +110,24 @@ void Core::preLoop()
 
 	cam.setup(45, 1.0*screenWidth/screenHeight, vec3(0.0, 0.0, 1.0), vec3(0.0, 0.0, 0.0), vec2(0.0, 0.0), vec2(screenWidth, screenHeight));
 	transformLocation = ResourceManager::getShader("meshShader")->getUniformLocation("transform");
+	vector<const GLchar*> faces;
+    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/right.jpg");
+    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/left.jpg");
+    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/top.jpg");
+    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/bottom.jpg");
+    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/back.jpg");
+    faces.push_back("/home/robotichuman/Tacticks/EditorAssets/SkyboxTextures/front.jpg");
+	skybox = new CubeMap(faces);
 }
 void Core::render()
 {
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.2f,0.2f,0.2f,0.0f);
+
+	// Draw skybox first
+	glDepthMask(GL_FALSE);// Remember to turn depth writing off
+	ResourceManager::getShader("skyboxShader")->use();
+	skybox->draw();
 	glEnable(GL_DEPTH_TEST);
 	ResourceManager::getShader("meshShader")->use();
 	if(drawableModel)drawableModel->draw(ResourceManager::getShader("meshShader"));
@@ -203,6 +216,7 @@ bool Core::init()
 	ResourceManager::loadShader("EditorAssets/shaders/VS.vs", "EditorAssets/shaders/FS.fs","meshShader");
 	ResourceManager::loadShader("EditorAssets/shaders/VSHUD.vs", "EditorAssets/shaders/FSHUD.fs","hudShader");
 	ResourceManager::loadShader("EditorAssets/shaders/DebugMesh.vs", "EditorAssets/shaders/DebugMesh.fs","debugMeshShader");
+	ResourceManager::loadShader("EditorAssets/shaders/Skybox.vs", "EditorAssets/shaders/Skybox.fs","skyboxShader");
 	coreHUD.init(screenWidth,screenHeight);
 
 	return true;
@@ -337,6 +351,8 @@ void Core::start()
 		glUniformMatrix4fv(transformLocation, 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
 		ResourceManager::getShader("debugMeshShader")->use();
 		glUniformMatrix4fv(ResourceManager::getShader("debugMeshShader")->getUniformLocation("transform"), 1, GL_FALSE, value_ptr(cam.getViewMatrix()));
+		ResourceManager::getShader("skyboxShader")->use();
+		glUniformMatrix4fv(ResourceManager::getShader("skyboxShader")->getUniformLocation("transform"), 1, GL_FALSE, value_ptr(cam.getNonTranslatedViewMatrix()));
 		render();
 
 		SDL_GL_SwapWindow(mainwindow);
